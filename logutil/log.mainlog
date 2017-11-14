@@ -38,7 +38,7 @@ function start_mainlog_terminal {
 		$terminal_execfile -t "Record ANR" -h always -w max --log $logfile_maillog -e adb logcat $log_filter &
 	fi
 
-	if [ $myscript_os == "gun/linux" ];then
+	if [ $linux_os == "Linux" ];then
 		adb logcat -b events -c
 		#$terminal_execfile -t "Record Event log" -h always -w max --log $logfile_eventlog -e adb logcat -b events $log_filter &
 		adb logcat $log_filter > $logfile_mainlog &

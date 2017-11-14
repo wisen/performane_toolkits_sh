@@ -14,7 +14,7 @@ function start_vmstat_ternimal {
 		$terminal_execfile -t "Record vmstat" -h always -w max --log $logfile_vmstat -e record_memory vmstat  &
 	fi
 
-	if [ $myscript_os == "gun/linux" ];then
+	if [ $linux_os == "Linux" ];then
 		#adb logcat -b events -c
 		#$terminal_execfile -t "Record Event log" -h always -w max --log $logfile_eventlog -e adb logcat -b events $log_filter &
 		#adb logcat -b events $log_filter > $logfile_eventlog &
