@@ -1,0 +1,77 @@
+#!/bin/bash
+
+. color.u
+. monitor.meminfo
+. monitor.vmstat
+. dump.misc
+. monitor.zoneinfo
+. monitor.art
+. monitor.gpu
+. monitor.gfx
+
+function usage {
+	echo
+	red monitor usage:
+	red "\t" monitor meminfo
+	red "\t" monitor vmstat
+	red "\t" monitor misc
+	red "\t" monitor zoneinfo
+	red "\t" monitor all
+	red "\t" monitor art processname
+	red "\t" monitor gpu processname
+	echo
+}
+
+if [ $# -gt 1 ];then
+	if [ $1 == "art" ];then
+		monitor_art_by_processname $2
+		exit
+	fi
+	
+	if [ $1 == "gpu" ];then
+		monitor_gpu_by_processname $2
+		exit
+	fi
+
+	if [ $1 == "gfx" ];then
+		monitor_gfx_by_processname $2
+		exit
+	fi
+	
+	usage
+	exit
+fi
+
+if [ $# -eq 1 ];then
+	if [ $1 == "meminfo" ];then
+		monitor_meminfo
+		exit
+	fi
+
+	if [ $1 == "zoneinfo" ];then
+		monitor_zoneinfo
+		exit
+	fi
+
+	if [ $1 == "watermark" ];then
+		monitor_watermark
+		exit
+	fi
+
+	if [ $1 == "vmstat" ];then
+		monitor_vmstat 
+		exit
+	fi
+
+	if [ $1 == "misc" ];then
+		dump_misc 
+		exit
+	fi
+
+	if [ $1 == "all" ];then
+		monitor_all 
+		exit
+	fi
+fi
+
+usage

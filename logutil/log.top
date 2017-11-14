@@ -1,0 +1,15 @@
+#!/bin/bash
+. os.u
+
+# start_top_ternimal logfile
+function start_top_terminal {
+	logfile_top=$1
+	
+	if [ $myscript_os == "cygwin" ];then
+		$terminal_execfile -t "Record top" -h always -w max --log $logfile_top -e record_memory top  &
+	fi
+	
+	if [ $myscript_os == "msys" ];then	
+		$terminal_execfile -t "Record top" -h always -w max --log $logfile_top -e record_memory top  &
+	fi
+}

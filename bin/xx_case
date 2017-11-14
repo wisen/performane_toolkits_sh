@@ -1,0 +1,124 @@
+#!/bin/bash
+# auto build by config
+
+#utils
+. color.u
+. process.u
+. os.u
+. env.u
+#logs
+. log.event
+. log.kernel
+. log.meminfo
+. log.vmstat
+. log.top
+. dump.fps
+. log.mainlog
+#parsers
+. applist.parser
+. meminfo.parser
+. appinfo.parser
+. kinfo.parser
+. misc.parser
+. vmstat.parser
+#configures
+. ext_free_bytes.conf
+. misc.conf
+
+#actions start
+prepare_app_list $SCRIPT_ROOT/applist/QA.cold.launch.list
+prepare_prebuilt_tools $SCRIPT_ROOT/prebuilt_tools
+
+function testcase_xx_case {
+
+	if [ ! $1 ];then
+		test_cycles=50
+	else
+		test_cycles=$1
+	fi
+
+	#adb reboot
+	adb wait-for-device
+
+	#lock_cpu_freq
+	#lock_cpu_freq
+	#dis_cpu_hp
+	#en_cpu_hp
+	#set_dirty_ratio 20
+	#set_bg_ratio 5
+	set_ext_free_kbytes 32400
+	#turn_on_processmanager
+	#turn_off_processmanager
+	#enable_zram
+	#disable_zram
+	#enable_ksm
+	#disable_ksm
+	#set_ksm_sleep_millisecs 20
+	#set_ksm_pages_to_scan 100
+	
+	#misc related
+	set_console_loglevel 0
+	
+	xx_case_start_time=`date "+%Y%m%d%H%M%S"`
+	logfile_xx_case=logfile_actions_xx_case.${xx_case_start_time}.txt
+	
+	fps_folder=fps_${xx_case_start_time}
+	if [ ! -d $fps_folder ];then
+		mkdir $fps_folder
+	fi
+	
+	logfile_meminfo=logfile_meminfo_xx_case.${xx_case_start_time}.txt
+	logfile_kernellog=logfile_kernellog_xx_case.${xx_case_start_time}.txt
+	logfile_eventlog=logfile_eventlog_xx_case.${xx_case_start_time}.txt
+	logfile_vmstat=logfile_vmstat_xx_case.${xx_case_start_time}.txt
+	logfile_top=logfile_top_xx_case.${xx_case_start_time}.txt
+	logfile_mainlog=logfile_mainlog_xx_case.${xx_case_start_time}.txt
+	
+	#start_terminal
+	start_event_terminal $logfile_eventlog am_activity_launch_time am_kill am_anr am_pss
+	start_kernel_ternimal $logfile_kernellog
+	start_meminfo_terminal $logfile_meminfo
+	start_vmstat_ternimal $logfile_vmstat
+	start_top_terminal $logfile_top
+	start_mainlog_terminal $logfile_mainlog ANRManager art
+
+	for ((i=0;i<${#activities[@]};i=$i+1))
+	do
+		for ((j=1;j<=$test_cycles;j=$j+1))
+		do
+			cur_freq=`adb shell "cat /sys/bus/cpu/devices/cpu0/cpufreq/cpuinfo_cur_freq"|awk '{if(NR==1) print $1}'`
+			cpu_online=`adb shell "cat /sys/devices/system/cpu/online"|awk '{if(NR==1) print $1;}'`
+			echo "CPU Freq: $cur_freq Online: $cpu_online" | tee -a $logfile_xx_case
+			red_white "Cycle $test_cycles-$j, App $i" | tee -a $logfile_xx_case
+			echo "["`date "+%Y-%m-%d %H:%M:%S"`"]Start activity: "${activities[$i]} | tee -a $logfile_xx_case
+			#timestamp=`adb shell cat /proc/uptime|awk '{print $1}'`
+			#record_ftrace   &
+			#clean_fps_by_packageName ${packages[$i]} > .tmp.null
+			timeout 10 adb shell am start -W ${activities[$i]} | tee -a $logfile_xx_case
+			dump_fps_by_packageName ${packages[$i]} >> ./$fps_folder/fps.${packages[$i]}
+			
+			timeout 3 adb shell input keyevent 3 #simulation user press home key
+
+		done
+	done
+	xx_case_end_time=`date "+%Y%m%d%H%M%S"`
+	echo "The Test total use "$((${xx_case_end_time}-${xx_case_start_time}))" Seconds." | tee -a $logfile_xx_case
+# 4. close all log bash
+	kill_others
+	
+	logfile_result=logfile_result_xx_case.${xx_case_end_time}.txt
+	#clac_the_result
+	collect_misc_info | tee -a $logfile_result
+	parse_meminfo $logfile_meminfo | tee -a $logfile_result
+	parse_app_launchtime $logfile_eventlog | tee -a $logfile_result
+	parse_app_crash $logfile_eventlog | tee -a $logfile_result
+	parse_lmk_count_byADJ $logfile_kernellog | tee -a $logfile_result
+	parse_vmstat $logfile_vmstat | tee -a $logfile_result
+}
+
+testcase_xx_case $1
+tar -czf logfile_xx_case_${xx_case_end_time}.tar.gz logfile_*${xx_case_start_time}.txt $logfile_result
+#mail_title="-t 'TestCase[xx_case]: Result at ${xx_case_end_time}'"
+#mail_attachment="-a 'logfile_${xx_case_end_time}.tar.gz'"
+#mail_content_file="-f '$logfile_result'"
+python /e/memory_script/bin/mail/sendmail.py -v mail.reallytek.com --port 25 -p Ab123456 -s wanbin.wang@reallytek.com -r wanbin.wang@reallytek.com  -t "TestCase[xx_case]: Result at ${xx_case_end_time}" -f "$logfile_result" -a "logfile_xx_case_${xx_case_end_time}.tar.gz"

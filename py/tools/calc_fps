@@ -1,0 +1,80 @@
+#!/usr/bin/env python
+
+import sys
+import getopt
+
+def usage():
+    usageStr = '''Usage: calc_fps --width=width --height=height --'''
+    print(usageStr)
+def main(argv):
+    try:
+        opts, args = getopt.getopt(argv, "",["help","width=","height=","vsync=","vbp=","vfp=","hsync=","hbp=","hfp=","pll=","bpp=","lane=","mode="])
+    except getopt.GetoptError:
+        usage()
+        sys.exit(2)
+    #print(args)
+    mode=''
+    width = ''
+    height = ''
+    vsync = ''
+    vbp = ''
+    vfp = ''
+    hsync = ''
+    hbp = ''
+    hfp = ''
+    pll = ''
+    bpp = ''
+    lane = ''
+    for opt, arg in opts:
+        if opt in ("--help"):
+            usage()
+            sys.exit(0)
+        if opt in ("--mode"):
+            mode = arg
+        if opt in ("--width"):
+            width = float(arg)
+        if opt in ("--height"):
+            height = float(arg)
+        if opt in ("--pll"):
+            pll = float(arg)
+        if opt in ("--bpp"):
+            bpp = float(arg)
+        if opt in ("--lane"):
+            lane = float(arg)
+        if opt in ("--vsync"):
+            vsync = float(arg)
+        if opt in ("--vbp"):
+            vbp = float(arg)
+        if opt in ("--vfp"):
+            vfp = float(arg)
+        if opt in ("--hsync"):
+            hsync = float(arg)
+        if opt in ("--hbp"):
+            hbp = float(arg)
+        if opt in ("--hfp"):
+            hfp = float(arg)
+
+    if(mode == "Vedio"):
+        datarate = pll * 2;
+        pixclk = datarate * lane / (bpp * 8);
+        tline = (width + hsync + hbp + hfp) / pixclk;
+        tframe = tline * (height + vsync + vbp + vfp) / 1000;
+        fps = 1000 / tframe;
+
+        print("tframe: %.2f"%tframe+" ms")
+        print("fps:    %.2f"%fps)
+
+        #__fps=30
+        #__vfp=(1000*1000*pll*2*lane/(__fps*(width+hsync+hbp+hfp)*bpp*8))-height-vsync-vbp
+        print("")
+        print("fps\tvfp")
+        for _fps in range(30, 61):
+            _vfp = (1000 * 1000 * pll * 2 * lane / (_fps * (width + hsync + hbp + hfp) * bpp * 8)) - height - vsync - vbp
+            print("%.2f\t" % _fps + " %.2f" % _vfp)
+    elif (mode == "Command"):
+        datarate = pll * 2;
+        print("wait to implement the fps algorithm under command mode")
+
+
+if __name__=="__main__":
+    main(sys.argv[1:])

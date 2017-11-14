@@ -1,0 +1,31 @@
+#!/bin/bash
+
+. color.u
+
+function dump_pss_all {
+	adb shell ps | grep com |awk '{print $2;}' > .tmp.pid.list
+
+	while read pid
+	do
+		adb shell cat /proc/$pid/smaps | egrep "^Pss:"|awk -v a_pid="$pid " '{sum+=$2;} END{printf("%s %.2f MB\n", a_pid, sum/1024);}'
+	done < .tmp.pid.list
+}
+
+function dump_pss_by_processname {
+	
+	records=`adb shell ps | grep $1|awk 'END{print NR}'`
+	if [ $records -gt 1 ];then
+		red "ProcessName is not uniq:"
+		adb shell ps | grep $1 --color
+		exit
+	fi
+	pid=`adb shell ps | grep $1 |awk '{print $2;}' > .tmp.single.pid.list`
+
+	adb shell cat /proc/$pid/smaps | egrep "^Pss:"|awk -v a_pid="$pid " '{sum+=$2;} END{printf("%s %.2f MB\n", a_pid, sum/1024);}'
+}
+
+if [ -z $1 ];then
+	dump_pss_by_pid | awk '{sum+=$2;print $0;} END{printf("%s %.2f %s\n", "Total Pss:", sum, "MB");}'
+else
+	dump_pss_by_processname $1
+fi

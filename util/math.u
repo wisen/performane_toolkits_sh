@@ -1,0 +1,6 @@
+#!/bin/bash
+
+function checkInt {
+	expr $1 + 0 &>/dev/null
+    [ $? -ne 0 ] && { echo -e "\033[31m" "Args must be integer!" "\033[0m"; exit 1;}
+}

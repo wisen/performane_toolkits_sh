@@ -1,0 +1,19 @@
+#!/bin/bash
+
+. color.u
+
+# iotest cycles 
+function iotest {
+	
+	red_white "Total Cycles: $1"
+
+	for ((i=0;i<$1;i=$i+1))
+	do
+		red_white "Cycles:$i"
+		adb shell dd if=/dev/zero of=/data/tmp.$i.txt bs=52428800 count=1
+		sleep 2
+		adb shell rm /data/tmp.$i.txt
+	done
+}
+
+iotest $1

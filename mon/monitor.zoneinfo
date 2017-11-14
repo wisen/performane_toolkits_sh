@@ -1,0 +1,70 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for monitoring some memory infomation
+# Date: 2017-02-26
+
+function monitor_zoneinfo {
+	title_line1="\tnr_\t\t|\tpgscan\t\t\t|"
+	title_line2="dirty\tthres\tbgthres\t|ks_nor\t\tks_high\t\tdi_nor\t\tdi_high\t\t|acstall"
+	#title_line9="d\t"
+
+	#echo -e $title_line1
+	#echo -e $title_line2
+	
+	line=0
+	while true
+	do
+		if [ `expr ${line} % 50` == 0 ];then
+			echo -e $title_line1
+			echo -e $title_line2
+		fi
+		line=`expr ${line} + 1`
+		
+		adb shell cat /proc/zoneinfo |awk '/nr_dirty/{a[0]=$2;} 
+										/nr_dirty_threshold/{a[1]=$2;}
+										/nr_dirty_background_threshold/{a[2]=$2;}
+										/pgscan_kswapd_normal/{a[3]=$2;}
+										/pgscan_kswapd_high/{a[4]=$2;}
+										/pgscan_direct_normal/{a[5]=$2;}
+										/pgscan_direct_high/{a[6]=$2;}
+										/allocstall/{a[7]=$2;}
+										
+										END{
+											printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7]);
+										}
+										'
+		sleep 1
+	done
+	
+}
+
+function monitor_watermark {
+    local title="Normal\tHigh"
+    local line=0
+
+    local zone1_lowlevel=$(adb shell cat //proc/zoneinfo|awk '/low/{if(NR<8) print $2;}')
+    local zone2_lowlevel=$(adb shell cat //proc/zoneinfo|awk '/low/{if(NR>50) print $2;}')
+
+    red_white "$zone1_lowlevel, $zone2_lowlevel";
+
+    while true
+    do
+        if [ `expr ${line} % 50` == 0 ];then
+			blue_white $title
+		fi
+		line=`expr ${line} + 1`
+
+        adb shell cat //proc/zoneinfo|awk -v lowlevel=$zone2_lowlevel '
+                                /nr_free_pages/{
+                                    if(NR>5 && NR <20) high=$2;
+                                    if(NR>50) low=$2;
+                                }
+                                END{
+                                    if(low<lowlevel){
+                                        printf("%d\t%d\t%s\n",high,low,"*");
+                                    }else{
+                                        printf("%d\t%d\n",high,low);}
+                                }'
+        sleep 0.5;
+    done
+}

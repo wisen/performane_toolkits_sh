@@ -1,0 +1,42 @@
+#!/bin/bash
+# auto build by config
+
+#utils
+. color.u
+. process.u
+. os.u
+. env.u
+#logs
+. log.event
+. log.kernel
+. log.meminfo
+. log.vmstat
+. log.top
+. dump.fps
+. log.mainlog
+#parsers
+. applist.parser
+. meminfo.parser
+. appinfo.parser
+. kinfo.parser
+. misc.parser
+. vmstat.parser
+#configures
+. ext_free_bytes.conf
+. misc.conf
+
+	once_start_time=`date "+%Y%m%d%H%M%S"`
+	logfile_meminfo=logfile_meminfo_once.${once_start_time}.txt
+	logfile_kernellog=logfile_kernellog_once.${once_start_time}.txt
+	logfile_eventlog=logfile_eventlog_once.${once_start_time}.txt
+	logfile_vmstat=logfile_vmstat_once.${once_start_time}.txt
+	logfile_top=logfile_top_once.${once_start_time}.txt
+	logfile_mainlog=logfile_mainlog_once.${once_start_time}.txt
+	
+	#start_terminal
+	start_event_terminal $logfile_eventlog am_activity_launch_time am_kill am_anr am_pss
+	start_kernel_ternimal $logfile_kernellog
+	start_meminfo_terminal $logfile_meminfo
+	start_vmstat_ternimal $logfile_vmstat
+	start_top_terminal $logfile_top
+	start_mainlog_terminal $logfile_mainlog ANRManager

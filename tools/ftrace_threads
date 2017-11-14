@@ -1,0 +1,84 @@
+#!/bin/bash
+
+function collect_threads {
+	awk '{print $1}' $1|sort|uniq|sed '/\.\.\./d'> .tmp.threads
+}
+
+echo Parse file: $1
+
+collect_threads $1
+
+i=0
+while read line
+do
+    threads[$i]=`echo $line`
+    echo "Parse thread: threads[$i]="${threads[$i]}
+    i=$(($i+1))
+done < .tmp.threads
+
+AWKPROG_P='
+BEGIN {
+	f = 0
+	t_s = 0
+	t_e = 0
+	t_total = 0
+	MATCH_S = "NULL"
+	MATCH_E = "NULL"
+
+	if(match(pair, "se")) {
+		MATCH_S = "start"	
+		MATCH_E = "end"
+	} else if(match(pair, "fmwd")) {
+		MATCH_S = "wait$"
+		MATCH_E = "wait_done"
+	} else if(match(pair, "fmrd")) {
+		MATCH_S = "read$"
+		MATCH_E = "read_done"
+	} else if(match(pair, "swrd")) {
+		MATCH_S = "rd$"
+		MATCH_E = "rd_done"
+	} else if(match(pair, "bg")) {
+		MATCH_S = "begin"
+		MATCH_E = "end"
+	}
+}
+{
+	if(match($5,MATCH_S)) { 
+		f = 1
+		t_s = $4
+	} else if(match($5,MATCH_E)) {
+		if(f == 1) {
+			f = 0
+			t_e = $4
+			t_total += (t_e - t_s)
+		}
+	}
+}
+END {
+	#if (t_total > 0) {
+		printf("%s\n", thread);
+		printf("\t%s\t%2.6f\n", item, t_total);
+		printf("\n");
+	#}
+}
+'
+
+for ((i=0;i<${#threads[@]};i=$i+1))
+do
+	grep "${threads[$i]}"|grep "mm_shrink_slab_start\|mm_shrink_slab_end" $1 | awk -v item=mm_shrink_slab  -v pair=se -v thread=${threads[$i]} "$AWKPROG_P"
+	#grep "${threads[$i]}\|mm_fmflt_op_wait\|mm_fmflt_op_wait_done" $1 | awk -v item=mm_fmflt_op_wait  -v pair=fmwd thread=${threads[$i]} "$AWKPROG_P"
+	#grep "${threads[$i]}\|mm_fmflt_op_read\|mm_fmflt_op_read_done" $1 | awk -v item=mm_fmflt_op_read  -v pair=fmrd thread=${threads[$i]} "$AWKPROG_P"
+	#grep "${threads[$i]}\|mm_swap_op_rd\|mm_swap_op_rd_done" $1 | awk -v item=mm_swap_op_rd  -v pair=swrd thread=${threads[$i]} "$AWKPROG_P"
+	#grep "${threads[$i]}\|mm_vmscan_memcg_softlimit_reclaim_begin\|mm_vmscan_memcg_softlimit_reclaim_end" $1 | awk -v item=mm_vmscan_memcg_softlimit_reclaim  -v pair=be thread=${threads[$i]} "$AWKPROG_P"
+	#grep "${threads[$i]}\|mm_vmscan_memcg_reclaim_begin\|mm_vmscan_memcg_reclaim_end" $1 | awk -v item=mm_vmscan_memcg_reclaim  -v pair=be thread=${threads[$i]} "$AWKPROG_P"
+	#grep "${threads[$i]}\|mm_vmscan_direct_reclaim_begin\|mm_vmscan_direct_reclaim_end" $1 | awk -v item=mm_vmscan_direct_reclaim  -v pair=be thread=${threads[$i]} "$AWKPROG_P"
+
+
+	#grep "${threads[$i]}\|mm_vmscan_kswapd_wake" $1 | wc -l  | awk '{print "mm_vmscan_kswapd_wake: " $1 " times"}'
+	#grep "${threads[$i]}\|mm_vmscan_kswapd_sleep" $1 | wc -l | awk '{print "mm_vmscan_kswapd_sleep: " $1 " times"}'
+	#grep "${threads[$i]}\|mm_filemap_add_to_page_cache" $1 | wc -l | awk '{print "mm_filemap_add_to_page_cache: " $1 " times" }'
+	#grep "${threads[$i]}\|mm_filemap_delete_from_page_cache" $1 | wc -l | awk '{print "mm_filemap_delete_from_page_cache: " $1 " times"}'
+done
+
+
+

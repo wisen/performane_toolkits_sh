@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. color.u
+
+if [ -z $1 ];then
+	red "Please enter a filter"
+	exit
+fi
+
+adb shell ps -t | grep --color -i $1

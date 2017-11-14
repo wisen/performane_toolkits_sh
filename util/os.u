@@ -1,0 +1,20 @@
+#!/bin/bash
+
+myscript_os=`uname -o|tr [:upper:] [:lower:]`
+
+terminal_execfile=""
+
+if [ $myscript_os == "cygwin" ];then
+	terminal_execfile="/usr/bin/mintty"
+fi
+
+if [ $myscript_os == "gun/linux" ];then
+	terminal_execfile="/usr/bin/gnome-terminal"
+fi
+
+if [ $myscript_os == "msys" ];then
+	terminal_execfile="/usr/bin/mintty"
+fi
+
+export myscript_os
+export terminal_execfile

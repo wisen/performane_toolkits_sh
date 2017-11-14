@@ -1,0 +1,193 @@
+#!/bin/bash
+
+. color.u
+
+# $1. packagename
+# $2. timestamp
+# $3. ftrace|atrace
+
+#  adb shell atrace --list_categories
+#         gfx - Graphics
+#       input - Input
+#        view - View System
+#     webview - WebView
+#          wm - Window Manager
+#          am - Activity Manager
+#          sm - Sync Manager
+#       audio - Audio
+#       video - Video
+#      camera - Camera
+#         hal - Hardware Modules
+#         app - Application
+#         res - Resource Loading
+#      dalvik - Dalvik VM
+#          rs - RenderScript
+#        hwui - HWUI
+#        perf - Performance
+#      bionic - Bionic C Library
+#       power - Power Management
+#          pm - Package Manager
+#          ss - System Server
+#    database - Database
+#       sched - CPU Scheduling
+#         irq - IRQ Events
+#        freq - CPU Frequency
+#        idle - CPU Idle
+#        disk - Disk I/O
+#         mmc - eMMC commands
+#        load - CPU Load
+#        sync - Synchronization
+#       workq - Kernel Workqueues
+#  memreclaim - Kernel Memory Reclaim
+#  regulators - Voltage and Current Regulators
+#  binder_driver - Binder Kernel driver
+#  binder_lock - Binder global lock trace
+#   pagecache - Page cache
+
+# trace all:
+# adb shell atrace -a com.andromeda.androbench2 -t5 -b 2048 rs workq webview mmc dalvik freq video regulators 
+# pagecache binder_driver view hal hwui database load wm sm audio power camera perf memreclaim app ss res idle 
+# irq am sync input disk sched binder_lock bionic gfx pm -o //data/sss.txt
+
+# setTraceOverwriteOption 0/1
+# disable or enable overwriting of the kernel trace buffers, Disabling this
+# will cause tracing to stop once the trace buffers have filled up.
+function setTraceOverwriteOption {
+	adb shell "echo $1 > //sys/kernel/debug/tracing/options/overwrite"
+}
+
+# setTraceBufferSizeKB sizeKB
+function setTraceBufferSizeKB {
+	adb shell "echo $1 > /sys/kernel/debug/tracing/buffer_size_kb"
+}
+
+# cleanTraceBuffer
+function cleanTraceBuffer {
+	adb shell "echo > /sys/kernel/debug/tracing/trace"
+}
+
+function turnOnTraceBuffer {
+	adb shell "echo 1 > /sys/kernel/debug/tracing/tracing_on"
+}
+
+function turnOffTraceBuffer {
+	adb shell "echo 0 > /sys/kernel/debug/tracing/tracing_on"
+}
+
+# setTraceClock local|global|counter|uptime|perf|mono
+# Enable or disable the kernel's use of the global clock.  Disabling the global
+# clock will result in the kernel using a per-CPU local clock.
+# Any write to the trace_clock sysfs file will reset the buffer, so only
+# update it if the requested value is not the current value.
+function setTraceClock {
+	adb shell "echo $1 > //sys/kernel/debug/tracing/trace_clock"
+}
+
+# setKernelOptions 0/1
+# 1: enable kernel options 0: disable kernel options
+function setKernelOptions {
+	#   CPU Scheduling
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/sched/sched_switch/enable" #req
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/sched/sched_wakeup/enable" #req
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/sched/sched_blocked_reason/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/sched/sched_cpu_hotplug/enable"
+	#   IRQ Events
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/irq/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/ipi/enable"
+	#   CPU Frequency
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/power/cpu_frequency/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/power/clock_set_rate/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/power/cpu_frequency_limits/enable"
+	#   Memory Bus Utilization
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/memory_bus/enable"
+	#   CPU Idle
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/power/cpu_idle/enable" 
+	#   Disk I/O
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/f2fs/f2fs_sync_file_enter/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/f2fs/f2fs_sync_file_exit/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/f2fs/f2fs_write_begin/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/f2fs/f2fs_write_end/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/ext4/ext4_da_write_begin/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/ext4/ext4_da_write_end/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/ext4/ext4_sync_file_enter/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/ext4/ext4_sync_file_exit/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/block/block_rq_issue/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/block/block_rq_complete/enable"
+	#   eMMC commands
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/mmc/enable"
+	#   CPU Load
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/cpufreq_interactive/enable"
+	#   Synchronization
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/sync/enable"
+	#   Kernel Workqueues
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/workqueue/enable"
+	#   Kernel Memory Reclaim
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/vmscan/mm_vmscan_direct_reclaim_begin/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/vmscan/mm_vmscan_direct_reclaim_end/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/vmscan/mm_vmscan_kswapd_wake/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/vmscan/mm_vmscan_kswapd_sleep/enable"
+	#   Voltage and Current Regulators
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/regulator/enable"
+
+	#   Binder Kernel driver
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/binder/binder_transaction/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/binder/binder_transaction_received/enable"
+	#   Binder global lock trace
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/binder/binder_lock/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/binder/binder_locked/enable"
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/binder/binder_unlock/enable"
+	#   Page cache
+	adb shell "echo $1 > //sys/kernel/debug/tracing/events/filemap/enable"
+}
+
+function record_atrace {
+	adb shell atrace -a com.andromeda.androbench2 -t5 -b 2048 rs workq webview mmc dalvik freq video regulators pagecache binder_driver view hal hwui database load wm sm audio power camera perf memreclaim app ss res idle irq am sync input disk sched binder_lock bionic gfx pm -o //data/sss.txt
+	#adb shell atrace -a com.andromeda.androbench2 -t5 -b 2048 rs mmc dalvik  view hal hwui load wm sm memreclaim app ss res am sync input gfx pm -o //data/sss.txt
+}
+
+function record_ftrace {
+	# step 1
+
+	# step 2
+	setTraceOverwriteOption 0
+
+	# set event filters
+	adb shell "echo filemap > /sys/kernel/debug/tracing/set_event"
+	adb shell "echo vmscan >> /sys/kernel/debug/tracing/set_event"
+	adb shell "echo writeback >> /sys/kernel/debug/tracing/set_event"
+
+	# Disable all /sys/ enable files
+	setKernelOptions 0
+	# then enbale all /sys/ enable files
+	setKernelOptions 1
+
+
+	# tmp save the current pid
+	echo $$ > .tmp.ftrace_pid
+
+	# enable tarce
+	adb shell "echo 1 > /sys/kernel/debug/tracing/tracing_on"
+	while true
+	do
+		adb shell "cat /sys/kernel/debug/tracing/trace" >> $logfile_trace
+	done
+}
+
+start_trace_time=`date "+%Y%m%d%H%M%S"`
+phone_utc_time=`adb shell date "+%Y%m%d%H%M%S"`
+
+if [ -z $3 ];then
+	logfile_trace=logfile_ftrace#$1#$2#$phone_utc_time#$start_trace_time#.txt
+else 
+	if [ $3 == "ftrace" ];then
+		logfile_trace=logfile_ftrace#$1#$2#$phone_utc_time#$start_trace_time#.txt
+	fi
+	
+	if [ $3 == "atrace" ];then
+		logfile_trace=logfile_atrace#$1#$2#$phone_utc_time#$start_trace_time#.txt
+	fi
+	
+	red_white "Cannot recongnize the parameters $3, it just can be ftrace|atrace"
+fi
+
+

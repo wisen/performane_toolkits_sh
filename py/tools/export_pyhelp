@@ -1,0 +1,20 @@
+#!/usr/bin/env python
+
+import sys
+import pydoc
+ 
+def output_help_to_file(filepath, request):
+	f = open(filepath,'w')
+	out = sys.stdout
+	sys.stdout = f
+	pydoc.help(request)
+	f.close()
+	#sys.stdout = sys.__stdout__
+	sys.stdout = out
+	return
+
+modulename=sys.argv[1]
+filename=modulename+".txt"
+print(modulename)
+print(filename)
+output_help_to_file(filename, modulename)

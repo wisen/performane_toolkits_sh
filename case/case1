@@ -1,0 +1,38 @@
+#!/bin/bash
+. os.u
+
+# case1 packname seed
+
+logfile_case_actions=logfile_case_actions_$1
+#logfile_case_record_gfx=logfile_case1_record_gfx_$1
+#logfile_case_record_meminfo=logfile_case1_record_meminfo_$1
+
+#if [ -f .tmp.case1.flag ];then
+#    case1_flag=`cat .tmp.case1.flag|awk '{print $1}'`
+#else
+#    case1_flag=false
+#fi
+
+#if [ $case1_flag == "false" ];then
+#    $terminal_execfile -t "Record gfxinfo" -h always -w max --log logfile_case1_gfx_systemui -e monitor gfx systemui  &
+#    $terminal_execfile -t "Record gfxinfo" -h always -w max --log logfile_case1_gfx_launcher -e monitor gfx com.transsion.XOSLauncher  &
+#    $terminal_execfile -t "Record gfxinfo" -h always -w max --log logfile_case1_gfx_wakegesture -e monitor gfx com.infinix.wakegesture  &
+#    $terminal_execfile -t "Record gfxinfo" -h always -w max --log logfile_case1_gfx_system_server -e monitor gfx system_server  &
+#    echo true > .tmp.case1.flag
+#fi
+
+echo "["`date "+%Y-%m-%d %H:%M:%S"`"]Start Monkey to: "$1 | tee -a $logfile_case_actions
+adb shell monkey --ignore-crashes --ignore-timeouts --throttle 300 --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes -p $1 -s $2 10000 | tee -a $logfile_case_actions
+adb shell dumpsys gfxinfo $1|awk '
+                                    /TextureCache/{print $1,$2,$4}
+                                    /LayerCache/{print $1,$2,$4}
+                                    /RenderBufferCache/{print $1,$2,$4}
+                                    /GradientCache/{print $1,$2,$4}
+                                    /PathCache/{print $1,$2,$4}
+                                    /TessellationCache/{print $1,$2,$4}
+                                    /TextDropShadowCache/{print $1,$2,$4}
+                                    /PatchCache/{print $1,$2,$4}
+                                    /FontRenderer A8/{print $1,$3,$5}
+                                    /FontRenderer RGBA/{print $1,$5,$5}
+                                    /FboCache/{print $1,$2,$4}
+                                  ' | tee -a logfile_case1_gfx_$1.txt

@@ -1,0 +1,176 @@
+set backspace=indent,eol,start
+set fenc=utf-8 "设定默认解码 
+set fencs=utf-8,usc-bom,gb18030,gbk,gb2312,cp936,euc-jp
+set nocp "或者 set nocompatible 用于关闭VI的兼容模式 
+set number "显示行号 
+set ai "或者 set autoindent vim使用自动对齐，也就是把当前行的对齐格式应用到下一行 
+set si "或者 set smartindent 依据上面的对齐格式，智能的选择对齐方式
+set tabstop=4 "设置tab键为4个空格
+set sw=4 "或者 set shiftwidth 设置当行之间交错时使用4个空格
+set ruler "设置在编辑过程中,于右下角显示光标位置的状态行 
+set incsearch "设置增量搜索,这样的查询比较smart 
+set showmatch "高亮显示匹配的括号 
+set matchtime=5 "匹配括号高亮时间(单位为 1/10 s) set ignorecase "在搜索的时候忽略大小写 
+syntax on "高亮语法
+"colorscheme desert
+"colorscheme murphy 
+set hls   "搜索高亮
+"let Tlist_Ctags_Cmd='/bin/ctags'
+"let Tlist_Show_One_File=1
+"let Tlist_Exit_OnlyWindow=1
+"let Tlist_Use_Right_Window=1
+"let Tlist_Auto_Open=1
+"let Tlist_WinWidth=50
+   "F7 NERDTree
+   "map <F7> :NERDTreeToggle<CR>
+   "imap <F7> <ESC>:NERDTreeToggle<CR>
+   "
+   ""F12 TlistToggle
+"map <F12> :TlistToggle<CR>
+"map <F2> :NERDTree<CR>
+"imap <F12> <ESC>:TlistToggle<CR>
+set cursorline "开启高亮光标列
+hi CursorLine   cterm=NONE ctermbg=blue ctermfg=white guibg=gray guifg=white
+set gcr=n-v-c:ver25-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-Cursor/lCursor
+hi cursor cterm=bold ctermfg=128 ctermbg=0 guifg=slategrey guibg=khaki
+set mouse=a  "always use mouse
+" 显示中文帮助
+if version >= 603
+    set helplang=cn
+    set encoding=utf-8
+endif
+"--状态行设置--
+set laststatus=2
+"总显示最后一个窗口的状态行；设为1则窗口数多于一个的时候显示最后一个窗口的状态行；0不显示最后一个窗口的状态行
+set ruler "
+"标尺，用于显示光标位置的行号和列号，逗号分隔。每个窗口都有自己的标尺。如果窗口有状态行，标尺在那里显示。否则，它显示在屏幕的最后一行上。
+"
+""--命令行设置--
+set showcmd " 命令行显示输入的命令
+set showmode " 命令行显示vim当前模式
+"--ctags setting--
+"" 按下F5重新生成tag文件，并更新taglist
+"map <F5> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR><CR> :TlistUpdate<CR>
+"imap <F5> <ESC>:!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR><CR> :TlistUpdate<CR>
+"set tags=tags
+"set tags+=./tags "add current directory's generated tags file
+"set tags+=~/arm/linux-2.6.24.7/tags "add new tags file(刚刚生成tags的路径，在ctags -R 生成tags文件后，不要将tags移动到别的目录，否则ctrl+］时，会提示找不到源码文件)
+
+"set tags+=./tags表示在当前工作目录下搜索tags文件
+
+
+"-------SrcExpl setting start----------
+" // The switch of the Source Explorer
+" " 
+" " nmap <F8> :SrcExplToggle<CR> 
+" "
+" " 
+" " // Set the height of Source Explorer window
+" " 
+" " let g:SrcExpl_winHeight = 8 
+" "
+" " 
+" " // Set 100 ms for refreshing the Source Explorer
+" " 
+" " let g:SrcExpl_refreshTime = 100 
+" "
+" " 
+" " // Set "Enter" key to jump into the exact definition context
+" " 
+" " let g:SrcExpl_jumpKey = "<ENTER>" 
+" "
+" " 
+" " // Set "Space" key for back from the definition context
+" " 
+" " let g:SrcExpl_gobackKey = "<SPACE>" 
+" "
+" " 
+" " // In order to avoid conflicts, the Source Explorer should know what
+" plugins " 
+" " // except itself are using buffers. And you need add their buffer names
+" into " 
+" " // below listaccording to the command ":buffers!"
+" " 
+" " let g:SrcExpl_pluginList = [ 
+" "         \ "__Tag_List__", 
+" "         \ "_NERD_tree_" 
+" "     \ ] 
+" "
+" " 
+" " // Enable/Disable the local definition searching, and note that this is
+" not  " 
+" " // guaranteed to work, the Source Explorer doesn't check the syntax for
+" now. " 
+" " // It only searches for a match with the keyword according to command 'gd'
+" " 
+" " let g:SrcExpl_searchLocalDef = 1 
+" "
+" " 
+" " // Do not let the Source Explorer update the tags file when opening
+" " 
+" " let g:SrcExpl_isUpdateTags = 0 
+" "
+" " 
+" " // Use 'Exuberant Ctags' with '--sort=foldcase -R .' or '-L cscope.files'
+" to " 
+" " //  create/update a tags file
+" " 
+" " let g:SrcExpl_updateTagsCmd = "ctags --sort=foldcase -R ." 
+" "
+" " 
+" " // Set "<F12>" key for updating the tags file artificially
+" " 
+" " let g:SrcExpl_updateTagsKey = "<F12>" 
+" "
+" " 
+" " // Set "<F3>" key for displaying the previous definition in the jump list
+" " 
+" let g:SrcExpl_prevDefKey = "<F3>" 
+" "
+" " 
+" " // Set "<F4>" key for displaying the next definition in the jump list
+" " 
+" let g:SrcExpl_nextDefKey = "<F4>" 
+"-------SrcExpl setting end------------
+
+
+"-------Trinity setting start----------
+" Open and close all the three plugins on the same time 
+"nmap <F8>   :TrinityToggleAll<CR> 
+"
+" " Open and close the srcexpl.vim separately 
+"nmap <F9>   :TrinityToggleSourceExplorer<CR> 
+"
+" " Open and close the taglist.vim separately 
+"nmap <F10>  :TrinityToggleTagList<CR> 
+"
+" " Open and close the NERD_tree.vim separately 
+"nmap <F11>  :TrinityToggleNERDTree<CR>
+"-------Trinity setting end------------
+
+
+if has("cscope")
+              set csprg=/usr/bin/cscope.exe
+              set csto=0
+              set cst
+              set nocsverb
+              " add any database in current directory
+              if filereadable("cscope.out")
+                  cs add cscope.out
+              " else add database pointed to by environment
+              elseif $CSCOPE_DB != ""
+                  cs add $CSCOPE_DB
+              endif
+              set csverb
+endif
+
+:nn <M-1> 1gt
+:nn <M-2> 2gt
+:nn <M-3> 3gt
+:nn <M-4> 4gt
+:nn <M-5> 5gt
+:nn <M-6> 6gt
+:nn <M-7> 7gt
+:nn <M-8> 8gt
+:nn <M-9> 9gt
+:nn <M-0> :tablast<CR>

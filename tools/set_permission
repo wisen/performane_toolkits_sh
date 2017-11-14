@@ -1,0 +1,54 @@
+#!/bin/bash
+
+#adb shell input --help
+# 1. enter setting->Apps
+
+total_apps=$1
+
+# 2. total app=102
+# 2.1 select app +150*7
+#adb shell input tap 533 350
+#adb shell input tap 533 500
+
+function op_in_app {
+	# 2.2 press permissions
+	adb shell input tap 533 810
+	# 2.3 permission location
+	adb shell input tap 665 330
+	adb shell input tap 650 420
+	adb shell input tap 650 515
+	adb shell input tap 650 610
+	adb shell input tap 650 710
+	adb shell input tap 650 810
+	adb shell input tap 650 910
+	adb shell input tap 650 1010
+	adb shell input tap 650 1020
+	# 2.4 back to app info 
+	adb shell input keyevent 4
+	# 2.5 back to app list
+	adb shell input keyevent 4
+}
+
+start_position_y=350
+delta_distance_y=150
+current_position_y=0
+i=0
+for ((j=0;j<$total_apps;j=$j+1))
+do
+	if [ `expr ${j} % 7` == 0 ];then		
+		if [ $j -ne 0 ];then
+			echo "swipe"
+			current_position_y=0
+			adb shell input swipe 600 780 600 145
+		fi
+		i=0
+	fi
+	
+	((current_position_y=$start_position_y+$delta_distance_y*$i))
+	((i=$i+1))
+	echo $current_position_y
+	adb shell input tap 533 $current_position_y
+	op_in_app
+done
+
+

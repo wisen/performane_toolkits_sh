@@ -1,0 +1,41 @@
+#!/bin/bash
+echo > trace.txt
+echo "START: trace_marker" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/trace_marker >> trace.txt
+echo "START: trace_options" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/trace_options >> trace.txt
+echo "START: current_tracer" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/current_tracer >> trace.txt
+echo "START: available_tracers" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/available_tracers >> trace.txt
+echo "START: available_events" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/available_events >> trace.txt
+echo "START: buffer_size_kb" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/buffer_size_kb >> trace.txt
+echo "START: buffer_total_size_kb" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/buffer_total_size_kb >> trace.txt
+echo "START: free_buffer" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/free_buffer >> trace.txt
+echo "START: printk_formats" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/printk_formats >> trace.txt
+echo "START: saved_cmdlines" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/saved_cmdlines >> trace.txt
+echo "START: saved_cmdlines_size" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/saved_cmdlines_size >> trace.txt
+echo "START: saved_tgids" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/saved_tgids >> trace.txt
+echo "START: set_event" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/set_event >> trace.txt
+echo "START: trace_clock" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/trace_clock >> trace.txt
+echo "START: trace_options" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/trace_options >> trace.txt
+echo "START: trace_pipe" >> trace.txt
+#adb shell cat /sys/kernel/debug/tracing/trace_pipe >> trace.txt
+echo "START: tracing_cpumask" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/tracing_cpumask >> trace.txt
+echo "START: tracing_thresh" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/tracing_thresh >> trace.txt
+echo "START: tracing_on" >> trace.txt
+adb shell cat /sys/kernel/debug/tracing/tracing_on >> trace.txt
+

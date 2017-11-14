@@ -1,0 +1,287 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for calcing activity launch time
+# Date: 2017-02-26
+
+# calc_case applist meminfolog eventlog kernellog
+
+applistfile=$1
+logfile_meminfo=$2
+logfile_eventlog=$3
+logfile_kernellog=$4
+logfile_vmstatlog=$5
+
+echo "               ##############################################################"
+echo "               # Please confirm your logfile sequnce:                       #"
+echo "               # calc_case applist meminfolog eventlog kernellog vmstatlog  #"
+echo "               # If you are sure, then press any key to continue..          #"
+echo "               ##############################################################"
+read -n 1
+echo
+
+i=0
+while read line
+do
+    #echo "Start app: "$line
+    #adb shell "am start $line"
+    activities[$i]=`echo $line|sed 's/^M//g'`
+    echo "Parse file: activities[$i]="${activities[$i]}
+    #sleep 5
+    packages[$i]=`echo $line|awk -F "/" '{print $1}'`
+    echo "Parse file: packages[$i]="${packages[$i]}
+    #echo "Force Stop package: "$stop_package
+    #adb shell "am force-stop $stop_package"
+    #adb shell "echo 3 > /proc/sys/vm/drop_caches"
+    #adb shell "sync"
+    i=$(($i+1))
+done < $applistfile
+
+echo "app count: "$i
+#echo "Enter test loop:"
+
+function clac_the_result {
+
+	echo
+	echo
+	result_time=`date "+%Y%m%d%H%M%S"`
+	logfile_result=logfile_result.$result_time.txt
+	#logfile_result=test.xls
+	# 0. collect the related information
+	#echo "#######################################################" | tee -a $logfile_result
+	#echo "#                  Misc information                   #" | tee -a $logfile_result
+	#echo "#######################################################" | tee -a $logfile_result
+	#echo | tee -a $logfile_result
+	#echo "extra_free_kbytes: "`adb shell "cat /proc/sys/vm/extra_free_kbytes"` | tee -a $logfile_result
+	#echo "adj:               "`adb shell "cat /sys/module/lowmemorykiller/parameters/adj"` | tee -a $logfile_result
+	#echo "minfree:           "`adb shell "cat /sys/module/lowmemorykiller/parameters/minfree"` | tee -a $logfile_result
+	
+	echo | tee -a $logfile_result
+	echo | tee -a $logfile_result
+	
+	# 1. calc $logfile_meminfo
+	echo "#######################################################" | tee -a $logfile_result
+	echo "#             Memory related information              #" | tee -a $logfile_result
+	echo "#######################################################" | tee -a $logfile_result
+	echo | tee -a $logfile_result
+	
+	sed '/Time/d' $logfile_meminfo | sed '/^$/d' | awk '
+										BEGIN{count=0;} 
+										{
+											if(NR==1){AocStal_start=$15;}
+											MemFree+=$2;
+											Buffers+=$3;
+											Cached+=$4;
+											SwapCah+=$5;
+											Active+=$6;
+											Inact+=$7;
+											Shmem+=$8;
+											Anon+=$9;
+											ThHold+=$10;
+											CanUse+=$11;
+											Avail+=$12;
+											SwapT+=$13;
+											SwapF+=$14;
+											AocStal_end=$15;
+											count++;
+										}
+									
+										END{
+											#printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+											#"MemFree","Buffers","Cached","SwapCah","Active","Inact","Shmem","Anon","ThHold","CanUse","Avail","SwapT","SwapF","AocStal");
+											printf("%s\n", "MemFree\tBuffers\tCached\tSwapCah\tActive\tInact\tShmem\tAnon\tThHold\tCanUse\tAvail\tSwapT\tSwapF\tAocStal");
+											printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%d\n",
+											MemFree/count,Buffers/count,Cached/count,SwapCah/count,Active/count,Inact/count,Shmem/count,
+											Anon/count,ThHold/count,CanUse/count,Avail/count,SwapT/count,SwapF/count,AocStal_end-AocStal_start);
+										}
+									' | tee -a $logfile_result
+	
+	echo | tee -a $logfile_result
+	echo | tee -a $logfile_result
+
+	# 2. calc the launch time
+	echo "#######################################################" | tee -a $logfile_result
+	echo "#             Collect Apps Launch ThisTime            #" | tee -a $logfile_result
+	echo "#######################################################" | tee -a $logfile_result
+	echo | tee -a $logfile_result
+	echo -e "Cycles\tMin\tAVG\tMax\tActivities"  | tee -a $logfile_result
+	for ((i=0;i<${#activities[@]};i=$i+1))
+	do
+		#echo ${activities[$i]}
+		activity=`echo ${activities[$i]}|awk -F "/" '{if(NR==1) print $2;}'`
+		#echo $activity
+		#cat $logfile |awk -F "/" '{print $2;}'|sed 's/]//g'|awk -F "," -v a_activity="$activity" 'BEGIN{count=0;} /a_activity/{sum=sum+$3;count++;} END{print a_activity,count,sum/count;}'
+		#cat $logfile |awk -F "/" '{print $2;}'|sed 's/]//g'
+		sed 's/]//g' $logfile_eventlog |grep "${activities[$i]}"|awk -F "," -v a_activity="${activities[$i]}" '
+																		BEGIN{count=0;min=0;max=0;} 
+																		{
+																			if(0==count){
+																				min=$4;max=$4;
+																			} else {
+																				if($4<min) min=$4;
+																				if($4>max) max=$4;
+																			}
+																			sum=sum+$4;
+																			count++;
+																		} 
+																		END{if (count!=0) printf("%d\t%d\t%d\t%d\t%s\n", count, min, sum/count, max, a_activity); }
+																		' | tee -a $logfile_result
+		#sleep 2
+	done
+	echo | tee -a $logfile_result
+	echo | tee -a $logfile_result
+	
+	echo "#######################################################" | tee -a $logfile_result
+	echo "#             Collect Apps Launch TotalTime           #" | tee -a $logfile_result
+	echo "#######################################################" | tee -a $logfile_result
+	echo | tee -a $logfile_result
+	echo -e "Cycles\tMin\tAVG\tMax\tActivities"  | tee -a $logfile_result
+	for ((i=0;i<${#activities[@]};i=$i+1))
+	do
+		#echo ${activities[$i]}
+		activity=`echo ${activities[$i]}|awk -F "/" '{if(NR==1) print $2;}'`
+		#echo $activity
+		#cat $logfile |awk -F "/" '{print $2;}'|sed 's/]//g'|awk -F "," -v a_activity="$activity" 'BEGIN{count=0;} /a_activity/{sum=sum+$3;count++;} END{print a_activity,count,sum/count;}'
+		#cat $logfile |awk -F "/" '{print $2;}'|sed 's/]//g'
+		sed 's/]//g' $logfile_eventlog |grep "${activities[$i]}"|awk -F "," -v a_activity="${activities[$i]}" '
+																		BEGIN{count=0;min=0;max=0;} 
+																		{
+																			if(0==count){
+																				min=$5;max=$5;
+																			} else {
+																				if($5<min) min=$5;
+																				if($5>max) max=$5;
+																			}
+																			sum=sum+$5;
+																			count++;
+																		} 
+																		END{if (count!=0) printf("%d\t%d\t%d\t%d\t%s\n", count, min, sum/count, max, a_activity); }
+																		' | tee -a $logfile_result
+		#sleep 2
+	done
+	
+	# clac the carsh times
+	echo | tee -a $logfile_result
+	echo | tee -a $logfile_result
+	echo "#######################################################" | tee -a $logfile_result
+	echo "#              Collect Apps Crash Time                #" | tee -a $logfile_result
+	echo "#######################################################" | tee -a $logfile_result
+	echo -e "PacName\tCrash" | tee -a $logfile_result
+	for ((i=0;i<${#packages[@]};i=$i+1))
+	do
+
+		activity=`echo ${packages[$i]}|awk -F "/" '{if(NR==1) print $2;}'`
+		#echo $activity
+
+		sed 's/]//g' $logfile_eventlog |grep "${packages[$i]}"|awk -F "," -v a_package="${packages[$i]}" '
+																		BEGIN{count=0;}
+																		/crash/{count++}
+																		END{printf("%s\t%d\n",a_package, count); }
+																		' | tee -a $logfile_result
+		#sleep 2
+	done
+	
+	echo | tee -a $logfile_result
+	echo | tee -a $logfile_result
+	
+	# 3. clac lmk count
+	echo "#######################################################" | tee -a $logfile_result
+	echo "#             Collect LMK killer count                #" | tee -a $logfile_result
+	echo "#######################################################" | tee -a $logfile_result
+	#lmkkiller_count=`cat $logfile_kernellog | grep "Killing '"|wc -l`
+	cat $logfile_kernellog | grep "Killing '"|awk -F "," '{print $2,$3;}'|awk '
+																	BEGIN{count=0;}
+																	{
+																	if($2==0){adj0+=1;}
+																	if($2==1){adj1+=1;}
+																	if($2==2){adj2+=1;}
+																	if($2==3){adj3+=1;}
+																	if($2==4){adj4+=1;}
+																	if($2==5){adj5+=1;}
+																	if($2==6){adj6+=1;}
+																	if($2==7){adj7+=1;}
+																	if($2==8){adj8+=1;}
+																	if($2==9){adj9+=1;}
+																	if($2==10){adj10+=1;}
+																	if($2==11){adj11+=1;}
+																	if($2==12){adj12+=1;}
+																	if($2==13){adj13+=1;}
+																	if($2==14){adj14+=1;}
+																	if($2==15){adj15+=1;}
+																	if($2==16){adj16+=1;}
+																	count++;
+																	}
+
+																	END{
+																		printf("%s\n", "ADJ\t0\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10\t11\t12\t13\t14\t15\t16\tTotal");
+																		printf("%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+																				"Count",adj0,adj1,adj2,adj3,adj4,adj5,adj6,adj7,adj8,adj9,adj10,adj11,adj12,adj13,adj14,adj15,adj16,count);
+																	}
+																	' | tee -a $logfile_result
+	echo | tee -a $logfile_result
+	echo | tee -a $logfile_result
+																	
+																	
+	echo "#######################################################" | tee -a $logfile_result
+	echo "#             VMstat related information              #" | tee -a $logfile_result
+	echo "#######################################################" | tee -a $logfile_result
+
+	sed '/procs/d' $logfile_vmstatlog|sed '/swpd/d' |sed  '/^$/d'|awk '
+																		BEGIN{
+																			line=0
+																			printf("%s\n", "r\tb\tswpd\tfree\tbuff\tcache\tsi\tso\tbi\tbo\tin\tcs\tus\tsy\tid\twa");
+																		}
+																		
+																		{
+																			if(NR==1) {
+																				r=$1;
+																				b=$2;
+																				swpd=$3;
+																				free=$4;
+																				buff=$5;
+																				cache=$6;
+																				si=$7;
+																				so=$8;
+																				bi=$9;
+																				bo=$10;
+																				inin=$11;
+																				cs=$12;
+																				us=$13;
+																				sy=$14;
+																				id=$15;
+																				wa=$16;
+																			} else {
+																				r=(r+$1)/2;
+																				b=(b+$2)/2;
+																				swpd=(swpd+$3)/2;
+																				free=(free+$4)/2;
+																				buff=(buff+$5)/2;
+																				cache=(cache+$6)/2;
+																				si=(si+$7)/2;
+																				so=(so+$8)/2;
+																				bi=(bi+$9)/2;
+																				bo=(bo+$10)/2;
+																				inin=(inin+$11)/2;
+																				cs=(cs+$12)/2;
+																				us=(us+$13)/2;
+																				sy=(sy+$14)/2;
+																				id=(id+$15)/2;
+																				wa=(wa+$16)/2;
+																			}
+																			#line++;
+																			#printf("%d: %.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n",
+																			#			r,b,swpd,free,buff,cache,si,so,bi,bo,inin,cs,us,sy,id,wa);
+																		}
+																		
+																		END{
+																			
+																			printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n",
+																					r,b,swpd/1024,free/1024,buff/1024,cache/1024,si,so,bi,bo,inin,cs,us,sy,id,wa);
+																		}
+																		'| tee -a $logfile_result
+	echo | tee -a $logfile_result
+	echo | tee -a $logfile_result															
+																	
+}
+
+clac_the_result
+

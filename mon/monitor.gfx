@@ -1,0 +1,63 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for monitoring gfxinfo
+# Date: 2017-02-26
+
+. color.u
+
+function monitor_gfx_by_processname {
+
+	if [ -z $1 ];then
+		red "You should enter a processname!"
+		exit
+	fi
+
+	records=`adb shell ps | grep "$1"|awk 'END{print NR}'`
+	if [ $records -gt 1 ];then
+		red "ProcessName is not uniq:"
+		adb shell ps | grep "$1" --color
+		exit
+	fi
+
+	if [ $records -lt 1 ];then
+		red "No process named $1"
+		exit
+	fi
+
+	processname=`adb shell ps | grep "$1"|awk '{print $9}'`
+	echo -e "Begin to monitor the gfxinfo of process: \c"
+	green $processname
+	title="TC\tTCtotal\tLC\tTCtotal\tRB\tRBtotal\tGC\tGCtotal\tPC\tPCtotal\tTeC\tTetotal\tTDSC\tTdtotal\tFR\tFRtotal\tFB\tFBtotal"
+	line=0
+	while true
+	do
+		if [ `expr ${line} % 50` == 0 ];then
+			#echo -e ${title}
+			blue_white ${title}
+		fi
+		line=`expr ${line} + 1`
+
+		adb shell dumpsys gfxinfo $processname | awk '
+												BEGIN{
+													gl_line=1;
+												}
+												/TextureCache/{if($2!=0) tc_current=$2/1024/1024; else tc_current=0; if($4!=0) tc_total=$4/1024/1024; else tc_total=0;}
+                                                /LayerCache/{if($2!=0) lc_current=$2/1024/1024; else lc_current=0; if($4!=0) lc_total=$4/1024/1024; else lc_total=0;}
+                                                /RenderBufferCache/{if($2!=0) rbc_current=$2/1024/1024; else rbc_current=0; if($4!=0) rbc_total=$4/1024/1024; else rbc_total=0;}
+                                                /GradientCache/{if($2!=0) gc_current=$2/1024/1024; else gc_current=0; if($4!=0) gc_total=$4/1024/1024; else gc_total=0;}
+                                                /PathCache/{if($2!=0) pc_current=$2/1024/1024; else pc_current=0; if($4!=0) pc_total=$4/1024/1024; else pc_total=0;}
+                                                /TessellationCache/{if($2!=0) tec_current=$2/1024/1024; else tec_current=0; if($4!=0) tec_total=$4/1024/1024; else tec_total=0;}
+                                                /TextDropShadowCache/{if($2!=0) tdsc_current=$2/1024/1024; else tdsc_current=0; if($4!=0) tdsc_total=$4/1024/1024; else tdsc_total=0;}
+                                                #/PatchCache/{if($2!=0) tc_current=$2/1024/1024; else tc_current=0; if($4!=0) tc_total=$4/1024/1024; else tc_total=0;}
+                                                /FontRenderer A8/{if($3!=0) fr_current=$3/1024/1024; else fr_current=0; if($5!=0) fr_total=$5/1024/1024; else fr_total=0;}
+                                                /FboCache/{if($2!=0) fc_current=$2/1024/1024; else fc_current=0; if($4!=0) fc_total=$4/1024/1024; else fc_total=0;}
+												END{
+													printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n",
+															tc_current, tc_total, lc_current, lc_total, rbc_current, rbc_total,
+															gc_current, gc_total, pc_current, pc_total, tec_current, tec_total,
+															tdsc_current, tdsc_total, fr_current, fr_total, fc_current, fc_total);
+												}
+												'
+		sleep 0.5
+	done
+}

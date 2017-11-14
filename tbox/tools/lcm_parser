@@ -1,0 +1,124 @@
+#!/bin/bash
+
+function usage() {
+    echo "Usage:"
+    echo "    lcm_parser lcm_driver_srcFile"
+    echo "example:"
+    echo "    lcm_parser /z/source/x556n_india/kernel-3.18/drivers/misc/mediatek/lcm/ili9881c_hd720_dsi_vdo_cmi/ili9881c_hd720_dsi_vdo_cmi.c"
+}
+
+if [ $# -eq 0 ];then
+    usage
+    exit
+fi
+
+lcm_driver_srcFile=$1
+
+_mode=`grep LCM_DSI_CMD_MODE $lcm_driver_srcFile | awk '{if(NR==1)print $3}'`
+if [ ! -z $_mode ];then
+    if [ $_mode -eq 0 ];then
+        _mode_str="Vedio"
+    else
+        _mode_str="Command"
+    fi
+else
+    _mode=`grep dsi.mode $lcm_driver_srcFile | awk -F "=" '{if(NR==1)print $2}'|sed 's/;//g'`
+    if [ $_mode == "CMD_MODE" ];then
+        _mode_str="Command"
+    else
+        _mode_str="Vedio"
+    fi
+fi
+
+_width=`grep FRAME_WIDTH $lcm_driver_srcFile |awk '{if(NR==1)print $3}'|sed 's/[(-)]//g'`
+_height=`grep FRAME_HEIGHT $lcm_driver_srcFile |awk '{if(NR==1)print $3}'|sed 's/[(-)]//g'`
+
+
+_lane=`grep "dsi.LANE_NUM" $lcm_driver_srcFile | awk -F "=" '{if(NR==1)print $2}'|sed 's/;//g'`
+_lane=`echo $_lane|tr [:lower:] [:upper:]`
+case $_lane in
+    LCM_ONE_LANE)
+        __lane=1
+    ;;
+    LCM_TWO_LANE)
+        __lane=2
+    ;;
+    LCM_THREE_LANE)
+        __lane=3
+    ;;
+    LCM_FOUR_LANE)
+        __lane=4
+    ;;
+    *)
+    echo x5
+    ;;
+esac
+
+_vsync=`grep "dsi.vertical_sync_active" $lcm_driver_srcFile | awk -F "=" '{if(NR==1)print $2}'|sed 's/[,;]//g'|awk -F "/" '{print $1}'`
+_vbp=`grep "dsi.vertical_backporch" $lcm_driver_srcFile | awk -F "=" '{if(NR==1)print $2}'|sed 's/[,;]//g'|awk -F "/" '{print $1}'`
+_vfp=`grep "dsi.vertical_frontporch" $lcm_driver_srcFile | awk -F "=" '{if(NR==1)print $2}'|sed 's/[,;]//g'|awk -F "/" '{print $1}'`
+
+_hsync=`grep "dsi.horizontal_sync_active" $lcm_driver_srcFile | awk -F "=" '{if(NR==1)print $2}'|sed 's/[,;]//g'|awk -F "/" '{print $1}'`
+_hbp=`grep "dsi.horizontal_backporch" $lcm_driver_srcFile | awk -F "=" '{if(NR==1)print $2}'|sed 's/[,;]//g'|awk -F "/" '{print $1}'`
+_hfp=`grep "dsi.horizontal_frontporch" $lcm_driver_srcFile | awk -F "=" '{if(NR==1)print $2}'|sed 's/[,;]//g'|awk -F "/" '{print $1}'`
+
+_pll=`grep "dsi.PLL_CLOCK" $lcm_driver_srcFile | awk -F "=" '{if(NR==1)print $2}'|sed 's/[,;]//g'|awk -F "/" '{print $1}'`
+
+_format=`grep "dsi.data_format.format" $lcm_driver_srcFile | awk -F "=" '{if(NR==1)print $2}'|sed 's/[,;]//g'|awk -F "/" '{print $1}'`
+_format=`echo $_format|tr [:lower:] [:upper:]`
+case $_format in
+    LCM_DSI_FORMAT_RGB888|LCM_DPI_FORMAT_RGB666)
+        _bpp=3
+    ;;
+    LCM_DPI_FORMAT_RGB565)
+        _bpp=2
+    ;;
+esac
+
+echo "Mode:   "$_mode_str
+echo "Width:  "$_width
+echo "Height: "$_height
+echo "Lane:   "$__lane
+echo "VSYNC:  "$_vsync
+echo "VBP:    "$_vbp
+echo "VFP:    "$_vfp
+echo "HSYNC:  "$_hsync
+echo "HBP:    "$_hbp
+echo "HFP:    "$_hfp
+echo "PLL:    "$_pll
+echo "BPP:    "$_bpp
+
+python $SCRIPT_ROOT/py/tools/calc_fps --mode=$_mode_str\
+    --width $_width \
+    --height $_height \
+    --vsync $_vsync \
+    --vbp $_vbp \
+    --vfp $_vfp \
+    --hsync $_hsync \
+    --hbp $_hbp \
+    --hfp $_hfp \
+    --pll $_pll \
+    --bpp $_bpp \
+    --lane $__lane
+
+#fps=`awk -v width=$_width \
+#    -v height=$_height \
+#    -v vsync=$_vsync \
+#    -v vbp=$_vbp \
+#    -v vfp=$_vfp \
+#    -v hsync=$_hsync \
+#    -v hbp=$_hbp \
+#    -v hfp=$_hfp \
+#    -v pll=$_pll \
+#    -v bpp=$_bpp \
+#    -v lane=$__lane \
+#    '
+#    BEGIN{
+#        datarate=pll*2;
+#        pixclk=datarate*lane/(bpp*8);
+#        tline=(width+hsync+hbp+hfp)/pixclk;
+#        tframe=tline*height/1000;
+#        fps=1/tframe;
+#        print fps;
+#        }
+#    ' $lcm_driver_srcFile`

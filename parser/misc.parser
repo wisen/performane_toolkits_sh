@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# collect_misc_info
+function collect_misc_info {
+	# 0. collect the related information
+	echo "#######################################################"
+	echo "#                  Misc information                   #"
+	echo "#######################################################"
+	echo "dirty_ratio:       "`adb shell "cat /proc/sys/vm/dirty_ratio"`
+	echo "bg_ratio:          "`adb shell "cat /proc/sys/vm/dirty_background_ratio"`
+	echo "extra_free_kbytes: "`adb shell "cat /proc/sys/vm/extra_free_kbytes"`
+	echo "adj:               "`adb shell "cat /sys/module/lowmemorykiller/parameters/adj"`
+	echo "minfree:           "`adb shell "cat /sys/module/lowmemorykiller/parameters/minfree"`
+	
+	echo
+	echo
+}

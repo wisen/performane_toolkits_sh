@@ -1,0 +1,29 @@
+#!/bin/bash
+
+arm_platform=`adb shell cat //proc/cpuinfo|grep Hardware|awk -F ":" '{print $2}'`
+arm_cpu_abilist64=`adb shell getprop ro.product.cpu.abilist64`
+if [ -z $arm_cpu_abilist64 ];then
+    arm_cpu_bits=32bits
+else
+    arm_cpu_bits=64bits
+fi
+os_build_vesion=`adb shell getprop ro.bootimage.build.fingerprint|awk -F "/" '{print $5}'|awk -F ":" '{print $2}'`
+os_build_id=`adb shell getprop ro.build.id|awk '{if(NR==1) print $0}'`
+os_build_product=`adb shell getprop ro.build.product|awk '{if(NR==1) print $0}'`
+os_build_displayid=`adb shell getprop ro.build.display.id`
+
+root_str=$(adb root|grep "production builds")
+
+if [ ! -n "$root_str" ];then
+    isROOT=true
+    root_str=root
+else
+    isROOT=false
+    root_str=NoN-root
+fi
+
+export os_build_vesion
+export os_build_id
+export os_build_product
+export os_build_displayid
+export isROOT

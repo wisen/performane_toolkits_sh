@@ -1,0 +1,98 @@
+#!/bin/bash
+
+# get_ppid pid
+# 返回传入的pid的父进程
+function get_ppid {
+	pid=$1
+	#echo [$0]:pid=$pid
+	ppid=`ps x|awk -v a_pid="${pid}" '
+								BEGIN{
+									ppid=0;
+								}
+	
+								{
+									if ($1=="I" && $2==a_pid){
+										ppid=$3;
+									} else if ($1==a_pid){
+										ppid=$2;
+									}
+								}
+								
+								END{
+									print ppid;
+								}
+								'`
+	#echo "Current $FUNCNAME (${FUNCNAME[@]})"
+	#return $ppid;
+	echo $ppid
+}
+
+# get_pid_list pid
+# 返回传入的pid的父进程列表，直到父进程ID=1
+function get_pid_list {
+	pid_list=$1
+	#echo "Current $FUNCNAME (${FUNCNAME[@]}) pid_list=$pid_list"
+	
+	tmp_i=1
+	ppid=`get_ppid $1`
+	pid_list=$pid_list" "$ppid
+	while true
+	do
+		ppid=`get_ppid $ppid`
+		#echo "Current $FUNCNAME (${FUNCNAME[@]}) ppid=$ppid"
+		if [ $ppid == 1 ];then
+			break
+		fi
+		pid_list=$pid_list" "$ppid
+		tmp_i=`expr $tmp_i + 1`
+	done
+	
+	echo $pid_list
+}
+
+# kill_others
+# 该函数将会杀死除了自己和父进程以外的其它进程
+function kill_others {
+	#echo self list: `get_pid_list $$`
+	for pid in `ps x|awk '{if($1=="I"){print $2;}else{print $1;}}'`
+	do
+		#echo pid:$pid
+		get_pid_list $$ | grep $pid && continue
+		echo kill:$pid
+		kill -9 $pid
+	done
+}
+
+# kill_myfamily
+# 该函数杀死自己家族包括自己
+function kill_myfamily {
+    #echo self list: `get_pid_list $$`
+	for pid in `ps x|awk '{if($1=="I"){print $2;}else{print $1;}}'`
+	do
+		#echo pid:$pid
+		get_pid_list $$ | grep $pid && kill -9 $pid
+	done
+}
+
+# kill_ftrace
+# 该函数杀死ftrace recording 进程
+function kill_ftrace {
+    #kill -9 `cat .tmp.ftrace_pid|awk '{if(NR==1) print $1;}'`
+	while read pid
+	do
+		kill -9 $pid
+	done < .tmp.ftrace_pid
+}
+
+# kill_by_processName
+# 该函数会根据传进来的processname，来杀死相关的进程
+function kill_by_processName {
+	if [ -z $1 ];then
+		red "Please enter the a processname!"
+	fi
+
+	for pid in `adb shell ps -t| grep -i $1 | awk '{print $2}'`
+	do
+		adb shell kill -9 $pid
+	done
+}

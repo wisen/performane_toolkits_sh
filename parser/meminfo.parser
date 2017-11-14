@@ -1,0 +1,48 @@
+#!/bin/bash
+
+. color.u
+
+# parse_meminfo logfile
+function parse_meminfo {
+	
+	logfile_meminfo=$1
+
+	echo "#######################################################"
+	echo "#             Memory related information              #"
+	echo "#######################################################"
+	
+	sed '/Time/d' $logfile_meminfo | sed '/^$/d' | awk '
+										BEGIN{count=0;} 
+										{
+											if(NR==1){AocStal_start=$15;}
+											MemFree+=$2;
+											Buffers+=$3;
+											Cached+=$4;
+											SwapCah+=$5;
+											Active+=$6;
+											Inact+=$7;
+											Shmem+=$8;
+											Anon+=$9;
+											ThHold+=$10;
+											CanUse+=$11;
+											Avail+=$12;
+											SwapT+=$13;
+											SwapF+=$14;
+											AocStal_end=$15;
+											count++;
+										}
+									
+										END{
+											#printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+											#"MemFree","Buffers","Cached","SwapCah","Active","Inact","Shmem","Anon","ThHold","CanUse","Avail","SwapT","SwapF","AocStal");
+											printf("%s\n", "MemFree\tBuffers\tCached\tSwapCah\tActive\tInact\tShmem\tAnon\tThHold\tCanUse\tAvail\tSwapT\tSwapF\tAocStal");
+											printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%d\n",
+											MemFree/count,Buffers/count,Cached/count,SwapCah/count,Active/count,Inact/count,Shmem/count,
+											Anon/count,ThHold/count,CanUse/count,Avail/count,SwapT/count,SwapF/count,AocStal_end-AocStal_start);
+										}
+									'
+	
+	echo
+	echo
+
+}

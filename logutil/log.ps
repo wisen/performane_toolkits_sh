@@ -1,0 +1,15 @@
+#!/bin/bash
+. os.u
+
+# start_top_ternimal logfile
+function start_ps_terminal {
+	logfile_ps=$1
+	
+	if [ $myscript_os == "cygwin" ];then
+		$terminal_execfile -t "Record ps" -h always -w max --log $logfile_ps -e record_memory ps  &
+	fi
+	
+	if [ $myscript_os == "msys" ];then	
+		$terminal_execfile -t "Record ps" -h always -w max --log $logfile_ps -e record_memory ps  &
+	fi
+}

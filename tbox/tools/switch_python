@@ -1,0 +1,43 @@
+#!/bin/bash
+
+. color.u
+
+#if [[ ! -f ".python_install_path"  -o  -s ".python_install_path" ]];then
+#	red "Please set all the Python installed path, then enter q to continue"#
+#	line=""
+#	while [ $line != 'q' ]
+#	do
+#		read "Enter: "line
+#		echo $line
+#		if [ $line == "q" ];then
+#			break;
+#		fi
+#		echo $line >> .python_install_path
+#	done
+#fi
+
+green "All the Python you installed verison:"
+#j=1
+#while read line
+#do
+	#echo $line |awk -F "\\" 'END{for(i=1;i<=NF;i++){str=substr($i,1,6); if(str=="Python"){if(substr($i,7,2) ~ /^[0-9]+$/) print $i;}}}'
+#	eval echo "${line}"
+#	echo -e "$j) "
+#	echo $line |awk -F "\\" 'BEGIN{inx=1;} {for(i=1;i<=NF;i++){str=substr($i,1,6); if(str=="Python"){if(substr($i,7,2) ~ /^[0-9]+$/){printf("%d: %s\n", inx, $i);inx++;}}}}'
+#	j=$(($j+1))
+#done < .python_install_path
+cat .python_install_path |awk -F "/" 'BEGIN{inx=1;} {for(i=1;i<=NF;i++){str=substr($i,1,6); if(str=="Python"){if(substr($i,7,2) ~ /^[0-9]+$/){printf("%d: %s\n", inx, $i);inx++;}}}}'|tee .tmp.python.inx
+red "Please choose the Python:"
+read -s num
+echo "You select $num"
+while read inx python_version
+do
+	real_inx=`echo $inx|awk -F ":" '{print $1;}'`
+	if [ $num == $real_inx ];then
+		python_windows_path=`cat .python_install_path|grep $python_version`
+		echo "export ${python_windows_path} into your env"
+		PATH=${python_windows_path}:${PATH}
+		export PATH
+		exit
+	fi
+done < .tmp.python.inx

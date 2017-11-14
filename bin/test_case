@@ -1,0 +1,485 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for doing some test cases
+# Date: 2017-02-26
+
+. color.u
+. process.u
+. os.u
+. applist.parser
+
+prepare_app_list $SCRIPT_ROOT/applist/tmp.app.list3
+
+echo "Enter test loop:"
+
+function cold_start {
+	for ((j=0;j<10;j=$j+1))
+	do
+		for ((i=0;i<${#activities[@]};i=$i+1))
+		do
+			cur_freq=`adb shell cat /sys/bus/cpu/devices/cpu0/cpufreq/cpuinfo_cur_freq|awk '{if(NR==1) print $1}'`
+			echo "Curr Freq: $cur_freq"
+			echo "Cycle $j, App $i"
+			echo "Start activity: "${activities[$i]}
+			timeout 10 adb shell am start -W ${activities[$i]}
+			#sleep 5
+			echo "Force stop package: "${packages[$i]}
+			adb shell "am force-stop ${packages[$i]}"
+			sleep 2
+			adb shell "echo 3 > /proc/sys/vm/drop_caches"
+			adb shell "sync"
+			sleep 2
+		done
+	done
+}
+
+function cold_start2 {
+	for ((j=0;j<100;j=$j+1))
+	do
+		for ((i=0;i<${#activities[@]};i=$i+1))
+		do
+			cur_freq=`adb shell cat /sys/bus/cpu/devices/cpu0/cpufreq/cpuinfo_cur_freq|awk '{if(NR==1) print $1}'`
+			echo "Curr Freq: $cur_freq"
+			echo "Cycle $j, App $i"
+			echo "Start activity: "${activities[$i]}
+			timeout 10 adb shell am start -W ${activities[$i]}
+			#sleep 8
+			echo "Force stop package: "${packages[$i]}
+			adb shell "am force-stop ${packages[$i]}"
+			sleep 2
+		done
+	done
+}
+
+function start_terminal {
+	#CMD1="record_memory case4|tee -a logfile_memorystatus.txt"
+	start_time=`date "+%Y%m%d%H%M%S"`
+	logfile_meminfo=logfile_memoryinfo.$start_time.txt
+	logfile_kernellog=logfile_kernellog.$start_time.txt
+	logfile_eventlog=logfile_eventlog.$start_time.txt
+	
+	if [ $myscript_os == "cygwin" ];then
+		$terminal_execfile -t "Record MemoryInfo" -h always -w max --log $logfile_meminfo -e record_memory case4  &
+		$terminal_execfile -t "Record Kernel log" -h always -w max --log $logfile_kernellog -e record_memory kernel2  &
+		$terminal_execfile -t "Record Event log" -h always -w max --log $logfile_eventlog -e adb logcat -b events -s am_activity_launch_time am_kill am_anr &
+	fi
+	
+	if [ $myscript_os == "msys" ];then	
+		$terminal_execfile -t "Record MemoryInfo" -h always -w max --log $logfile_meminfo -e record_memory case4  &
+		$terminal_execfile -t "Record Kernel log" -h always -w max --log $logfile_kernellog -e record_memory kernel2  &
+		$terminal_execfile -t "Record Event log" -h always -w max --log $logfile_eventlog -e adb logcat -b events -s am_activity_launch_time am_kill am_anr &
+	fi
+}
+
+function clac_the_result {
+
+	echo
+	echo
+	result_time=`date "+%Y%m%d%H%M%S"`
+	logfile_result=logfile_result.$result_time.txt
+	# 0. collect the related information
+	echo "#######################################################" | tee -a $logfile_result
+	echo "#                  Misc information                   #" | tee -a $logfile_result
+	echo "#######################################################" | tee -a $logfile_result
+	echo "extra_free_kbytes: "`adb shell "cat /proc/sys/vm/extra_free_kbytes"` | tee -a $logfile_result
+	echo "adj:               "`adb shell "cat /sys/module/lowmemorykiller/parameters/adj"` | tee -a $logfile_result
+	echo "minfree:           "`adb shell "cat /sys/module/lowmemorykiller/parameters/minfree"` | tee -a $logfile_result
+	
+	echo | tee -a $logfile_result
+	echo | tee -a $logfile_result
+	
+	# 1. calc $logfile_meminfo
+	echo "#######################################################" | tee -a $logfile_result
+	echo "#             Memory related information              #" | tee -a $logfile_result
+	echo "#######################################################" | tee -a $logfile_result
+	
+	sed '/Time/d' $logfile_meminfo | sed '/^$/d' | awk '
+										BEGIN{count=0;} 
+										{
+											if(NR==1){AocStal_start=$15;}
+											MemFree+=$2;
+											Buffers+=$3;
+											Cached+=$4;
+											SwapCah+=$5;
+											Active+=$6;
+											Inact+=$7;
+											Shmem+=$8;
+											Anon+=$9;
+											ThHold+=$10;
+											CanUse+=$11;
+											Avail+=$12;
+											SwapT+=$13;
+											SwapF+=$14;
+											AocStal_end=$15;
+											count++;
+										}
+									
+										END{
+											#printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+											#"MemFree","Buffers","Cached","SwapCah","Active","Inact","Shmem","Anon","ThHold","CanUse","Avail","SwapT","SwapF","AocStal");
+											printf("%s\n", "MemFree\tBuffers\tCached\tSwapCah\tActive\tInact\tShmem\tAnon\tThHold\tCanUse\tAvail\tSwapT\tSwapF\tAocStal");
+											printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%d\n",
+											MemFree/count,Buffers/count,Cached/count,SwapCah/count,Active/count,Inact/count,Shmem/count,
+											Anon/count,ThHold/count,CanUse/count,Avail/count,SwapT/count,SwapF/count,AocStal_end-AocStal_start);
+										}
+									' | tee -a $logfile_result
+	
+	echo | tee -a $logfile_result
+	echo | tee -a $logfile_result
+
+	# 2. calc the launch time
+	echo "#######################################################" | tee -a $logfile_result
+	echo "#             Collect Apps Launch Time                #" | tee -a $logfile_result
+	echo "#######################################################" | tee -a $logfile_result
+	for ((i=0;i<${#activities[@]};i=$i+1))
+	do
+		#echo ${activities[$i]}
+		activity=`echo ${activities[$i]}|awk -F "/" '{if(NR==1) print $2;}'`
+		#echo $activity
+		#cat $logfile |awk -F "/" '{print $2;}'|sed 's/]//g'|awk -F "," -v a_activity="$activity" 'BEGIN{count=0;} /a_activity/{sum=sum+$3;count++;} END{print a_activity,count,sum/count;}'
+		#cat $logfile |awk -F "/" '{print $2;}'|sed 's/]//g'
+		sed 's/]//g' $logfile_eventlog |grep "${activities[$i]}"|awk -F "," -v a_activity="${activities[$i]}" '
+																		BEGIN{count=0;min=0;max=0;} 
+																		{
+																			if(0==count){
+																				min=$4;max=$4;
+																			} else {
+																				if($4<min) min=$4;
+																				if($4>max) max=$4;
+																			}
+																			sum=sum+$4;
+																			count++;
+																		} 
+																		END{if (count!=0) printf("%s, %d, %d, %d, %d\n",a_activity, count, min, sum/count, max); }
+																		' | tee -a $logfile_result
+		#sleep 2
+	done
+	echo | tee -a $logfile_result
+	echo | tee -a $logfile_result
+	
+	# clac the carsh times
+	echo "#######################################################" | tee -a $logfile_result
+	echo "#              Collect Apps Crash Time                #" | tee -a $logfile_result
+	echo "#######################################################" | tee -a $logfile_result
+	echo | tee -a $logfile_result
+	echo -e "PacName\tCrash" | tee -a $logfile_result
+	for ((i=0;i<${#packages[@]};i=$i+1))
+	do
+
+		activity=`echo ${packages[$i]}|awk -F "/" '{if(NR==1) print $2;}'`
+		#echo $activity
+
+		sed 's/]//g' $logfile_eventlog |grep "${packages[$i]}"|awk -F "," -v a_package="${packages[$i]}" '
+																		BEGIN{count=0;}
+																		/crash/{count++}
+																		END{printf("%s, %d\n",a_package, count); }
+																		' | tee -a $logfile_result
+		#sleep 2
+	done
+	
+	echo | tee -a $logfile_result
+	echo | tee -a $logfile_result
+
+	# 3. clac lmk count
+	echo "#######################################################" | tee -a $logfile_result
+	echo "#             Collect LMK killer count                #" | tee -a $logfile_result
+	echo "#######################################################" | tee -a $logfile_result
+	#lmkkiller_count=`cat $logfile_kernellog | grep "Killing '"|wc -l`
+	cat $logfile_kernellog | grep "Killing '"|awk -F "," '{print $2,$3;}'|awk '
+																	BEGIN{count=0;}
+																	{
+																	if($2==0){adj0+=1;}
+																	if($2==1){adj1+=1;}
+																	if($2==2){adj2+=1;}
+																	if($2==3){adj3+=1;}
+																	if($2==4){adj4+=1;}
+																	if($2==5){adj5+=1;}
+																	if($2==6){adj6+=1;}
+																	if($2==7){adj7+=1;}
+																	if($2==8){adj8+=1;}
+																	if($2==9){adj9+=1;}
+																	if($2==10){adj10+=1;}
+																	if($2==11){adj11+=1;}
+																	if($2==12){adj12+=1;}
+																	if($2==13){adj13+=1;}
+																	if($2==14){adj14+=1;}
+																	if($2==15){adj15+=1;}
+																	if($2==16){adj16+=1;}
+																	count++;
+																	}
+
+																	END{
+																		printf("%s\n", "ADJ\t0\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10\t11\t12\t13\t14\t15\t16\tTotal");
+																		printf("%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+																				"Count",adj0,adj1,adj2,adj3,adj4,adj5,adj6,adj7,adj8,adj9,adj10,adj11,adj12,adj13,adj14,adj15,adj16,count);
+																	}
+																	' | tee -a $logfile_result
+	
+}
+
+# 因为在实际的测试中发现am start -W会卡住，这个是Android NDK的bug
+# 所以想到一个办法， am start -W的时候，放到后台执行，记录这个后台执行的pid, 如果10秒后am start -W还没返回就按home键//0310,后来还是决定用timeout
+# terminal1:	test_case cold3 tmp.app.list3
+# terminal2:	record_memory kernel2 > logfile_kernellog.txt
+# terminal3:	record_memory case4|tee -a logfile_memorystatus.txt
+# terminal4:	adb logcat -b events -s am_activity_launch_time am_kill am_anr|tee -a logfile_eventlog.txt
+function cold_start3 {
+
+	if [ ! $1 ];then
+		test_cycles=50
+	else
+		test_cycles=$1
+	fi
+
+# 0. prepare logfile
+	#adb reboot
+	adb wait-for-device
+
+	cold3_start_time=`date "+%Y%m%d%H%M%S"`
+	logfile_cold3=logfile_cold3.$cold3_start_time.txt
+
+# 1. disable process manager
+#	adb shell dumpsys activity feature ac off
+#	adb shell dumpsys activity feature as off
+# 2. lock cpu freq
+#	adb shell "echo 1248000 > /sys/bus/cpu/devices/cpu0/cpufreq/scaling_min_freq"
+#	adb shell "echo 1248000 > /sys/bus/cpu/devices/cpu0/cpufreq/scaling_max_freq"
+	#adb shell "echo performance > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+
+# 2.1 cpu hotplug
+#	adb shell "echo 0 > /proc/hps/enabled"
+#	adb shell "echo 1 > /sys/devices/system/cpu/cpu0/online"
+#	adb shell "echo 1 > /sys/devices/system/cpu/cpu1/online"
+#	adb shell "echo 1 > /sys/devices/system/cpu/cpu2/online"
+#	adb shell "echo 1 > /sys/devices/system/cpu/cpu3/online"
+
+# 2.2 set dirty ratio
+#	adb shell "echo 1 > /proc/sys/vm/dirty_background_ratio"
+#	adb shell "echo 10 > /proc/sys/vm/dirty_ratio"
+	
+# 3. set extra_free_kbytes
+	extra_free_kbytes=32400
+	echo "You set the /proc/sys/vm/extra_free_kbytes to $extra_free_kbytes" | tee -a $logfile_cold3
+	adb shell "echo $extra_free_kbytes > /proc/sys/vm/extra_free_kbytes" | tee -a $logfile_cold3
+	confirm_value=`adb shell cat /proc/sys/vm/extra_free_kbytes|awk '{if(NR==1) print $1}'`
+	echo "Confirm it: $confirm_value" | tee -a $logfile_cold3
+	
+	#start to open terminal to record some usefull information
+	start_terminal
+	
+	cold3test_start_time=`date +%s`
+
+	for ((j=1;j<=$test_cycles;j=$j+1))
+	do
+		for ((i=0;i<${#activities[@]};i=$i+1))
+		do
+			cur_freq=`adb shell "cat /sys/bus/cpu/devices/cpu0/cpufreq/cpuinfo_cur_freq"|awk '{if(NR==1) print $1}'`
+			#cpu0=`adb shell cat /sys/devices/system/cpu/cpu0/online|awk '{if(NR==1) print $1;}'`
+			#cpu1=`adb shell cat /sys/devices/system/cpu/cpu1/online|awk '{if(NR==1) print $1;}'`
+			#cpu2=`adb shell cat /sys/devices/system/cpu/cpu2/online|awk '{if(NR==1) print $1;}'`
+			#cpu3=`adb shell cat /sys/devices/system/cpu/cpu3/online|awk '{if(NR==1) print $1;}'`
+			cpu_online=`adb shell "cat /sys/devices/system/cpu/online"|awk '{if(NR==1) print $1;}'`
+			echo "CPU Freq: $cur_freq Online: $cpu_online" | tee -a $logfile_cold3
+			red_white "Cycle $test_cycles-$j, App $i" | tee -a $logfile_cold3
+			echo "["`date "+%Y-%m-%d %H:%M:%S"`"]Start activity: "${activities[$i]} | tee -a $logfile_cold3
+			timestamp=`adb shell cat /proc/uptime|awk '{print $1}'`
+			#record_ftrace ${packages[$i]} $timestamp &
+			timeout 10 adb shell am start -W ${activities[$i]} | tee -a $logfile_cold3
+			# timeout 10 adb shell am start -W ${activities[$i]} &
+			# lastpid=$!
+			# timeout 10 adb shell input keyevent 3
+			# kill -9 $lastpid
+			#read -n 1
+			#kill -9 `cat .tmp.ftrace_pid|awk '{if(NR==1) print $1;}'`
+			timeout 3 adb shell input keyevent 3 #simulation user press home key
+			#sleep 5
+			#echo "Force stop package: "${packages[$i]}
+			#adb shell "am force-stop ${packages[$i]}"
+			#sleep 2
+		done
+	done
+	cold3test_end_time=`date +%s`
+	echo "The Test total use "$(($cold3test_end_time-$cold3test_start_time))" Seconds." | tee -a $logfile_cold3
+# 4. close all log bash
+	kill_others
+	#for pid in `ps|grep bash|awk '{if ($1=="I") {print $2;}else {print $1}}'`
+	#do
+		# don't kill self bash self_pid=$$
+	#	if [ $$ != $pid ];then
+	#		echo "Kill -9 $pid"
+			#kill -9 $pid#have some bug, TODO
+	#	fi
+	#done
+# 5. recovery cpu freq and hotplug
+	adb shell "echo 1 > /proc/hps/enabled"
+	#adb shell "echo interactive > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+# 6. calc result
+	clac_the_result
+}
+
+function cold_start3_for_systrace {
+# 1. disable process manager
+	adb shell dumpsys activity feature ac off
+	adb shell dumpsys activity feature as off
+# 2. lock cpu freq
+	adb shell "echo 1248000 > /sys/bus/cpu/devices/cpu0/cpufreq/scaling_min_freq"
+	adb shell "echo 1248000 > /sys/bus/cpu/devices/cpu0/cpufreq/scaling_max_freq"
+	
+	extra_free_kbytes=$[$1*1024]
+	echo "You set the /proc/sys/vm/extra_free_kbytes to $extra_free_kbytes"
+	adb shell "echo $extra_free_kbytes > /proc/sys/vm/extra_free_kbytes"
+	confirm_value=`adb shell cat /proc/sys/vm/extra_free_kbytes|awk '{if(NR==1) print $1}'`
+	echo "Confirm it: $confirm_value"
+	#for ((j=0;j<30;j=$j+1))
+	#do
+		for ((i=0;i<${#activities[@]};i=$i+1))
+		do
+			cur_freq=`adb shell cat /sys/bus/cpu/devices/cpu0/cpufreq/cpuinfo_cur_freq|awk '{if(NR==1) print $1}'`
+			echo "Curr Freq: $cur_freq"
+			echo "Cycle $j, App $i"
+			echo "Start package: ${packages[$i]}, activity: ${activities[$i]}"
+			timeout 10 adb shell am start -W ${activities[$i]}
+			#sleep 5
+			
+			if [ ${packages[$i]} == "com.jingdong.app.mall" ];then
+				echo "##############################################"
+				echo "#   Script pause, please open the systrace   #"
+				echo "##############################################"
+				read -n 1
+			fi
+			#echo "Force stop package: "${packages[$i]}
+			#adb shell "am force-stop ${packages[$i]}"
+			#sleep 2
+		done
+	#done
+}
+
+#back on app about 80M
+#com.qiyi.video/org.qiyi.android.video.MainActivity
+function backgroud_one_app {
+	#while true
+	#do
+	clean_backgroup
+	for ((i=0;i<${#activities[@]};i=$i+1))
+	do
+		for ((j=0;j<10;j=$j+1))
+		do
+			timeout 10 adb shell am start -W com.qiyi.video/org.qiyi.android.video.MainActivity
+			#sleep 5
+			echo "Start activity: "${activities[$i]}
+			timeout 10 adb shell am start -W ${activities[$i]}
+			#sleep 5
+			echo "Force stop package: com.qiyi.video"
+			adb shell "am force-stop com.qiyi.video"
+			sleep 2
+			echo "Force stop package: "${packages[$i]}
+			adb shell "am force-stop ${packages[$i]}"
+			sleep 2
+			adb shell "echo 3 > /proc/sys/vm/drop_caches"
+			adb shell "sync"
+			sleep 2
+		done
+	done
+	#done
+}
+
+function clean_backgroup {
+	adb shell am kill-all
+	sleep 5
+	adb shell "sync" 
+	adb shell "echo 3 > /proc/sys/vm/drop_caches"
+	adb shell "sync" 
+	sleep 2
+}
+
+#back on app about 180M
+#com.qiyi.video/org.qiyi.android.video.MainActivity 80M
+#com.taobao.taobao/com.taobao.tao.welcome.Welcome 100M
+function backgroud_two_app {
+	#while true
+	#do
+	clean_backgroup
+	for ((i=0;i<${#activities[@]};i=$i+1))
+	do
+		for ((j=0;j<10;j=$j+1))
+		do
+			timeout 10 adb shell am start -W com.qiyi.video/org.qiyi.android.video.MainActivity
+			#sleep 5
+			timeout 10 adb shell am start -W com.taobao.taobao/com.taobao.tao.welcome.Welcome
+			#sleep 5
+			echo "Start activity: "${activities[$i]}
+			timeout 10 adb shell am start -W ${activities[$i]}
+			#sleep 5
+			echo "Force stop package: com.qiyi.video"
+			adb shell "am force-stop com.qiyi.video"
+			sleep 2
+			echo "Force stop package: com.taobao.taobao"
+			adb shell "am force-stop com.taobao.taobao"
+			sleep 2
+			echo "Force stop package: "${packages[$i]}
+			adb shell "am force-stop ${packages[$i]}"
+			sleep 2
+			adb shell "echo 3 > /proc/sys/vm/drop_caches"
+			adb shell "sync"
+			sleep 2
+		done
+	done
+	#done
+}
+
+function test_case4 {
+# 1. disable process manager
+	adb shell dumpsys activity feature ac off
+	adb shell dumpsys activity feature as off
+	
+# 2. set extra_free_kbytes
+	extra_free_kbytes=$2
+	adb shell "echo $extra_free_kbytes > /proc/sys/vm/extra_free_kbytes"
+	#adb shell echo 10800 > /proc/sys/vm/extra_free_kbytes
+	#adb shell echo 21600 > /proc/sys/vm/extra_free_kbytes
+	#adb shell echo 32400 > /proc/sys/vm/extra_free_kbytes
+	confirm_value=`adb shell cat /proc/sys/vm/extra_free_kbytes|awk '{if(NR==1) print $1}'`
+	echo "Confirm it: $confirm_value"
+	
+# 3. start monkey
+	whitelist_file=$1
+	echo "Push white list file into /sdcard for Monkey test"
+	adb push $whitelist_file /sdcard/tmp.app.whitelist
+	sleep 2
+	adb shell "monkey --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes -s 6516 -v --throttle 300 100000 > /sdcard/monkey-log.txt" 
+	#adb shell "monkey --pkg-whitelist-file /sdcard/tmp.app.whitelist --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes -s 6666 -v --throttle 300 100000 > /sdcard/monkey-log.txt"
+	
+# 4. record kernel log and record avg cache size and allocalstall
+	#record_memory kernel2
+	#record_memory case4|tee -a logfile_for_case4.txt
+}
+
+if [ $1 == "cold" ];then
+	cold_start;exit;
+fi
+
+if [ $1 == "cold2" ];then
+	cold_start2;exit;
+fi
+
+if [ $1 == "cold3" ];then
+	cold_start3 $2;exit;
+fi
+
+if [ $1 == "case4" ];then
+	test_case4 $2 $3;exit;
+fi
+
+if [ $1 == "systrace" ];then
+	cold_start3_for_systrace $3;exit;
+fi
+
+if [ $1 == "back1" ];then
+	backgroud_one_app;exit;
+fi
+
+if [ $1 == "back2" ];then
+	backgroud_two_app;exit;
+fi
+
+

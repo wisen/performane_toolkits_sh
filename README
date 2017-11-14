@@ -1,0 +1,28 @@
+1. when you get this scripts Tool kit, you should install it firstly
+   ./install_script
+   after you install the script env, you should close it and restart the terminal to reload the config
+
+2. then you should build your testcase
+   just modify the file .conf to meet your requirement
+   then run 'build_testcase', then you will get a testcase which in folder case, for example, you will get testcase cold3
+
+3. run your testcase in any terminal
+   xxx $: cold3 testcycles
+   
+   
+###############Related sys file#######################
+1. memory related
+	/proc/sys/vm
+	/proc/vmstat
+	/proc/meminfo
+	/proc/zoneinfo
+	/proc/buddyinfo
+2. io related
+3. cpu related
+	/proc/sched_debug
+	/proc/sys/kernel
+4. fs related
+
+#################targets and tools#####################
+1. IOPS-->fio iozone
+2.

@@ -1,0 +1,1068 @@
+#!/bin/bash
+#stty echo
+#list=`adb shell ps |grep "com"|gawk '{print $2" "$9}'`
+
+script_name="memory_calc"
+cmd="awk"
+
+function memory_statistics {
+	file_oom_score_adj="apk.oom_score_adj"
+	
+
+	#adb shell ps | grep "com" | gawk '{print $2, $9}'|while read a b
+	if [ -f $file_oom_score_adj ];then
+	  rm -f $file_oom_score_adj
+	fi
+
+	column_name="PID\tOom_Adj\tOom_Score\tScore_adj\tPName\tApp Size"
+
+	echo -e $column_name 
+	echo -e $column_name > $file_oom_score_adj
+
+	adb shell ps | grep "com" | $cmd '{print $2,$9}' > apk.process
+
+	total_size=0
+	app_count=0
+
+	while read buf
+	do
+	  pid=`echo $buf | $cmd '{print $1}'`
+	  pname=`echo $buf | $cmd '{print $2}'`
+	  #echo -e "$pid\t$pname"
+	  oom_adj=`adb shell cat /proc/${pid}/oom_adj|$cmd '{print $1}'`
+	  #echo $oom_adj
+	  oom_score=`adb shell cat /proc/${pid}/oom_score|$cmd '{print $1}'`
+	  #echo $oom_score
+	  oom_score_adj=`adb shell cat /proc/${pid}/oom_score_adj|$cmd '{print $1}'`
+	  apk_size=`adb shell dumpsys meminfo ${pid}|grep "TOTAL:"|awk '{print $2}'`
+	  total_size=`expr ${total_size} + ${apk_size}`
+	  app_count=`expr ${app_count} + 1`
+	  #echo $oom_score_adj
+	  #echo -e "\n"
+	  line="${pid}\t${oom_adj}\t${oom_score}\t${oom_score_adj}\t${pname}\t${apk_size}"
+	  echo -e $line
+	  #echo -e "${pid}\t${pname}\t${oom_adj}\t${oom_score}\t${oom_score_adj}"
+	  #echo -e "${pid}\t${pname}\t${oom_adj}\t${oom_score}\t${oom_score_adj}" >> $file_oom_score_adj
+	  echo -e $line >> $file_oom_score_adj
+
+	done < apk.process
+
+	mb_size=`expr ${total_size}/1024`
+	mb_size=`awk 'BEGIN{printf "%.2f\n",('${total_size}'/1024)}'`
+	echo "----------------------------------------------------------------------"
+	echo "App Count: ${app_count}   Total Size: ${total_size} KB, ${mb_size} MB"
+}
+
+#function memory_statistics2_2 for monitor_process_memory_sub2_2 invoke
+function memory_statistics2_2 {
+	#file_oom_score_adj="apk.oom_score_adj"
+	
+	# if [ -f $file_oom_score_adj ];then
+	  # rm -f $file_oom_score_adj
+	# fi
+
+	# column_name="PID\tOom_Adj\tOom_Score\tScore_adj\tPName\tApp Size"
+
+	# echo -e $column_name 
+	# echo -e $column_name > $file_oom_score_adj
+
+	#adb shell ps | grep "com" | $cmd '{print $2,$9}' > apk.process.for_sub2_2
+	#don't needed $9-->pname
+	adb shell ps | grep "com" | $cmd '{print $2}' > apk.process.for_sub2_2
+
+	total_size=0
+	app_count=0
+
+	while read buf
+	do
+	  pid=`echo $buf | $cmd '{print $1}'`
+	  # pname=`echo $buf | $cmd '{print $2}'`
+	  #echo -e "$pid\t$pname"
+	  # oom_adj=`adb shell cat /proc/${pid}/oom_adj|$cmd '{print $1}'`
+	  # #echo $oom_adj
+	  # oom_score=`adb shell cat /proc/${pid}/oom_score|$cmd '{print $1}'`
+	  # #echo $oom_score
+	  # oom_score_adj=`adb shell cat /proc/${pid}/oom_score_adj|$cmd '{print $1}'`
+	  apk_size=`adb shell dumpsys meminfo ${pid}|grep "TOTAL:"|awk '{print $2}';`
+	  
+	  if [ -z ${apk_size} ];then
+		apk_size=0;
+	  fi
+	  
+	  total_size=`expr ${total_size} + ${apk_size}`
+	  app_count=`expr ${app_count} + 1;`
+	  #echo $oom_score_adj
+	  #echo -e "\n"
+	  # line="${pid}\t${oom_adj}\t${oom_score}\t${oom_score_adj}\t${pname}\t${apk_size}"
+	  # echo -e $line
+	  # #echo -e "${pid}\t${pname}\t${oom_adj}\t${oom_score}\t${oom_score_adj}"
+	  # #echo -e "${pid}\t${pname}\t${oom_adj}\t${oom_score}\t${oom_score_adj}" >> $file_oom_score_adj
+	  # echo -e $line >> $file_oom_score_adj
+
+	done < apk.process.for_sub2_2
+
+	# mb_size=`expr ${total_size}/1024`
+	mb_size=`awk 'BEGIN{printf "%.2f\n",('${total_size}'/1024)}'`
+	# echo "----------------------------------------------------------------------"
+	# echo "App Count: ${app_count}   Total Size: ${total_size} KB, ${mb_size} MB"
+}
+
+function monitor_process_memory_sub1 {
+	echo
+	echo "=================================================="
+	echo -e "Index\tPID\tPName"
+	adb shell ps|grep com|awk '{print NR"\t"$2"\t"$9}' |tee tmp.monitor_file
+	echo "Please Enter your select:"
+	read index_list
+	#echo ${index_list}
+	
+	for index in ${index_list};do
+		#echo "index=${index}"
+		while read buf
+		do
+			#echo $buf
+			inx=`echo $buf | $cmd '{print $1}'`
+			#echo "inx=${inx} index=${index}"
+			pid=`echo $buf | $cmd '{print $2}'`
+			#echo ${pid}
+			pname=`echo $buf | $cmd '{print $3}'`
+			#echo ${pname}
+			if [ ${index} -eq ${inx} ];then
+			    #echo ${pid} ${pname}|tee -a tmp.monitor_process;
+				echo ${pid} ${pname} >> tmp.monitor_process;
+				pname=`echo ${pname}|awk -F . '{print $3}'`
+				echo ${pid} >> tmp.monitor_pid;
+				echo "${pname}" >> tmp.monitor_pname;
+				title_pname=${title_pname}"\t"${pname}
+				break;
+			fi
+		done < tmp.monitor_file
+	done
+}
+
+#the function monitor_process_memory_sub1_rewrite need to be implement in the future
+function monitor_process_memory_sub1_rewrite {
+
+	if [ -f tmp.monitor_process ];then
+		rm tmp.monitor_process
+	fi
+	
+	#don't delete tmp.monitor_pname, which used to record the process
+	#if [ -f tmp.monitor_pname ];then
+	#	rm tmp.monitor_pname
+	#fi
+	
+	if [ -f tmp.monitor_pid ];then
+		rm tmp.monitor_pid
+	fi
+
+	echo
+	echo "=================================================="
+	echo -e "Index\tPID\tPName"
+	adb shell ps|grep com|awk '{print NR"\t"$2"\t"$9}' |tee tmp.monitor_file
+	echo "Please Enter your select:"
+	read index_list
+	#echo ${index_list}
+	
+	for index in ${index_list};do
+		#echo "index=${index}"
+		while read buf
+		do
+			#echo $buf
+			inx=`echo $buf | $cmd '{print $1}'`
+			#echo "inx=${inx} index=${index}"
+			pid=`echo $buf | $cmd '{print $2}'`
+			#echo ${pid}
+			pname=`echo $buf | $cmd '{print $3}'`
+			#echo ${pname}
+			if [ ${index} -eq ${inx} ];then
+			    #echo ${pid} ${pname}|tee -a tmp.monitor_process;
+				echo ${pid} ${pname} >> tmp.monitor_process;
+				pname=`echo ${pname}|awk -F . '{print $3}'`
+				echo ${pid} >> tmp.monitor_pid;
+				echo "${pname}" >> tmp.monitor_pname;
+				title_pname=${title_pname}"\t"${pname}
+				break;
+			fi
+		done < tmp.monitor_file
+	done
+}
+
+function monitor_process_memory_sub2 {
+	echo 
+	echo "=========================================================="
+	echo -e "\tMonitor process:"
+	echo -e ${title_pname}
+	
+	while true
+	do
+	    size_echo=""
+		for pid in ${pid_list};do
+			#echo ${pid}
+			process_name=`adb shell ps -p ${pid}|grep com|awk '{print $13}'`
+			#echo ${process_name}
+			#pname=${procss_name}"\t"
+			size=`adb shell dumpsys meminfo ${pid}|grep "TOTAL:"|awk '{print $2}'`
+			if [ -z ${size} ]; then
+				size="Killed";
+				#return;
+			fi
+			size_echo=${size_echo}"\t"${size}
+		done
+		echo -e ${size_echo}
+		python -c "import time;time.sleep(1.5)";
+	done
+}
+
+#add item: total size 
+#function monitor_process_memory_sub2_2 calc all apk memory size, it is too slow, waste about 18s
+function monitor_process_memory_sub2_2 {
+	echo 
+	echo "=========================================================="
+	echo -e "\tMonitor process:"
+	echo -e "Num\tTotal\t"${title_pname}
+	total_monitor_size=0
+	
+	while true
+	do
+	    size_echo=""
+		#echo "start:"$(date +%s.%N)
+		for pid in ${pid_list};do
+			#echo ${pid}
+			process_name=`adb shell ps -p ${pid}|grep com|awk '{print $13}'`
+			#echo ${process_name}
+			#pname=${procss_name}"\t"
+			size=`adb shell dumpsys meminfo ${pid}|grep "TOTAL:"|awk '{print $2}'`
+			if [ -z ${size} ]; then
+				#echo ${size}"1";
+				mb_apk_size=0;
+				#return;
+			else
+				#echo ${size}"2";
+				mb_apk_size=`awk 'BEGIN{printf "%.2f\n",('${size}'/1024)}'`
+			fi
+			size_echo=${size_echo}"\t"${mb_apk_size}
+		done
+		#echo "mid:"$(date +%s.%N)
+		memory_statistics2_2;
+		size_echo=${app_count}"\t"${mb_size}"\t"${size_echo}
+		
+		#echo "end:"$(date +%s.%N)
+		echo -e ${size_echo}|tee -a monitor_process_readfile
+		#python -c "import time;time.sleep(1.5)";
+	done
+}
+
+#function monitor_process_memory_sub2_3 calc all you want to monitor apk size
+function monitor_process_memory_sub2_3 {
+	echo 
+	echo "=========================================================="
+	echo -e "\tMonitor process:"
+	echo -e "Num\tTotal\t"${title_pname}
+	total_monitor_size=0
+	
+	while true
+	do
+	    size_echo=""
+		mb_size=0
+		#echo "start:"$(date +%s.%N)
+		for pid in ${pid_list};do
+			#echo ${pid}
+			process_name=`adb shell ps -p ${pid}|grep com|awk '{print $13}'`
+			#echo ${process_name}
+			#pname=${procss_name}"\t"
+			size=`adb shell dumpsys meminfo ${pid}|grep "TOTAL:"|awk '{print $2}'`
+			if [ -z ${size} ]; then
+				#echo ${size}"1";
+				mb_apk_size=0;
+				#return;
+			else
+				#echo ${size}"2";
+				mb_apk_size=`awk 'BEGIN{printf "%.2f\n",('${size}'/1024)}'`
+			fi
+			size_echo=${size_echo}"\t"${mb_apk_size}
+			mb_size=`expr ${mb_size} + ${mb_apk_size}`
+		done
+		#echo "mid:"$(date +%s.%N)
+		#mb_size=`awk 'BEGIN{printf "%.2f\n",('${mb_size}'/1024)}'`;
+		app_count=`adb shell ps|grep com|wc`
+		size_echo=${app_count}"\t"${mb_size}"\t"${size_echo}
+		
+		#echo "end:"$(date +%s.%N)
+		echo -e ${size_echo}|tee -a monitor_process_readfile
+		#python -c "import time;time.sleep(1.5)";
+	done
+}
+
+function clean_tmp_file_for_monitor_process_memory {
+	if [ -f tmp.monitor_file ];then
+		rm tmp.monitor_file
+	fi
+	
+	if [ -f tmp.monitor_process ];then
+		rm tmp.monitor_process
+	fi
+	
+	if [ -f tmp.monitor_pname ];then
+		rm tmp.monitor_pname
+	fi
+	
+	if [ -f tmp.monitor_pid ];then
+		rm tmp.monitor_pid
+	fi
+}
+
+function clean_tmp_file_for_monitor_process_memory_2 {
+	if [ -f tmp.monitor_file ];then
+		rm tmp.monitor_file
+	fi
+	
+	if [ -f tmp.monitor_process ];then
+		rm tmp.monitor_process
+	fi
+	
+	if [ -f tmp.monitor_pname ];then
+		rm tmp.monitor_pname
+	fi
+	
+	if [ -f tmp.monitor_pid ];then
+		rm tmp.monitor_pid
+	fi
+	
+	if [ -f apk.process.for_sub2_2 ];then
+		rm apk.process.for_sub2_2
+	fi
+	
+	if [ -f monitor_process_readfile ];then
+		rm monitor_process_readfile
+	fi
+}
+
+function monitor_process_memory {
+	#echo $1
+	# if [ -f tmp.monitor_file ];then
+		# rm tmp.monitor_file
+	# fi
+	
+	# if [ -f tmp.monitor_process ];then
+		# rm tmp.monitor_process
+	# fi
+	
+	# if [ -f tmp.monitor_pname ];then
+		# rm tmp.monitor_pname
+	# fi
+	
+	# if [ -f tmp.monitor_pid ];then
+		# rm tmp.monitor_pid
+	# fi
+	clean_tmp_file_for_monitor_process_memory;
+	
+	monitor_process_memory_sub1;
+
+	pid_list=`cat tmp.monitor_pid`
+	echo "Your Select is:"
+	cat tmp.monitor_process
+	
+	monitor_process_memory_sub2;
+	
+	#process_pid=$1
+	#process_name=`adb shell ps -p ${process_pid}|grep com|awk '{print $13}'`
+	
+	#while true;do adb shell dumpsys meminfo ${process_pid}|grep "TOTAL:"|awk '{print $2}';python -c "import time;time.sleep(5)";done
+	#while true
+	#do
+	#	adb shell dumpsys meminfo ${process_pid}|grep "TOTAL:"|awk '{print $2}';python -c "import time;time.sleep(3)";
+	#done
+}
+
+function monitor_process_memory_2 {
+	
+	clean_tmp_file_for_monitor_process_memory_2;
+	
+	monitor_process_memory_sub1;
+
+	pid_list=`cat tmp.monitor_pid`
+	echo "Your Select is:"
+	cat tmp.monitor_process
+	
+	monitor_process_memory_sub2_2;
+	
+}
+
+function monitor_process_memory_3 {
+	
+	clean_tmp_file_for_monitor_process_memory_2;
+	
+	monitor_process_memory_sub1;
+
+	pid_list=`cat tmp.monitor_pid`
+	echo "Your Select is:"
+	cat tmp.monitor_process
+	
+	monitor_process_memory_sub2_3;
+	
+}
+
+function usage {
+  echo "${script_name} usage:"
+  echo "${script_name} #count the application memory use"
+  echo "${script_name} -m #monitor the process memory using"
+  echo "${script_name} -ma #monitor the process memory using and calc all apk memory size"
+  echo "${script_name} -mm #monitor the process memory using and calc the monitor apk memory size"
+  echo "${script_name} kernel #display the kernel log(grep \"is below limit\|lowmemorykiller\")"
+  echo "${script_name} killsub #cuple use with ${script_name} kernel, kill the process which fork in ${script_name} kernel"
+  echo "${script_name} surface #monitor the surface size"
+  echo "${script_name} -f xxx#calc all runtime process memor size"
+  echo "${script_name} -AN xxx grep RECORD #calc all runtime process memor size for Android N"
+  echo "${script_name} -AM xxx grep RECORD #calc all runtime process memor size for Android M"
+  echo "${script_name} test xxx grep RECORD #calc all runtime process memor size"
+  echo "${script_name} expAM xxx #export a data for excel to draw memory useage on Android M"
+  echo "${script_name} expAN xxx #export a data for excel to draw memory useage on Android N"
+  echo "${script_name} -p projectName xxx #export a data for spcial project to draw memory useage"
+  
+}
+
+function store_kernel {
+	if [ -f tmp.${script_name}.pid_store ];then
+		echo > tmp.${script_name}.pid_store
+	fi
+
+	echo "store_kernel in SUB PID: $$" > tmp.${script_name}.pid_store
+
+	if [ -f tmp.kernel_log ];then
+		echo > tmp.kernel_log
+	fi
+	
+	adb shell dmesg > tmp.kernel_log
+	last_timestamp=`cat tmp.kernel_log|awk 'END{print $1}'|sed 's/\[//g'|sed 's/\]//g'`
+	
+	{
+		while [ 1 ]  
+		do  
+			#cat tmp.tmp.kernel_log >> tmp.kernel_log
+			adb shell dmesg|sed -n '/'$last_timestamp'/,$p'>>tmp.kernel_log
+			last_timestamp=`cat tmp.kernel_log|awk 'END{print $1}'|sed 's/\[//g'|sed 's/\]//g'`
+			sleep 1  
+		done 
+	}&
+}
+
+function show_kernel {
+	echo "show_kernel in Parent PID: $$" >> tmp.${script_name}.pid_store
+
+	if [ ! -f tmp.kernel_log ];then
+		touch tmp.kernel_log
+	fi
+	echo
+	echo 
+	echo
+	tail -f tmp.kernel_log
+}
+
+function kill_sub {
+	subpid=`cat tmp.${script_name}.pid_store|awk -F ":" '{print $2}'`
+	kill -9 ${subpid}
+}
+
+function memory_surface {
+	while true
+	do
+		adb shell dumpsys SurfaceFlinger| grep "Total allocated";
+		python -c "import time;time.sleep(2)";
+	done
+}
+
+function memory_meminfo {
+	while true
+	do
+		adb shell cat /proc/meminfo
+		#grep "MemFree\|Buffers\|Cached"
+		python -c "import time;time.sleep(2)";
+	done
+}
+
+function memory_meminfo2 {
+	while true
+	do
+		adb shell dumpsys meminfo|grep "Free RAM:"|awk '{print $3}'
+		#grep "MemFree\|Buffers\|Cached"
+		#python -c "import time;time.sleep(2)";
+	done
+
+}
+######################################################################
+function calc_avg_and_max {
+
+	tmp_file_name="tmp.all.process.list"
+	tmp_collect_memory_file_name="tmp.all.process.memory.file"
+	
+	source_file=$1
+
+	echo "source file: $2 ${source_file}"
+	
+	if [ -f ${tmp_file_name} ];then
+		rm ${tmp_file_name}
+	fi
+	
+	if [ -f ${tmp_collect_memory_file_name} ];then
+		rm ${tmp_collect_memory_file_name}
+	fi
+	
+	#collect all process into a tmp file
+	cat ${source_file} |sed -n '/Total PSS by process:/,/Total PSS by OOM adjustment:/p'|sed '/Total/d'|sed 's/\,//g'|awk '{print $2}'|sort|uniq|sed '/^$/d' > ${tmp_file_name}
+	total_count_of_process=`cat ${tmp_file_name}|wc -l`
+
+	#size name pid
+	cat ${source_file} |sed -n '/Total PSS by process:/,/Total PSS by OOM adjustment:/p'|sed '/Total/d'|sed 's/\,//g'|sed 's/K://g'|awk '{print $1,$2,$4}'|sed 's/)//g' > ${tmp_collect_memory_file_name}
+	
+	echo "=============================================================="
+	i=0
+	while read buf_processname
+	do
+		processname=`echo ${buf_processname}|awk '{print $1}'`
+		echo "start calc process[$i] Total[${total_count_of_process}]: "${processname}" gogogo"
+		((start_time=$(date +%s)))
+		killed_times=0
+		pcycle=1
+		ptotal=0
+		pmax=0
+		pavg=0
+		lastpid=0
+		while read buf_processParameters
+		do
+			pid=`echo ${buf_processParameters}|awk '{print $3}'`
+			pname=`echo ${buf_processParameters}|awk '{print $2}'`
+			psize=`echo ${buf_processParameters}|awk '{print $1}'`
+			#echo ${buf_processParameters}
+			#echo ${pname}
+			if [ "${pname}" == "${buf_processname}" ];then
+				echo "${pname} eq ${buf_processname}"
+				
+				pcycle=`expr ${pcyle} + 1`
+				ptotal=`expr ${ptotal} + ${psize}`
+				
+				if [ ${lastpid} -ne ${pid} ];then
+					lastpid=${pid}
+					killed_times=`expr ${killed_times} + 1`
+				fi
+				
+				if [ ${psize} -gt ${pmax} ];then
+					pmax=${psize}
+				fi
+				echo ${buf_processParameters}"+++++"${lastpid}" "${killed_times}" "${pmax}
+				#break;
+			fi
+			
+		done < ${tmp_collect_memory_file_name}
+		
+		pavg=`expr ${ptotal} / ${pcycle}`
+		echo -e "${buf_processname}\t${pcycle}\t${pavg}\t${pmax}\t${killed_times}"
+		echo
+		
+		i=`expr ${i} + 1`
+		((end_time=$(date +%s)))
+		cost_time=`expr ${end_time} - ${start_time}`
+		echo "Cost time: "${cost_time}
+	done < ${tmp_file_name}
+	echo "Total process: ${total_count_of_process}"
+	echo "Total Size: "
+	echo "=============================================================="
+}
+
+######################################################################
+function calc_avg_and_max_for_AndroidN {
+
+	tmp_file_name="tmp.all.process.list"
+	tmp_collect_memory_file_name="tmp.all.process.memory.file"
+	
+	source_file=$1
+
+	echo "source file: $2 ${source_file}"
+	
+	if [ -f ${tmp_file_name} ];then
+		rm ${tmp_file_name}
+	fi
+	
+	if [ -f ${tmp_collect_memory_file_name} ];then
+		rm ${tmp_collect_memory_file_name}
+	fi
+	
+	#collect all process into a tmp file
+	cat ${source_file} |sed -n '/Total PSS by process:/,/Total PSS by OOM adjustment:/p'|sed '/Total/d'|sed 's/\,//g'|awk '{print $2}'|sort|uniq|sed '/^$/d'|sed 's/\///g' > ${tmp_file_name}
+	total_count_of_process=`cat ${tmp_file_name}|wc -l`
+
+	#size name pid
+	cat ${source_file} |sed -n '/Total PSS by process:/,/Total PSS by OOM adjustment:/p'|sed '/Total/d'|sed 's/\,//g'|sed 's/K://g'|awk '{print $1,$2,$4}'|sed 's/)//g'|sed '/^$/d'|sed 's/\///g' > ${tmp_collect_memory_file_name}
+
+	echo "=============================================================="
+	echo -e "RECORD: PNAME PCYCLE PAVG PMAX PKILLED"
+	i=0
+	while read buf_processname
+	do
+		processname=`echo ${buf_processname}|awk '{print $1}'`
+		echo "start calc process[$i] Total[${total_count_of_process}]: "${processname}" gogogo"
+		((start_time=$(date +%s)))
+		killed_times=0
+		pcycle=1
+		ptotal=0
+		pmax=0
+		pavg=0
+		lastpid=0
+		awk -v a_processname="$processname" '
+			BEGIN{
+				a_killed_times=0;
+				a_pcycle=0;
+				a_ptotal=0;
+				a_pmax=0;
+				a_pavg=0;
+				a_lastpid=0;
+			}
+			
+			{
+				pid=$3;
+				pname=$2;
+				psize=$1;
+				print "p1 is: "a_processname" p2 is: "pname;
+				if(pname == a_processname){
+					print pname" eq "a_processname;
+				
+					a_pcycle++;
+					a_ptotal=a_ptotal+psize;
+					
+					if(a_lastpid != pid){
+						a_lastpid=pid;
+						a_killed_times++;
+					}
+					
+					if(psize > a_pmax){
+						a_pmax=psize;
+					}
+					
+					print $1"-->"a_lastpid" "a_killed_times" "a_pmax;
+				}
+			}
+			
+			END{
+				a_pavg=a_ptotal/a_pcycle/1024;
+				a_pmax=a_pmax/1024;
+				print "RECORD: "a_processname" "a_pcycle" "a_pavg" "a_pmax" "a_killed_times;
+			}
+		' ${tmp_collect_memory_file_name}
+		
+		#pavg=`expr ${ptotal} / ${pcycle}`
+		#echo -e "${buf_processname}\t${pcycle}\t${pavg}\t${pmax}\t${killed_times}"
+		#echo
+		
+		i=`expr ${i} + 1`
+		((end_time=$(date +%s)))
+		cost_time=`expr ${end_time} - ${start_time}`
+		echo "Cost time: "${cost_time}
+	done < ${tmp_file_name}
+	#echo "Total process: ${total_count_of_process}"
+	#echo "Total Size: "
+	echo "=============================================================="
+}
+
+######################################################################
+function calc_avg_and_max_for_AndroidM {
+
+	tmp_file_name="tmp.all.process.list"
+	tmp_collect_memory_file_name="tmp.all.process.memory.file"
+	
+	source_file=$1
+
+	echo "source file: $2 ${source_file}"
+	
+	if [ -f ${tmp_file_name} ];then
+		rm ${tmp_file_name}
+	fi
+	
+	if [ -f ${tmp_collect_memory_file_name} ];then
+		rm ${tmp_collect_memory_file_name}
+	fi
+	
+	#collect all process into a tmp file
+	cat ${source_file} |sed -n '/Total PSS by process:/,/Total PSS by OOM adjustment:/p'|sed '/Total/d'|sed 's/\,//g'|awk '{print $3}'|sort|uniq|sed '/^$/d'|sed 's/\///g' > ${tmp_file_name}
+	total_count_of_process=`cat ${tmp_file_name}|wc -l`
+
+	#size name pid
+	cat ${source_file} |sed -n '/Total PSS by process:/,/Total PSS by OOM adjustment:/p'|sed '/Total/d'|awk '{print $1,$3,$5}'|sed 's/)//g'|sed '/^$/d'|sed 's/\///g' > ${tmp_collect_memory_file_name}
+
+	echo "=============================================================="
+	echo -e "RECORD: PNAME PCYCLE PAVG PMAX PKILLED"
+	i=0
+	while read buf_processname
+	do
+		processname=`echo ${buf_processname}|awk '{print $1}'`
+		echo "start calc process[$i] Total[${total_count_of_process}]: "${processname}" gogogo"
+		((start_time=$(date +%s)))
+		killed_times=0
+		pcycle=1
+		ptotal=0
+		pmax=0
+		pavg=0
+		lastpid=0
+		awk -v a_processname="$processname" '
+			BEGIN{
+				a_killed_times=0;
+				a_pcycle=0;
+				a_ptotal=0;
+				a_pmax=0;
+				a_pavg=0;
+				a_lastpid=0;
+			}
+			
+			{
+				pid=$3;
+				pname=$2;
+				psize=$1;
+				print "p1 is: "a_processname" p2 is: "pname;
+				if(pname == a_processname){
+					print pname" eq "a_processname;
+				
+					a_pcycle++;
+					a_ptotal=a_ptotal+psize;
+					
+					if(a_lastpid != pid){
+						a_lastpid=pid;
+						a_killed_times++;
+					}
+					
+					if(psize > a_pmax){
+						a_pmax=psize;
+					}
+					
+					print $1"-->"a_lastpid" "a_killed_times" "a_pmax;
+				}
+			}
+			
+			END{
+				a_pavg=a_ptotal/a_pcycle/1024;
+				a_pmax=a_pmax/1024;
+				print "RECORD: "a_processname" "a_pcycle" "a_pavg" "a_pmax" "a_killed_times;
+			}
+		' ${tmp_collect_memory_file_name}
+		
+		#pavg=`expr ${ptotal} / ${pcycle}`
+		#echo -e "${buf_processname}\t${pcycle}\t${pavg}\t${pmax}\t${killed_times}"
+		#echo
+		
+		i=`expr ${i} + 1`
+		((end_time=$(date +%s)))
+		cost_time=`expr ${end_time} - ${start_time}`
+		echo "Cost time: "${cost_time}
+	done < ${tmp_file_name}
+	#echo "Total process: ${total_count_of_process}"
+	#echo "Total Size: "
+	echo "=============================================================="
+}
+
+function testf {
+	tmp_file_name="tmp.all.process.list"
+	tmp_collect_memory_file_name="tmp.all.process.memory.file"
+	
+	source_file=$1
+
+	echo "source file: $2 ${source_file}"
+	
+	if [ -f ${tmp_file_name} ];then
+		rm ${tmp_file_name}
+	fi
+	
+	if [ -f ${tmp_collect_memory_file_name} ];then
+		rm ${tmp_collect_memory_file_name}
+	fi
+	
+	#collect all process into a tmp file
+	cat ${source_file} |sed -n '/Total PSS by process:/,/Total PSS by OOM adjustment:/p'|sed '/Total/d'|sed 's/\,//g'|awk '{print $2}'|sort|uniq|sed '/^$/d'|sed 's/\///g' > ${tmp_file_name}
+	total_count_of_process=`cat ${tmp_file_name}|wc -l`
+
+	#size name pid
+	cat ${source_file} |sed -n '/Total PSS by process:/,/Total PSS by OOM adjustment:/p'|sed '/Total/d'|sed 's/\,//g'|sed 's/K://g'|awk '{print $1,$2,$4}'|sed 's/)//g'|sed '/^$/d'|sed 's/\///g' > ${tmp_collect_memory_file_name}
+
+	echo "=============================================================="
+	echo -e "RECORD: PNAME PCYCLE PAVG PMAX PKILLED"
+	i=0
+	while read buf_processname
+	do
+		processname=`echo ${buf_processname}|awk '{print $1}'`
+		echo "start calc process[$i] Total[${total_count_of_process}]: "${processname}" gogogo"
+		((start_time=$(date +%s)))
+		killed_times=0
+		pcycle=1
+		ptotal=0
+		pmax=0
+		pavg=0
+		lastpid=0
+		awk -v a_processname="$processname" '
+			BEGIN{
+				a_killed_times=0;
+				a_pcycle=0;
+				a_ptotal=0;
+				a_pmax=0;
+				a_pavg=0;
+				a_lastpid=0;
+			}
+			
+			{
+				pid=$3;
+				pname=$2;
+				psize=$1;
+				print "p1 is: "a_processname" p2 is: "pname;
+				if(pname == a_processname){
+					print pname" eq "a_processname;
+				
+					a_pcycle++;
+					a_ptotal=a_ptotal+psize;
+					
+					if(a_lastpid != pid){
+						a_lastpid=pid;
+						a_killed_times++;
+					}
+					
+					if(psize > a_pmax){
+						a_pmax=psize;
+					}
+					
+					print $1"-->"a_lastpid" "a_killed_times" "a_pmax;
+				}
+			}
+			
+			END{
+				a_pavg=a_ptotal/a_pcycle/1024;
+				a_pmax=a_pmax/1024;
+				print "RECORD: "a_processname" "a_pcycle" "a_pavg" "a_pmax" "a_killed_times;
+			}
+		' ${tmp_collect_memory_file_name}
+		
+		#pavg=`expr ${ptotal} / ${pcycle}`
+		#echo -e "${buf_processname}\t${pcycle}\t${pavg}\t${pmax}\t${killed_times}"
+		#echo
+		
+		i=`expr ${i} + 1`
+		((end_time=$(date +%s)))
+		cost_time=`expr ${end_time} - ${start_time}`
+		echo "Cost time: "${cost_time}
+	done < ${tmp_file_name}
+	#echo "Total process: ${total_count_of_process}"
+	#echo "Total Size: "
+	echo "=============================================================="
+}
+
+# function print_fps_dynamic {
+	
+	# while true
+	# do
+		# filter=`cat tmp.surfaceflnger.latency|awk '{print $1}'`
+		# echo "filter is: "${filter}
+		# ((start_time=$(date +%s)))
+		# adb shell dumpsys SurfaceFlinger --latency|awk -v a_filter="$filter" '
+													# BEGIN {
+													# fps=0;prev=0;curr=0;
+													# } 
+													
+													# {
+														# if (a_filter==0) {
+															# if(NR==1) {_tmp_fps=$1;} 
+															# if(NR==2) {prev=$2;} 
+															# if(NR>2) {
+															# curr=$2;
+															# fps=(curr-prev);
+															# prev=curr; 
+															# print fps; 
+															# if(NR==128){print $2 > "tmp.surfaceflnger.latency"}
+															# }
+														# }
+													
+														# if ($2 == a_filter) {
+															
+															# if(NR==128){print $2 > "tmp.surfaceflnger.latency"}
+															# }
+														# }
+														
+													# }
+													# '
+		# ((end_time=$(date +%s)))
+		# cost_time=`expr ${end_time} - ${start_time}`
+		# rest_time=`expr 200000 - ${cost_time}`
+		# python -c "import time;import sys;print(sys.argv[1]);time.sleep(sys.argv[1])" ${rest_time};
+	# done
+	
+	
+
+# }
+
+
+# function merger_excel_data {
+	# #awk '{print }'
+# }
+
+function export_to_excel_for_AndroidN {
+	tmp_excel_data="tmp.excel.data"
+	tmp_excel_title="tmp.excel.title"
+	tmp_excel_merger_file="tmp.excel.merger.file"
+	
+	source_file=$1
+	
+	grep -a "Total RAM:" ${source_file}| awk '{print $3}'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.physical
+	grep -a "Used RAM:" ${source_file}| awk '{print $3}'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.used
+	grep -a "Used RAM:" ${source_file} | awk '{print $9}'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}'> ${tmp_excel_data}.kernel
+	grep -a "Free RAM:" ${source_file} | awk '{print $13}'|sed 's/\,//g'|sed 's/K//g' |awk '{print $1/1024}'> ${tmp_excel_data}.free
+	grep -a "CACHE RAM:" ${source_file} | awk '{print $3}'|sed 's/\,//g'|sed 's/K//g' |awk '{print $1/1024}'> ${tmp_excel_data}.cache
+	grep -a "ZRAM:" ${source_file} | awk '{print $2}'|sed 's/\,//g'|sed 's/K//g' |awk '{print $1/1024}'> ${tmp_excel_data}.zram
+	grep -a "KSM:" ${source_file} | awk '{print $2}'|sed 's/\,//g'|sed 's/K//g' |awk '{print $1/1024}'> ${tmp_excel_data}.ksm
+	grep -a "K: system" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.system
+	grep -a "K: surfaceflinger" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.surfaceflinger
+	grep -a "K: com.afmobi.carlcare" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.carlcare
+	grep -a "K: com.transsion.XOSLauncher" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.launcher
+	grep -a "K: com.google.android.apps.maps" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.apps.maps
+	grep -a "K: com.facebook.katana" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.katana
+	grep -a "K: net.bat.store" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.batstore
+	grep -a "K: com.google.android.googlequicksearchbox:search" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.search
+
+	
+	echo "PHY USED KERNEL FREE CACHE ZRAM KSM SYSTEM SF carlcare XOSLauncher apps.maps katana batstore googlequicksearchbox" > ${tmp_excel_title}
+}
+
+function export_to_excel_for_AndroidM {
+	tmp_excel_data="tmp.excel.data"
+	tmp_excel_title="tmp.excel.title"
+	tmp_excel_merger_file="tmp.excel.merger.file"
+	
+	source_file=$1
+	
+	grep -a "Total RAM:" ${source_file}| awk '{print $3}'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.physical
+	grep -a "Used RAM:" ${source_file}| awk '{print $5}'|sed 's/\,//g'|sed 's/K//g'|sed 's/(//g'|awk '{print $1/1024}' > ${tmp_excel_data}.usedpss
+	grep -a "Used RAM:" ${source_file} | awk '{print $9}'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}'> ${tmp_excel_data}.kerneldynamic
+	grep -a "Free RAM:" ${source_file} | awk '{print $5}'|sed 's/\,//g'|sed 's/K//g' |sed 's/(//g'|awk '{print $1/1024}'> ${tmp_excel_data}.cachedpss
+	grep -a "Free RAM:" ${source_file} | awk '{print $9}'|sed 's/\,//g'|sed 's/K//g' |sed 's/(//g'|awk '{print $1/1024}'> ${tmp_excel_data}.cachedkernel
+	grep -a "Free RAM:" ${source_file} | awk '{print $13}'|sed 's/\,//g'|sed 's/K//g' |awk '{print $1/1024}'> ${tmp_excel_data}.free
+	grep -a "CACHE RAM:" ${source_file} | awk '{print $3}'|sed 's/\,//g'|sed 's/K//g' |awk '{print $1/1024}'> ${tmp_excel_data}.cache
+	grep -a "ZRAM:" ${source_file} | awk '{print $2}'|sed 's/\,//g'|sed 's/K//g' |awk '{print $1/1024}'> ${tmp_excel_data}.zram
+	grep -a "KSM:" ${source_file} | awk '{print $2}'|sed 's/\,//g'|sed 's/K//g' |awk '{print $1/1024}'> ${tmp_excel_data}.ksm
+	grep -a "K: system" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.system
+	grep -a "K: surfaceflinger" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.surfaceflinger
+	grep -a "K: com.afmobi.carlcare" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.carlcare
+	grep -a "K: com.transsion.XOSLauncher" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.launcher
+	grep -a "K: com.google.android.apps.maps" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.apps.maps
+	grep -a "K: com.facebook.katana" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.katana
+	grep -a "K: net.bat.store" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.batstore
+	grep -a "K: com.google.android.googlequicksearchbox:search" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.search
+
+	
+	echo "PHY USEDPSS KER_DY CACHEDPSS CACHEDKER FREE CACHE ZRAM KSM SYSTEM SF carlcare XOSLauncher apps.maps katana batstore googlequicksearchbox" > ${tmp_excel_title}
+}
+
+function export_to_excel_for_S1 {
+	tmp_excel_data="tmp.excel.data"
+	tmp_excel_title_adj="tmp.excel.title.adj"
+	tmp_excel_title_apk="tmp.excel.title.apk"
+	tmp_excel_merger_file="tmp.excel.merger.file"
+	
+	source_file=$1
+	
+	grep -a "kB: Native" ${source_file}|awk '{print $1}'|sed '1~2!d'|awk '{print $1/1024}' > ${tmp_excel_data}.Native
+	grep -a "kB: System" ${source_file}|awk '{print $1}'|awk '{print $1/1024}' > ${tmp_excel_data}.System
+	grep -a "kB: Persistent$" ${source_file}|awk '{print $1}'|awk '{print $1/1024}' > ${tmp_excel_data}.Persistent
+	grep -a "kB: Foreground" ${source_file}|awk '{print $1}'|awk '{print $1/1024}' > ${tmp_excel_data}.Foreground
+	grep -a "kB: Visible" ${source_file}|awk '{print $1}'|awk '{print $1/1024}' > ${tmp_excel_data}.Visible
+	grep -a "kB: A Services" ${source_file}|awk '{print $1}'|awk '{print $1/1024}' > ${tmp_excel_data}.AServices
+	grep -a "kB: Previous" ${source_file}|awk '{print $1}'|awk '{print $1/1024}' > ${tmp_excel_data}.Previous
+	grep -a "kB: B Services" ${source_file}|awk '{print $1}'|awk '{print $1/1024}' > ${tmp_excel_data}.BServices
+	grep -a "kB: Cached" ${source_file}|awk '{print $1}'|awk '{print $1/1024}' > ${tmp_excel_data}.Cached
+	grep -a "Used RAM:" ${source_file} | awk '{print $9}'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}'> ${tmp_excel_data}.kerneldynamic
+	grep -a "ZRAM:" ${source_file} | awk '{print $2}'|sed 's/\,//g'|sed 's/K//g' |awk '{print $1/1024}'> ${tmp_excel_data}.zram
+	grep -a "KSM:" ${source_file} | awk '{print $2}'|sed 's/\,//g'|sed 's/K//g' |awk '{print $1/1024}'> ${tmp_excel_data}.ksm
+
+	grep -a "K: com.afmobi.carlcare" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.carlcare
+	grep -a "K: com.transsion.XOSLauncher" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.launcher
+	grep -a "K: com.google.android.apps.maps" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.apps.maps
+	grep -a "K: com.facebook.katana" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.katana
+	grep -a "K: net.bat.store" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.batstore
+	grep -a "K: com.google.android.googlequicksearchbox:search" ${source_file} |sed '1~2!d'|sed 's/\,//g'|sed 's/K//g'|awk '{print $1/1024}' > ${tmp_excel_data}.search
+
+	echo "Native System Persistent Foreground Visible AService Previous BService Cached KD ZRAM KSM" > ${tmp_excel_title_adj}
+	echo "carlcare XOSLauncher apps.maps katana batstore googlequicksearchbox" > ${tmp_excel_title_apk}
+}
+
+######################################################################
+#main here
+if [ 0 -eq $# ];then
+	memory_statistics
+else
+	if [ "-m" == $1 ];then
+		monitor_process_memory;exit;
+	fi
+	
+	if [ "-ma" == $1 ];then
+		monitor_process_memory_2;exit;
+	fi
+	
+	if [ "-mm" == $1 ];then
+		monitor_process_memory_3;exit;
+	fi
+
+	
+	if [ "kernel" == $1 ];then
+		$0 store_kernel;
+		show_kernel;
+		exit;
+	fi
+	
+	if [ "store_kernel" == $1 ];then
+		store_kernel;exit
+	fi
+	
+	if [ "killsub" == $1 ];then
+		kill_sub;exit
+	fi
+	
+	if [ "surface" == $1 ];then
+		memory_surface;exit
+	fi
+	
+	if [ "meminfo" == $1 ];then
+		memory_meminfo;exit
+	fi
+	
+	if [ "meminfo2" == $1 ];then
+		memory_meminfo2;exit
+	fi
+	
+	if [ "-f" == $1 ];then
+		calc_avg_and_max $2;exit
+	fi
+	
+	if [ "-AN" == $1 ];then
+		calc_avg_and_max_for_AndroidN $2;exit
+	fi
+	
+	if [ "-AM" == $1 ];then
+		calc_avg_and_max_for_AndroidM $2;exit
+	fi
+	
+	if [ "test" == $1 ];then
+		basepath=$(cd `dirname $0`; pwd)
+		echo $basepath
+		echo $0
+		testf $2;exit
+	fi
+	
+	if [ "expAN" == $1 ];then
+		export_to_excel_for_AndroidN $2;exit
+	fi
+	
+	if [ "expAM" == $1 ];then
+		export_to_excel_for_AndroidM $2;exit
+	fi
+	
+	if [ "-p" == $1 ];then
+		if [ "S1" == $2 ];then
+			export_to_excel_for_S1 $3;exit
+		fi
+	
+
+	fi
+	
+	usage
+fi

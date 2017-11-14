@@ -1,0 +1,16 @@
+#!/bin/bash
+
+. os.u
+
+# start_vmstat_ternimal logfile
+function start_vmstat_ternimal {
+	logfile_vmstat=$1
+	
+	if [ $myscript_os == "cygwin" ];then
+		$terminal_execfile -t "Record vmstat" -h always -w max --log $logfile_vmstat -e record_memory vmstat  &
+	fi
+	
+	if [ $myscript_os == "msys" ];then	
+		$terminal_execfile -t "Record vmstat" -h always -w max --log $logfile_vmstat -e record_memory vmstat  &
+	fi
+}

@@ -1,0 +1,739 @@
+#!/bin/bash
+
+. color.u
+
+if [ ! $1 ];then
+	conf_file=$SCRIPT_ROOT/.conf
+else
+	conf_file=$1
+fi
+
+if [ ! -f $conf_file ];then
+	red_white "Are you sure the config file $conf_file is exsit??"
+	exit
+fi
+
+case_script_path=$SCRIPT_ROOT/bin/
+
+testcase_mode=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "testcase=" |awk -F "=" 'END{print $2;}'`
+
+testcase_name=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "name=" |awk -F "=" 'END{print $2;}'`
+applist=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "applist=" |awk -F "=" 'END{print $2;}'`
+need_reboot=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "reboot" |awk -F "=" 'END{print $1;}'`
+prebuilt_tools=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "prepare_tools=" |awk -F "=" 'END{print $2;}'`
+loop_mode=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "outside=" |awk -F "=" 'END{print $2;}'`
+default_cycles=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "cycle=" |awk -F "=" 'END{print $2;}'`
+
+# no parameters
+lock_cpu_freq=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "lock_cpu_freq"  |awk 'END{print $1;}'`
+dis_cpu_hp=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "dis_cpu_hp"  |awk 'END{print $1;}'`
+en_cpu_hp=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "en_cpu_hp"  |awk 'END{print $1;}'`
+turn_on_processmanager=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "turn_on_processmanager"  |awk 'END{print $1;}'`
+turn_off_processmanager=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "turn_off_processmanager"  |awk 'END{print $1;}'`
+enable_zram=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "enable_zram"  |awk 'END{print $1;}'`
+disable_zram=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "disable_zram"  |awk 'END{print $1;}'`
+enable_ksm=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "enable_ksm"  |awk 'END{print $1;}'`
+disable_ksm=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "disable_ksm"  |awk 'END{print $1;}'`
+
+# have parameters
+set_dirty_ratio=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "set_dirty_ratio"  |awk 'END{print $2;}'`
+set_bg_ratio=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "set_bg_ratio"  |awk 'END{print $2;}'`
+set_ext_free_kbytes=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "set_ext_free_kbytes"  |awk 'END{print $2;}'`
+set_ksm_sleep_millisecs=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "set_ksm_sleep_millisecs"  |awk 'END{print $2;}'`
+set_ksm_pages_to_scan=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "set_ksm_pages_to_scan"  |awk 'END{print $2;}'`
+
+# misc related
+set_console_loglevel=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "console_loglevel=" |awk -F "=" 'END{print $2;}'`
+
+# mail related
+mail_server=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "server=" |awk -F "=" 'END{print $2;}'`
+mail_port=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "port=" |awk -F "=" 'END{print $2;}'`
+mail_password=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "password=" |awk -F "=" 'END{print $2;}'`
+mail_sender=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "sender=" |awk -F "=" 'END{print $2;}'`
+mail_receiver=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "^receiver=" |awk -F "=" 'END{print $2;}'`
+mail_cc_receiver=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "cc_receiver=" |awk -F "=" 'END{print $2;}'`
+
+# gc related
+gc_test=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "gc_test=" |awk -F "=" 'END{print $2;}'`
+gc_heapstartsize=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "dalvik.vm.heapstartsize=" |awk -F "=" 'END{print $2;}'`
+gc_heaputilization=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "dalvik.vm.heaputilization=" |awk -F "=" 'END{print $2;}'`
+gc_heapminfree=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "dalvik.vm.heapminfree=" |awk -F "=" 'END{print $2;}'`
+gc_heapmaxfree=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "dalvik.vm.heapmaxfree=" |awk -F "=" 'END{print $2;}'`
+
+if [ -z $gc_heapstartsize ];then
+	gc_heapstartsize=""
+else
+	gc_heapstartsize="dalvik.vm.heapstartsize=$gc_heapstartsize"
+fi
+
+if [ -z $gc_heaputilization ];then
+	gc_heaputilization=""
+else
+	gc_heaputilization="dalvik.vm.heaputilization=$gc_heaputilization"
+fi
+
+if [ -z $gc_heapminfree ];then
+	gc_heapminfree=""
+else
+	gc_heapminfree="dalvik.vm.heapminfree=$gc_heapminfree"
+fi
+
+if [ -z $gc_heapmaxfree ];then
+	gc_heapmaxfree=""
+else
+	gc_heapmaxfree="dalvik.vm.heapmaxfree=$gc_heapmaxfree"
+fi
+#adb pull //system/build.prop
+#echo $gc_heapstartsize >> build.prop
+#echo $gc_heaputilization >> build.prop
+#echo $gc_heapminfree >> build.prop
+#echo $gc_heapmaxfree >> build.prop
+#adb push build.prop //system/
+#adb shell chmod 0644 //system/build.prop
+#adb reboot
+#adb wait-for-device
+#adb root
+mail_module=enable
+if [ -z $mail_server ];then
+	mail_server=""
+	mail_module=disable
+else
+	mail_server="-v $mail_server"
+fi
+
+if [ -z $mail_port ];then
+	mail_port=""
+	mail_module=disable
+else
+	mail_port="--port $mail_port"
+fi
+
+if [ -z $mail_password ];then
+	mail_password=""
+	mail_module=disable
+else
+	mail_password="-p $mail_password"
+fi
+
+if [ -z $mail_sender ];then
+	mail_sender=""
+	mail_module=disable
+else
+	mail_sender="-s $mail_sender"
+fi
+
+if [ -z $mail_receiver ];then
+	mail_receiver=""
+	mail_module=disable
+else
+	mail_receiver="-r $mail_receiver"
+fi
+
+if [ -z $mail_cc_receiver ];then
+	mail_cc_receiver=""
+else
+	mail_cc_receiver="-c $mail_cc_receiver"
+fi
+
+# log related config
+log_top=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "log_top="  |awk -F "=" 'END{print $2;}'`
+log_vmstat=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "log_vmstat="  |awk -F "=" 'END{print $2;}'`
+log_meminfo=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "log_meminfo="  |awk -F "=" 'END{print $2;}'`
+log_kernel=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "log_kernel="  |awk -F "=" 'END{print $2;}'`
+log_event=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "log_event="  |awk -F "=" 'END{print $2;}'`
+log_ftrace=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "log_ftrace="  |awk -F "=" 'END{print $2;}'`
+log_fps=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "fps="  |awk -F "=" 'END{print $2;}'`
+log_mainlog=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "log_mainlog="  |awk -F "=" 'END{print $2;}'`
+
+if [ -z $testcase_name ];then
+	echo $testcase_name
+	red_white "You Must Define the Testcase Name"
+	exit
+fi
+
+if [ -z $applist ];then
+	echo $applist
+	red_white "You Must Define the App list"
+	exit
+fi
+
+if [ -z $need_reboot ];then
+	need_reboot="#adb reboot"
+else
+	need_reboot="adb reboot"
+fi
+# no parameters
+#enable_zram
+#disable_zram
+#enable_ksm
+#disable_ksm
+if [ -z $lock_cpu_freq ];then
+	lock_cpu_freq="#lock_cpu_freq"
+else
+	lock_cpu_freq="lock_cpu_freq"
+fi
+
+if [ -z $dis_cpu_hp ];then
+	dis_cpu_hp="#dis_cpu_hp"
+else
+	dis_cpu_hp="dis_cpu_hp"
+fi
+
+if [ -z $en_cpu_hp ];then
+	en_cpu_hp="#en_cpu_hp"
+else
+	en_cpu_hp="en_cpu_hp"
+fi
+
+if [ -z $turn_on_processmanager ];then
+	turn_on_processmanager="#turn_on_processmanager"
+else
+	turn_on_processmanager="turn_on_processmanager"
+fi
+
+if [ -z $turn_off_processmanager ];then
+	turn_off_processmanager="#turn_off_processmanager"
+else
+	turn_off_processmanager="turn_off_processmanager"
+fi
+
+if [ -z $enable_zram ];then
+	enable_zram="#enable_zram"
+else
+	enable_zram="enable_zram"
+fi
+
+if [ -z $disable_zram ];then
+	disable_zram="#disable_zram"
+else
+	disable_zram="disable_zram"
+fi
+
+if [ -z $enable_ksm ];then
+	enable_ksm="#enable_ksm"
+else
+	enable_ksm="enable_ksm"
+fi
+
+if [ -z $disable_ksm ];then
+	disable_ksm="#disable_ksm"
+else
+	disable_ksm="disable_ksm"
+fi
+
+# have parameters
+#set_ksm_sleep_millisecs 100
+#set_ksm_pages_to_scan 100
+if [ -z $set_dirty_ratio ];then
+	set_dirty_ratio="#set_dirty_ratio 20"
+else
+	set_dirty_ratio="set_dirty_ratio $set_dirty_ratio"
+fi
+
+if [ -z $set_bg_ratio ];then
+	set_bg_ratio="#set_bg_ratio 5"
+else
+	set_bg_ratio="set_bg_ratio $set_bg_ratio"
+fi
+
+if [ -z $set_ext_free_kbytes ];then
+	set_ext_free_kbytes="#set_ext_free_kbytes 0"
+else
+	set_ext_free_kbytes="set_ext_free_kbytes $set_ext_free_kbytes"
+fi
+
+if [ -z $set_ksm_sleep_millisecs ];then
+	set_ksm_sleep_millisecs="#set_ksm_sleep_millisecs 20"
+else
+	set_ksm_sleep_millisecs="set_ksm_sleep_millisecs $set_ksm_sleep_millisecs"
+fi
+
+if [ -z $set_ksm_pages_to_scan ];then
+	set_ksm_pages_to_scan="#set_ksm_pages_to_scan 100"
+else
+	set_ksm_pages_to_scan="set_ksm_pages_to_scan $set_ksm_pages_to_scan"
+fi
+
+# misc related 
+if [ -z $set_console_loglevel ];then
+	set_console_loglevel="#set_console_loglevel $set_console_loglevel"
+else
+	set_console_loglevel="set_console_loglevel $set_console_loglevel"
+fi
+
+# log related	
+if [ -z $log_top ];then
+	log_top="#start_top_terminal \$logfile_top"
+else
+	if [ $log_top == "yes" ];then
+		log_top="start_top_terminal \$logfile_top"
+	else
+		log_top="#start_top_terminal \$logfile_top"
+	fi
+fi
+
+if [ -z $log_vmstat ];then
+	log_vmstat="#start_vmstat_ternimal \$logfile_vmstat"
+else
+	if [ $log_vmstat == "yes" ];then
+		log_vmstat="start_vmstat_ternimal \$logfile_vmstat"
+	else
+		log_vmstat="#start_vmstat_ternimal \$logfile_vmstat"
+	fi	
+fi
+
+if [ -z $log_meminfo ];then
+	log_meminfo="#start_meminfo_terminal \$logfile_meminfo"
+else
+	if [ $log_meminfo == "yes" ];then
+		log_meminfo="start_meminfo_terminal \$logfile_meminfo"
+	else
+		log_meminfo="#start_meminfo_terminal \$logfile_meminfo"
+	fi
+fi
+
+if [ -z $log_kernel ];then
+	log_kernel="#start_kernel_ternimal \$logfile_kernellog"
+else
+	if [ $log_kernel == "yes" ];then
+		log_kernel="start_kernel_ternimal \$logfile_kernellog"
+	else
+		log_kernel="#start_kernel_ternimal \$logfile_kernellog"
+	fi
+fi
+
+if [ -z "$log_event" ];then
+	log_event="#start_event_terminal \$logfile_eventlog"
+else
+	log_event="start_event_terminal \$logfile_eventlog $log_event"
+fi
+
+if [ -z "$log_mainlog" ];then
+	log_mainlog="#start_mainlog_terminal \$logfile_mainlog"
+else
+	log_mainlog="start_mainlog_terminal \$logfile_mainlog $log_mainlog"
+fi
+
+if [ -z $log_ftrace ];then
+	log_ftrace="#start_event_terminal \$logfile_ftracelog"
+else
+	if [ $log_ftrace == "yes" ];then
+		log_ftrace="start_event_terminal \$logfile_ftracelog"
+	else
+		log_ftrace="#start_event_terminal \$logfile_ftracelog"
+	fi
+fi
+
+if [ -z $log_fps ];then
+	clean_fps="#clean_fps_by_packageName \${packages[\$i]} > .tmp.null"
+	log_fps="#dump_fps_by_packageName \${packages[\$i]} >> ./\$fps_folder/fps.\${packages[\$i]}"
+else
+	clean_fps="clean_fps_by_packageName \${packages[\$i]} > .tmp.null"
+	if [ $log_fps == "package" ];then
+		log_fps="dump_fps_by_packageName \${packages[\$i]} >> ./\$fps_folder/fps.\${packages[\$i]}"
+	else
+		if [ $log_fps == "time" ];then
+			log_fps="dump_fps_by_time >> ./\$fps_folder/fps.bytime"
+		fi
+	fi
+fi
+
+misc_info_parser=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "misc_info_parser="  |awk -F "=" 'END{print $2;}'`
+meminfo_parser=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "meminfo_parser="  |awk -F "=" 'END{print $2;}'`
+app_launchtime_parser=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "app_launchtime_parser="  |awk -F "=" 'END{print $2;}'`
+app_crash_parser=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "app_crash_parser="  |awk -F "=" 'END{print $2;}'`
+lmk_count_byADJ_parser=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "lmk_count_byADJ_parser="  |awk -F "=" 'END{print $2;}'`
+vmstat_parser=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "vmstat_parser="  |awk -F "=" 'END{print $2;}'`
+gc_parser=`sed '/#/d' ${conf_file} |sed '/^$/d'|grep "gc_parser="  |awk -F "=" 'END{print $2;}'`
+
+if [ -z $misc_info_parser ];then
+	misc_info_parser="#collect_misc_info | tee -a \$logfile_result"
+else
+	if [ $misc_info_parser == "yes" ];then
+		misc_info_parser="collect_misc_info | tee -a \$logfile_result"
+	else
+		misc_info_parser="#collect_misc_info | tee -a \$logfile_result"
+	fi
+fi
+
+if [ -z $meminfo_parser ];then
+	meminfo_parser="#parse_meminfo \$logfile_meminfo | tee -a \$logfile_result"
+else
+	if [ $meminfo_parser == "yes" ];then
+		meminfo_parser="parse_meminfo \$logfile_meminfo | tee -a \$logfile_result"
+	else
+		meminfo_parser="#parse_meminfo \$logfile_meminfo | tee -a \$logfile_result"
+	fi
+fi
+
+if [ -z $app_launchtime_parser ];then
+	app_launchtime_parser="#parse_app_launchtime \$logfile_eventlog | tee -a \$logfile_result"
+else
+	if [ $app_launchtime_parser == "yes" ];then
+		app_launchtime_parser="parse_app_launchtime \$logfile_eventlog | tee -a \$logfile_result"
+	else
+		app_launchtime_parser="#parse_app_launchtime \$logfile_eventlog | tee -a \$logfile_result"
+	fi
+fi
+
+if [ -z $app_crash_parser ];then
+	app_crash_parser="#parse_app_crash \$logfile_eventlog | tee -a \$logfile_result"
+else
+	if [ $app_crash_parser == "yes" ];then
+		app_crash_parser="parse_app_crash \$logfile_eventlog | tee -a \$logfile_result"
+	else
+		app_crash_parser="#parse_app_crash \$logfile_eventlog | tee -a \$logfile_result"
+	fi
+fi
+
+if [ -z $lmk_count_byADJ_parser ];then
+	lmk_count_byADJ_parser="#parse_lmk_count_byADJ \$logfile_kernellog | tee -a \$logfile_result"
+else
+	if [ $lmk_count_byADJ_parser == "yes" ];then
+		lmk_count_byADJ_parser="parse_lmk_count_byADJ \$logfile_kernellog | tee -a \$logfile_result"
+	else
+		lmk_count_byADJ_parser="#parse_lmk_count_byADJ \$logfile_kernellog | tee -a \$logfile_result"
+	fi
+fi
+
+if [ -z $vmstat_parser ];then
+	vmstat_parser="#parse_vmstat \$logfile_vmstat | tee -a \$logfile_result"
+else
+	if [ $vmstat_parser == "yes" ];then
+		vmstat_parser="parse_vmstat \$logfile_vmstat | tee -a \$logfile_result"
+	else
+		vmstat_parser="#parse_vmstat \$logfile_vmstat | tee -a \$logfile_result"
+	fi
+fi
+
+if [ -z $gc_parser ];then
+	gc_parser="#parseGC \$logfile_mainlog \${CDIR}"
+else
+	if [ $gc_parser == "yes" ];then
+		gc_parser="parseGC \$logfile_mainlog \${CDIR}"
+	else
+		gc_parser="#parseGC \$logfile_mainlog \${CDIR}"
+	fi
+fi
+
+red "Please confirm your TestCase define:"
+echo "Name:            $testcase_name"
+echo "AppList:         $applist"
+echo "Default cycles:  $default_cycles"
+if [ -z "$need_reboot" ];then
+	echo
+else
+	echo "You will reboot your Device before you test"
+fi
+echo
+echo "$lock_cpu_freq"
+echo "$dis_cpu_hp"
+echo "$en_cpu_hp"
+echo "$set_dirty_ratio"
+echo "$set_bg_ratio"
+echo "$set_ext_free_kbytes"
+echo "$set_ksm_sleep_millisecs"
+echo "$set_ksm_pages_to_scan"
+echo 
+echo "$turn_on_processmanager"
+echo "$turn_off_processmanager"
+echo "$enable_ksm"
+echo "$disable_ksm"
+echo "$enable_zram"
+echo "$disable_zram"
+
+read -n 1
+
+(cat <<EOF
+#!/bin/bash
+# auto build by config
+
+#utils
+. color.u
+. process.u
+. os.u
+. env.u
+. android.u
+#logs
+. log.event
+. log.kernel
+. log.meminfo
+. log.vmstat
+. log.top
+. dump.fps
+. log.mainlog
+#parsers
+. applist.parser
+. meminfo.parser
+. appinfo.parser
+. kinfo.parser
+. misc.parser
+. vmstat.parser
+#configures
+. ext_free_bytes.conf
+. misc.conf
+
+#actions start
+prepare_app_list \$SCRIPT_ROOT/applist/$applist
+
+if [ "$prebuilt_tools" == "true" ];then
+	prepare_prebuilt_tools \$SCRIPT_ROOT/prebuilt_tools
+fi
+
+CDIR=\`echo \$PWD|awk -F "/" '{print \$NF}'\`;
+
+function testcase_$testcase_name {
+
+	if [ ! \$1 ];then
+		test_cycles=$default_cycles
+	else
+		test_cycles=\$1
+	fi
+
+	$need_reboot
+	adb wait-for-device
+	
+	${testcase_name}_start_time=\`date "+%Y%m%d%H%M%S"\`
+	logfile_${testcase_name}=logfile_actions_$testcase_name.\${${testcase_name}_start_time}.txt
+	red "Device OS is: \$os_build_vesion" | tee -a \$logfile_$testcase_name
+	
+	if [ \$os_build_vesion == "userdebug" -o \$os_build_vesion == "eng" ];then
+		if [ "$gc_test" == "on" ];then
+			#gc related start
+			verity_status=\`adb disable-verity|grep system|awk '{if(NR==1)print $3}'\`
+			if [ \$verity_status == "disabled" ];then
+				green "Verity already disabled on system"
+			else
+				adb root
+				adb disable-verity
+				adb reboot
+				adb wait-for-device
+			fi
+			
+			adb root
+			red "Begin to Modify GC parameters" | tee -a \$logfile_$testcase_name
+			adb wait-for-device
+			if [ -f build.prop ];then
+				rm -f build.prop
+			fi
+			adb root
+			sleep 2
+			adb wait-for-device
+			adb pull //system/build.prop .
+			echo $gc_heapstartsize >> build.prop
+			echo $gc_heaputilization >> build.prop
+			echo $gc_heapminfree >> build.prop
+			echo $gc_heapmaxfree >> build.prop
+			adb push build.prop //system/
+			adb shell chmod 0644 //system/build.prop
+			red "End to Modify GC parameters" | tee -a \$logfile_$testcase_name
+			adb reboot
+			adb wait-for-device
+			adb root
+			adb wait-for-device
+			echo "dalvik.vm.heapstartsize="\`adb shell getprop dalvik.vm.heapstartsize\` | tee -a \$logfile_$testcase_name
+			echo "dalvik.vm.heaputilization="\`adb shell getprop dalvik.vm.heaputilization\` | tee -a \$logfile_$testcase_name
+			echo "dalvik.vm.heapminfree="\`adb shell getprop dalvik.vm.heapminfree\` | tee -a \$logfile_$testcase_name
+			echo "dalvik.vm.heapmaxfree="\`adb shell getprop dalvik.vm.heapmaxfree\` | tee -a \$logfile_$testcase_name
+			#wait the home
+			sleep 20
+			#gc related end
+		fi
+	else
+		red "You cannot modify the GC parameters on user release!"
+	fi
+
+	$lock_cpu_freq
+	$lock_cpu_freq
+	$dis_cpu_hp
+	$en_cpu_hp
+	$set_dirty_ratio
+	$set_bg_ratio
+	$set_ext_free_kbytes
+	$turn_on_processmanager
+	$turn_off_processmanager
+	$enable_zram
+	$disable_zram
+	$enable_ksm
+	$disable_ksm
+	$set_ksm_sleep_millisecs
+	$set_ksm_pages_to_scan
+	
+	#misc related
+	$set_console_loglevel
+	
+	fps_folder=fps_\${${testcase_name}_start_time}
+	if [ ! -d \$fps_folder ];then
+		mkdir \$fps_folder
+	fi
+	
+	logfile_meminfo=logfile_meminfo_${testcase_name}.\${${testcase_name}_start_time}.txt
+	logfile_kernellog=logfile_kernellog_${testcase_name}.\${${testcase_name}_start_time}.txt
+	logfile_eventlog=logfile_eventlog_${testcase_name}.\${${testcase_name}_start_time}.txt
+	logfile_vmstat=logfile_vmstat_${testcase_name}.\${${testcase_name}_start_time}.txt
+	logfile_top=logfile_top_${testcase_name}.\${${testcase_name}_start_time}.txt
+	logfile_mainlog=logfile_mainlog_${testcase_name}.\${${testcase_name}_start_time}.txt
+	
+	#start_terminal
+	$log_event
+	$log_kernel
+	$log_meminfo
+	$log_vmstat
+	$log_top
+	$log_mainlog
+
+EOF
+) > $case_script_path/$testcase_name
+
+if [ -z $testcase_mode ];then
+(cat <<EOF
+	for ((j=1;j<=\$test_cycles;j=\$j+1))
+	do
+		for ((i=0;i<\${#activities[@]};i=\$i+1))
+		do
+EOF
+) >> $case_script_path/$testcase_name
+else
+	if [ $testcase_mode == "default" ];then
+		if [ -z $loop_mode ];then
+(cat <<EOF
+	for ((j=1;j<=\$test_cycles;j=\$j+1))
+	do
+		for ((i=0;i<\${#activities[@]};i=\$i+1))
+		do
+EOF
+) >> $case_script_path/$testcase_name
+		else
+			if [ $loop_mode == "cycle" ];then
+(cat <<EOF
+	for ((j=1;j<=\$test_cycles;j=\$j+1))
+	do
+		for ((i=0;i<\${#activities[@]};i=\$i+1))
+		do
+EOF
+) >> $case_script_path/$testcase_name
+			fi
+
+			if [ $loop_mode == "activity" ];then
+(cat <<EOF
+	for ((i=0;i<\${#activities[@]};i=\$i+1))
+	do
+		for ((j=1;j<=\$test_cycles;j=\$j+1))
+		do
+EOF
+) >> $case_script_path/$testcase_name
+			fi
+		fi	
+	fi
+	
+	if [ $testcase_mode == "monkey" ];then
+(cat <<EOF
+	for ((j=1;j<=\$test_cycles;j=\$j+1))
+	do
+		for ((i=0;i<\${#activities[@]};i=\$i+1))
+		do
+EOF
+) >> $case_script_path/$testcase_name	
+	fi
+
+    if [ ${testcase_mode:0:5} == "case_" ];then
+(cat <<EOF
+	for ((j=1;j<=\$test_cycles;j=\$j+1))
+	do
+		for ((i=0;i<\${#activities[@]};i=\$i+1))
+		do
+EOF
+) >> $case_script_path/$testcase_name
+	fi
+fi
+
+(cat <<EOF
+            if [ \$os_build_vesion == "userdebug" -o \$os_build_vesion == "eng" ];then
+			    cur_freq=\`adb shell "cat /sys/bus/cpu/devices/cpu0/cpufreq/cpuinfo_cur_freq"|awk '{if(NR==1) print \$1}'\`
+			    cpu_online=\`adb shell "cat /sys/devices/system/cpu/online"|awk '{if(NR==1) print \$1;}'\`
+			    echo "CPU Freq: \$cur_freq Online: \$cpu_online" | tee -a \$logfile_$testcase_name
+			fi
+			red_white "Cycle \$test_cycles-\$j, App \$i" | tee -a \$logfile_$testcase_name
+			#timestamp=\`adb shell cat /proc/uptime|awk '{print \$1}'\`
+			#record_ftrace ${packages[$i]} $timestamp &
+			#$clean_fps
+EOF
+) >> $case_script_path/$testcase_name
+
+if [ $testcase_mode == "monkey" ];then
+(cat <<EOF
+			echo "["\`date "+%Y-%m-%d %H:%M:%S"\`"]Start Monkey to: "\${packages[\$i]} | tee -a \$logfile_$testcase_name
+			adb shell monkey --ignore-crashes --ignore-timeouts --throttle 300 --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes -p \${packages[\$i]} -s \$j 500 | tee -a \$logfile_$testcase_name
+		done
+	done
+EOF
+) >> $case_script_path/$testcase_name
+elif [ ${testcase_mode:0:5} == "case_" ];then
+(cat <<EOF
+			${SCRIPT_ROOT}/case/${testcase_mode:5}
+		done
+	done
+EOF
+) >> $case_script_path/$testcase_name
+else
+(cat <<EOF
+			echo "["\`date "+%Y-%m-%d %H:%M:%S"\`"]Start activity: "\${activities[\$i]} | tee -a \$logfile_$testcase_name
+			timeout 10 adb shell am start -W \${activities[\$i]} | tee -a \$logfile_$testcase_name
+			$log_fps
+			
+			timeout 3 adb shell input keyevent 3 #simulation user press home key
+
+		done
+	done
+EOF
+) >> $case_script_path/$testcase_name
+fi
+
+(cat <<EOF
+	${testcase_name}_end_time=\`date "+%Y%m%d%H%M%S"\`
+	echo "The Test total use "\$((\${${testcase_name}_end_time}-\${${testcase_name}_start_time}))" Seconds." | tee -a \$logfile_$testcase_name
+# 4. close all log bash
+	kill_others
+	
+	logfile_result=logfile_result_$testcase_name.\${${testcase_name}_end_time}.txt
+	#clac_the_result
+	$misc_info_parser
+	$meminfo_parser
+	$app_launchtime_parser
+	$app_crash_parser
+	$lmk_count_byADJ_parser
+	$vmstat_parser
+	$gc_parser
+}
+
+testcase_$testcase_name \$1
+targz_file="logfile_${testcase_name}_\${CDIR}_\${${testcase_name}_end_time}.tar.gz"
+if [ -f \$logfile_result ];then
+	tar -czf \${targz_file} logfile_*\${${testcase_name}_start_time}.txt \$logfile_result
+else
+	tar -czf \${targz_file} logfile_*\${${testcase_name}_start_time}.txt
+fi
+
+#mail_title="-t 'TestCase[$testcase_name]: Result at \${${testcase_name}_end_time}'"
+#mail_attachment="-a 'logfile_$testcase_name_\${${testcase_name}_end_time}.tar.gz'"
+#mail_content_file="-f '\$logfile_result'"
+#python $SCRIPT_ROOT/mail/sendmail.py $mail_server $mail_port $mail_password $mail_sender $mail_receiver $mail_cc_receiver -t "TestCase[$testcase_name]: Result at \${${testcase_name}_end_time}" -f "\$logfile_result" -a "logfile_${testcase_name}_\${${testcase_name}_end_time}.tar.gz"
+EOF
+) >> $case_script_path/$testcase_name
+
+if [ $mail_module == "enable" ];then
+	if [ ! -z \$gc_test ];then
+(cat <<EOF
+
+python $SCRIPT_ROOT/mail/sendmail.py $mail_server $mail_port $mail_password $mail_sender $mail_receiver $mail_cc_receiver -t "TestCase[$testcase_name]: Result at \${${testcase_name}_end_time}" -a "\${targz_file}"
+EOF
+) >> $case_script_path/$testcase_name
+	else
+(cat <<EOF
+	
+python $SCRIPT_ROOT/mail/sendmail.py $mail_server $mail_port $mail_password $mail_sender $mail_receiver $mail_cc_receiver -t "TestCase[$testcase_name]: Result at \${${testcase_name}_end_time}" -f "\$logfile_result" -a "\${targz_file}"
+EOF
+) >> $case_script_path/$testcase_name
+	fi
+
+fi

@@ -1,0 +1,132 @@
+#!/bin/bash
+
+. os.u
+. android.u
+. color.u
+
+function dump_misc {
+
+	echo
+	echo -e "PlatForm:\c";space 21;green "$arm_platform"
+	echo -e "CPU BITS:\c";space 21;green "$arm_cpu_bits"
+	echo -e "Android OS Build ID:\c";space 10;green "${os_build_id}"
+	echo -e "Android OS Build Version:\c";space 5;green "${os_build_vesion}(${root_str})"
+	echo -e "Android OS Build Production:\c";space 2;green "$os_build_product"
+	echo -e "Android OS Build Display ID:\c";space 2;green "$os_build_displayid"
+	echo
+	
+	echo "Mem Size: "`adb shell cat //proc/meminfo|awk '/MemTotal:/{print $2/1024}'`" MB"
+	echo
+	
+	if [ $os_build_vesion == "userdebug" ];then
+		adb root > .null
+		adb wait-for-device
+	fi
+
+	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" ];then
+		echo "CPU HP:             "`adb shell "cat /proc/hps/enabled"`
+		echo "Sched Features:     "`adb shell cat //sys/kernel/debug/sched_features`
+	fi
+	echo "child_runs_first:   "`adb shell cat //proc/sys/kernel/sched_child_runs_first`
+	echo "sched_latency:      "`adb shell cat //proc/sys/kernel/sched_latency_ns`
+	echo "wakeup_granularity: "`adb shell cat //proc/sys/kernel/sched_wakeup_granularity_ns`
+	echo "min_granularity:    "`adb shell cat //proc/sys/kernel/sched_min_granularity_ns`
+	echo
+	
+	echo "Printk Level:       "`adb shell cat //proc/sys/kernel/printk`
+	echo
+	
+	echo "ext_free_bytes: "`adb shell "cat /proc/sys/vm/extra_free_kbytes"`
+	echo "dirty_radio:    "`adb shell "cat /proc/sys/vm/dirty_ratio"`
+	echo "dirty_bg_radio: "`adb shell "cat /proc/sys/vm/dirty_background_ratio"`
+	echo "swapness:"$(adb shell cat //proc/sys/vm/swappiness)
+	echo "extfrag_threshold:"$(adb shell cat //proc/sys/vm/extfrag_threshold)
+	echo
+	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" ];then
+		echo "KSM:                 "`adb shell "cat /sys/kernel/mm/ksm/run"`
+		echo "KSM pages_to_scan:   "`adb shell "cat /sys/kernel/mm/ksm/pages_to_scan"`
+		echo "KSM sleep_millisecs: "`adb shell "cat /sys/kernel/mm/ksm/sleep_millisecs"`
+	fi
+
+	echo "ZRAM Algorithm:      "$(adb shell cat //sys/block/zram0/comp_algorithm)
+	echo "ZRAM Streams:        "$(adb shell cat //sys/block/zram0/max_comp_streams)
+	echo "ZRAM Disksize:       "$(adb shell cat //sys/block/zram0/disksize)
+	echo
+	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" ];then
+		echo "ION related:"
+		echo "ion_fb_heap:                          "`adb shell cat //sys/kernel/debug/ion/heaps/ion_fb_heap`
+		echo "ion_fb_heap_total_in_pool:            "`adb shell cat //sys/kernel/debug/ion/heaps/ion_fb_heap_total_in_pool`
+		echo "ion_mm_heap:                          "`adb shell cat //sys/kernel/debug/ion/heaps/ion_mm_heap`
+		echo "ion_mm_heap_for_camera:               "`adb shell cat //sys/kernel/debug/ion/heaps/ion_mm_heap_for_camera`
+		echo "ion_mm_heap_for_camera_shrink:        "`adb shell cat //sys/kernel/debug/ion/heaps/ion_mm_heap_for_camera_shrink`
+		echo "ion_mm_heap_for_camera_total_in_pool: "`adb shell cat //sys/kernel/debug/ion/heaps/ion_mm_heap_for_camera_total_in_pool`
+		echo "ion_mm_heap_shrink:                   "`adb shell cat //sys/kernel/debug/ion/heaps/ion_mm_heap_shrink`
+		echo "ion_mm_heap_total_in_pool:            "`adb shell cat //sys/kernel/debug/ion/heaps/ion_mm_heap_total_in_pool`
+	fi
+
+	echo
+	
+	adb shell cat //proc/zoneinfo|awk 'NR>=0&&NR<5&&/free/{free=$3;}NR>=0&&NR<10&&/min/{min=$2;}NR>=0&&NR<10&&/low/{low=$2;}NR>=0&&NR<10&&/high/{high=$2;} END{printf("%s: \t%d\t%d\t%d\t%d\n","Normal Zone [free high low min]", free, high, low, min);}'
+	adb shell cat //proc/zoneinfo|awk '/zone  HighMem/{line=NR;} NR>=line&&NR<line+5&&/free/{free=$3;}NR>=line&&NR<line+10&&/min/{min=$2;}NR>=line&&NR<line+10&&/low/{low=$2;}NR>=line&&NR<line+10&&/high/{high=$2;} END{printf("%s: \t%d\t%d\t%d\t%d\n","HighMem Zone[free high low min]", free, high, low, min);}'
+	
+	echo
+	#adb shell "dumpsys activity feature as status"|grep Auto
+	#echo "AutoClean: "`adb shell getprop persist.sys.ac`" (adb shell dumpsys activity feature ac off/on)"
+	#echo "AutoStart: "`adb shell getprop persist.sys.as`" (adb shell dumpsys activity feature as off/on)"
+	echo "AutoClean: "`adb shell getprop ro.proc_mgr.clean`
+	echo "AutoStart: "`adb shell getprop ro.proc_mgr.start`
+	echo
+	adb shell dumpsys window w -a|grep "Animation settings:"
+	adb shell wm size
+	_tmp_width=`adb shell wm size|awk '{print $3}'|awk -F "x" '{print $1}'`
+	_tmp_height=`adb shell wm size|awk '{print $3}'|awk -F "x" '{print $2}'`
+	_tmp_efb=$(($_tmp_width*$_tmp_height*4*9/1024))
+	echo -e "Suggestion exb: \c"space 5;green $_tmp_efb
+	echo "DPI: "`adb shell dumpsys window displays|awk '/init=/{print $0}'`
+	echo
+	echo "heaputilization "`adb shell getprop dalvik.vm.heaputilization`
+	echo "heapminfree "`adb shell getprop dalvik.vm.heapminfree`
+	echo "heapmaxfree "`adb shell getprop dalvik.vm.heapmaxfree`
+	echo
+	
+	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" ];then
+		echo "LMK adj:                 "`adb shell "cat /sys/module/lowmemorykiller/parameters/adj"`
+		echo "LMK source:              "`adb shell "cat /sys/module/lowmemorykiller/parameters/minfree"`
+		echo "LMK adaptive:            "`adb shell "cat /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk"`
+		echo "LMK vmpressure_file_min: "`adb shell "cat /sys/module/lowmemorykiller/parameters/vmpressure_file_min"`
+	else
+		echo "LMK threshold:           "`adb shell dumpsys meminfo|grep "Tuning:"|awk '{print $6}'|sed 's/[,K]//g'|awk '{print $1/1024,"MB"}'`
+	fi
+	echo
+	echo "################Graphic related#################"
+    echo `adb shell dumpsys SurfaceFlinger|awk '/DispSync configuration:/{print $0}'`
+    echo
+    echo "################Storage usage#################"
+    adb shell df
+    echo
+    echo "################Filesystem statics#################"
+    adb shell mount
+    echo
+    echo "#################IO Related#####################"
+    if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" ];then
+        echo "IO Scheduler: "`adb shell cat //sys/block/mmcblk0/queue/scheduler`
+        echo "nr_requests: "`adb shell cat //sys/block/mmcblk0/queue/nr_requests`
+        echo "rq_affinity: "`adb shell cat //sys/block/mmcblk0/queue/rq_affinity`
+        echo "read_ahead_kb: "`adb shell cat //sys/block/mmcblk0/queue/read_ahead_kb`
+        echo "iostats: "`adb shell cat //sys/block/mmcblk0/queue/iostats`
+    else
+        if [ $isROOT = "true" ];then
+            echo "IO Scheduler: "`adb shell cat //sys/block/mmcblk0/queue/scheduler`
+            echo "nr_requests: "`adb shell cat //sys/block/mmcblk0/queue/nr_requests`
+            echo "rq_affinity: "`adb shell cat //sys/block/mmcblk0/queue/rq_affinity`
+            echo "read_ahead_kb: "`adb shell cat //sys/block/mmcblk0/queue/read_ahead_kb`
+            echo "iostats: "`adb shell cat //sys/block/mmcblk0/queue/iostats`
+        else
+            red "User Release and non-root, no io related info."
+        fi
+    fi
+    echo
+    echo "#################CPU info#####################"
+    echo "Freq: "$(adb shell cat //sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies)
+    echo "Gove: "$(adb shell cat //sys/devices/system/cpu/cpu0/cpufreq/scaling_governor)
+}

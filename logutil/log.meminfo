@@ -1,0 +1,17 @@
+#!/bin/bash
+
+. os.u
+
+# start_meminfo_terminal logfile
+function start_meminfo_terminal {
+
+	logfile_meminfo=$1
+
+	if [ $myscript_os == "cygwin" ];then
+		$terminal_execfile -t "Record MemoryInfo" -h always -w max --log $logfile_meminfo -e record_memory case4  &
+	fi
+	
+	if [ $myscript_os == "msys" ];then	
+		$terminal_execfile -t "Record MemoryInfo" -h always -w max --log $logfile_meminfo -e record_memory case4  &
+	fi
+}

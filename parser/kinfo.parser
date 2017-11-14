@@ -1,0 +1,69 @@
+#!/bin/bash
+
+. color.u
+
+# parse_lmk_count_byADJ logfile
+function parse_lmk_count_byADJ {
+	logfile_kernellog=$1
+
+	echo "#######################################################"
+	echo "#           Collect LMK killer count by ADJ           #"
+	echo "#######################################################"
+	#lmkkiller_count=`cat $logfile_kernellog | grep "Killing '"|wc -l`
+	cat $logfile_kernellog | grep "Killing '"|awk -F "," '{print $2,$3;}'|awk '
+																	BEGIN{count=0;}
+																	{
+																	if($2==0){adj0+=1;}
+																	if($2==1){adj1+=1;}
+																	if($2==2){adj2+=1;}
+																	if($2==3){adj3+=1;}
+																	if($2==4){adj4+=1;}
+																	if($2==5){adj5+=1;}
+																	if($2==6){adj6+=1;}
+																	if($2==7){adj7+=1;}
+																	if($2==8){adj8+=1;}
+																	if($2==9){adj9+=1;}
+																	if($2==10){adj10+=1;}
+																	if($2==11){adj11+=1;}
+																	if($2==12){adj12+=1;}
+																	if($2==13){adj13+=1;}
+																	if($2==14){adj14+=1;}
+																	if($2==15){adj15+=1;}
+																	if($2==16){adj16+=1;}
+																	count++;
+																	}
+
+																	END{
+																		printf("%s\n", "ADJ\t0\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10\t11\t12\t13\t14\t15\t16\tTotal");
+																		printf("%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+																				"Count",adj0,adj1,adj2,adj3,adj4,adj5,adj6,adj7,adj8,adj9,adj10,adj11,adj12,adj13,adj14,adj15,adj16,count);
+																	}
+																	'
+	echo
+	echo
+}
+
+# parse_lmk_count_byProcessName logfile
+function parse_lmk_count_byProcessName {
+
+	logfile_kernellog=$1
+
+	echo "#######################################################" 
+	echo "#        Collect LMK killer count by ProcessName      #"
+	echo "#######################################################"
+	cat $logfile_kernellog | grep "Killing '"|awk -F "'" '{print $2;}'| awk '
+																		BEGIN{
+																			i=0;
+																		}
+																		{
+																			if($1!=process[i]){
+																				process[i]=$1;
+																				count[i]++;
+																			} else {
+																				
+																			}
+																		
+																		}'
+	echo 
+	echo
+}

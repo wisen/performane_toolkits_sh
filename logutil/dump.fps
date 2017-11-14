@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# clean_fps_by_packageName pacckageName
+function clean_fps_by_packageName {
+	adb shell dumpsys gfxinfo $1 reset
+}
+
+# dump_fps_by_packageName pacckageName
+function dump_fps_by_packageName {
+		adb shell dumpsys gfxinfo $1 framestats|awk '/Flags,IntendedVsync/,/---PROFILEDATA---/{print $0;}'
+}
+
+function dump_fps_by_time {
+		#TODO
+		echo
+}

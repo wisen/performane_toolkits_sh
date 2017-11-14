@@ -1,0 +1,33 @@
+#!/bin/bash
+. color.u
+ 
+#python_version=``
+ 
+#if [ $OSArch == 64 ];then
+#    pip_installpath=$ASHELL_ROOT/pip_whl/64/
+#fi
+ 
+#if [ $OSArch == 32 ];then
+#    pip_installpath=$ASHELL_ROOT/pip_whl/32/
+#fi
+
+pip_installpath=$ASHELL_ROOT/pip_whl/
+echo "******************************"
+file_list=`ls ${pip_installpath}/*whl`
+whl_num=`ls ${pip_installpath}/*whl|wc -l`
+#install_flag=false
+ 
+echo "There are total $whl_num whls:"
+ 
+i=1;
+for file in $file_list;do
+    #echo $file
+    suffix=`echo $file|awk -F . '{print $NF}'`
+    #echo suffix=$suffix;
+    if [ $suffix == "whl" ];then
+        green "####"Install the ${i}th whl: `echo $file|awk -F "/" '{print $NF}'`
+        date "+%Y-%m-%d %H:%M:%S"
+        pip install $file
+        i=`expr $i + 1`
+    fi
+done

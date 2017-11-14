@@ -1,0 +1,20 @@
+#!/bin/bash
+
+function sfdump_help() {
+	echo "sfdump implement in codebase: frameworks/native/servics/surfaceflinger/surfaceflinger.cpp dump"	
+}
+
+if [ $# -gt 0 ];then
+	if [ $1 == "--help" ];then
+		sfdump_help;
+		exit
+	fi
+
+	if [ $1 == "--layers" ];then
+	     sfdump |awk -F "," '/Visible layers/{print "\033[31m"$0"\033[0m";print ""}/+ Layer/{print "  \033[31m"NR"\033[0m""\033[32m"$0"\033[0m";}/layerStack=/{print "  \033[31m"NR"\033[0m"$1,$2,$3,$4,$5,$6,$7,$8,$9,$10;print ""}'
+	    exit
+	fi
+fi
+
+adb shell dumpsys SurfaceFlinger $*
+

@@ -1,0 +1,50 @@
+#!/bin/bash
+
+. color.u
+
+#G_DEBUG=true
+G_DEBUG=false
+#G_DEBUG_RUNTIME=true
+G_DEBUG_RUNTIME=false
+debug_output_log=${SCRIPT_ROOT}/.tmp.debug
+
+# debug_log $0 $FUNCNAME $LINENO $BASH_LINENO va1=$va1 va2=$va2 ....
+function debug_log {
+	if [ $G_DEBUG == "true" ];then
+		#echo "Current $FUNCNAME (${FUNCNAME[@]})" >> .tmp.debug
+
+		if [ $G_DEBUG_RUNTIME == "true" ];then
+			red "Current Script:   $1" | tee -a .tmp.debug
+			shift
+			yellow "Current Function: $1" | tee -a .tmp.debug
+			shift
+			echo " Function invoked line: $1" | tee -a .tmp.debug
+			shift
+			echo " Exec line: $1"
+			shift
+			green " The VARs:"            | tee -a .tmp.debug
+			#echo $#
+			until [ $# -eq 0 ]
+			do
+				echo -e "\t$1" | tee -a .tmp.debug
+				shift
+			done
+		else
+			echo "Current Script:   $1" >> .tmp.debug
+			shift
+			echo "Current Function: $1" >> .tmp.debug
+			shift
+			echo "Function invoked line: $1" | tee -a .tmp.debug
+			shift
+			echo "Exec line: $1"
+			shift
+			
+			echo "The VARs:" >> .tmp.debug
+			until [ $# -eq 0 ]
+			do
+				echo -e "\t$1" >> .tmp.debug
+				shift
+			done
+		fi
+	fi
+}

@@ -1,0 +1,45 @@
+__cmd_dumpsys() {
+	local __str cur
+	COMPREPLY=()
+	_get_comp_words_by_ref cur
+	
+	__str=`adb shell dumpsys -l|awk '{if(NR>1) print $0}'|sort -f|tr '\n' ' '`
+	COMPREPLY=( $( compgen -W "$__str" -- "$cur" ) )
+}
+
+__cmd_SurfaceFlinger() {
+	local __str cur
+	COMPREPLY=()
+	_get_comp_words_by_ref cur
+	
+	__str="--list --latency --latency-clear --dispsync --static-screen --fences --mtk"
+	COMPREPLY=( $( compgen -W "$__str" -- "$cur" ) )
+}
+
+__cmd_gfxinfo() {
+	local __str cur
+	COMPREPLY=()
+	_get_comp_words_by_ref cur
+	
+	for psn in `adb shell ps |grep "com"|awk '{print $9}'`;do __str=${__str}" "$psn;done
+	COMPREPLY=( $( compgen -W "$__str" -- "$cur" ) )
+}
+
+_tab_dumpsys() {
+	case $COMP_CWORD in  
+    0)  #仍在完成根命令，这里不需要处理  
+        ;;  
+    1)  #根命令已经完成，这里开始补充一级主命令  
+        #${COMP_WORDS[0]}是根命令  
+        eval __cmd_${COMP_WORDS[0]}  
+        ;;  
+    2)#一级主命令已经完成，这里开始补充一级主命令的选项
+        #${COMP_WORDS[1]}是一级主命令  
+        eval __cmd_${COMP_WORDS[1]}  
+        ;;
+    3)
+        ;;
+    esac  
+}
+
+complete -F _tab_dumpsys dumpsys

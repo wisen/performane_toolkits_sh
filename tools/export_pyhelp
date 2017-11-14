@@ -1,0 +1,3 @@
+#!/bin/bash
+
+python $SCRIPT_ROOT/py/tools/export_pyhelp $1

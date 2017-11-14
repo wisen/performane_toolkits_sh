@@ -1,0 +1,17 @@
+#!/bin/bash
+
+. os.u
+
+# start_kernel_ternimal logfile
+function start_kernel_ternimal {
+	logfile_kernellog=$1
+	
+	if [ $myscript_os == "cygwin" ];then
+		$terminal_execfile -t "Record Kernel log" -h always -w max --log $logfile_kernellog -e record_memory kernel  &
+	fi
+	
+	if [ $myscript_os == "msys" ];then	
+		$terminal_execfile -t "Record Kernel log" -h always -w max --log $logfile_kernellog -e record_memory kernel  &
+		$terminal_execfile -t "Record Kernel log" -h always -w max --log $logfile_kernellog -e record_memory kernel  &
+	fi
+}

@@ -1,0 +1,53 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for monitoring some graphic infomation
+# Date: 2017-02-26
+
+. color.u
+. android.u
+
+function monitor_gpu_by_processname {
+
+	if [ $os_build_vesion == "user" ];then
+		red "The GPU monitor is not support on user build!"
+		exit
+	fi
+
+	if [ -z $1 ];then
+		red "You should enter a processname!"
+		exit
+	fi
+
+	records=`adb shell ps | grep "$1"|awk 'END{print NR}'`
+	if [ $records -gt 1 ];then
+		red "ProcessName is not uniq:"
+		adb shell ps | grep "$1" --color
+		exit
+	fi
+	
+	if [ $records -lt 1 ];then
+		red "No process named $1"
+		exit
+	fi
+
+	processname=`adb shell ps | grep "$1"|awk '{print $9}'`
+	echo -e "Begin to monitor the Graphic of process: \c"
+	green $processname
+
+	pid=`adb shell ps | grep com.android.systemui | awk '{print $2}'`
+	
+	line_num=0
+	while true
+	do
+		if [ `expr ${line_num} % 50` == 0 ];then
+			#echo -e ${title}
+			blue_white "MGpu\tMion"
+		fi
+		line_num=`expr ${line} + 1`
+		mgpu=`adb shell cat //sys/kernel/debug/mali0/gpu_memory | awk -v a_pid=${pid} '{if(a_pid==$3){printf("%.2f\n",$2/1024);}}'`
+		mion=`adb shell cat //d/ion/clients/${pid}-0|awk '/ion_mm_heap:/{printf("%.2f\n",$2/1024/1024);}'`
+		echo -e "$mgpu\t$mion"
+		sleep 0.5
+	done
+}
+

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+. color.u
+. process.u
+. os.u
+. applist.parser
+
+kill_others

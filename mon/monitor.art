@@ -1,0 +1,58 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for monitoring some memory infomation
+# Date: 2017-02-26
+
+. color.u
+
+function monitor_art_by_processname {
+
+	if [ -z $1 ];then
+		red "You should enter a processname!"
+		exit
+	fi
+
+	records=`adb shell ps | grep "$1"|awk 'END{print NR}'`
+	if [ $records -gt 1 ];then
+		red "ProcessName is not uniq:"
+		adb shell ps | grep "$1" --color
+		exit
+	fi
+	
+	if [ $records -lt 1 ];then
+		red "No process named $1"
+		exit
+	fi
+
+	processname=`adb shell ps | grep "$1"|awk '{print $9}'`
+	echo -e "Begin to monitor the Heap of process: \c"
+	green $processname
+	#green "Heap\tAlloc\tFree\tRatio"
+	title="PSS\tEGL\tGL\tTHeap\tNHeap\tAlloc\tFree\tRatio\tDHeap\tAlloc\tFree\tRatio"
+	line=0
+	while true
+	do
+		if [ `expr ${line} % 50` == 0 ];then
+			#echo -e ${title}
+			blue_white ${title}
+		fi
+		line=`expr ${line} + 1`
+		#adb shell dumpsys meminfo $processname |grep "Dalvik Heap"|awk '{printf("%.2f\t%.2f\t%.2f\t%.2f\n",$7/1024,$8/1024,$9/1024,$8/$7);}'
+		adb shell dumpsys meminfo $processname | awk '
+												BEGIN{
+													gl_line=1;
+												}
+												/Native Heap/{if(NR<15){nheap=$7/1024;nalloc=$8/1024;nfree=$9/1024;if($7!=0){nratio=$8/$7;}else{nratio=0};}}
+												/Dalvik Heap/{if(NR<15){dheap=$7/1024;dalloc=$8/1024;dfree=$9/1024;if($7!=0){dratio=$8/$7;}else{dratio=0};}}
+												/EGL mtrack/{egl=$3/1024;}
+												/GL mtrack/{if(gl_line==2)gl=$3/1024;gl_line++;}
+												/TOTAL/{if(NR<25){totalpss=$2/1024;}}
+												END{
+													printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n",
+															totalpss, egl, gl, nheap+dheap, nheap, nalloc, nfree, nratio, dheap, dalloc, dfree, dratio);
+												}
+												'
+		sleep 0.5
+	done
+}
+

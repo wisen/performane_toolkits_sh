@@ -1,0 +1,97 @@
+#!/bin/bash
+
+. color.u
+. process.u
+. os.u
+. applist.parser
+. log.event
+. log.kernel
+. log.meminfo
+. log.vmstat
+. log.top
+. meminfo.parser
+. appinfo.parser
+. kinfo.parser
+. misc.parser
+. vmstat.parser
+. ext_free_bytes.conf
+
+prepare_app_list $SCRIPT_ROOT/applist/tmp.app.list4
+
+#QA_cold_launch cycles
+function test_case_cold4 {
+
+	adb reboot
+	adb wait-for-device
+
+	if [ ! $1 ];then
+		test_cycles=20
+	else
+		test_cycles=$1
+	fi
+
+	QA_cold_launch_start_time=`date "+%Y%m%d%H%M%S"`
+	logfile_QA_cold_launch=logfile_QA.$QA_cold_launch_start_time.txt
+	
+	logfile_meminfo=logfile_memoryinfo.$QA_cold_launch_start_time.txt
+	logfile_kernellog=logfile_kernellog.$QA_cold_launch_start_time.txt
+	logfile_eventlog=logfile_eventlog.$QA_cold_launch_start_time.txt
+	logfile_vmstat=logfile_vmstat.$QA_cold_launch_start_time.txt
+	logfile_top=logfile_top.$QA_cold_launch_start_time.txt
+	
+	#start_terminal
+	start_event_terminal $logfile_eventlog am_activity_launch_time am_kill am_anr am_pss
+	start_kernel_ternimal $logfile_kernellog
+	start_meminfo_terminal $logfile_meminfo
+	start_vmstat_ternimal $logfile_vmstat
+	start_top_terminal $logfile_top
+	
+	#config
+	#set_ext_free_kbytes 97200
+	set_ext_free_kbytes 0
+
+	for ((j=1;j<=$test_cycles;j=$j+1))
+	do
+		for ((i=0;i<${#activities[@]};i=$i+1))
+		do
+			cur_freq=`adb shell "cat /sys/bus/cpu/devices/cpu0/cpufreq/cpuinfo_cur_freq"|awk '{if(NR==1) print $1}'`
+			#cpu0=`adb shell cat /sys/devices/system/cpu/cpu0/online|awk '{if(NR==1) print $1;}'`
+			#cpu1=`adb shell cat /sys/devices/system/cpu/cpu1/online|awk '{if(NR==1) print $1;}'`
+			#cpu2=`adb shell cat /sys/devices/system/cpu/cpu2/online|awk '{if(NR==1) print $1;}'`
+			#cpu3=`adb shell cat /sys/devices/system/cpu/cpu3/online|awk '{if(NR==1) print $1;}'`
+			cpu_online=`adb shell "cat /sys/devices/system/cpu/online"|awk '{if(NR==1) print $1;}'`
+			echo "CPU Freq: $cur_freq Online: $cpu_online" | tee -a $logfile_QA_cold_launch
+			red_white "Cycle $test_cycles-$j, App $i" | tee -a $logfile_QA_cold_launch
+			echo "["`date "+%Y-%m-%d %H:%M:%S"`"]Start activity: "${activities[$i]} | tee -a $logfile_QA_cold_launch
+			timestamp=`adb shell cat /proc/uptime|awk '{print $1}'`
+			#record_ftrace ${packages[$i]} $timestamp &
+			timeout 10 adb shell am start -W ${activities[$i]} | tee -a $logfile_QA_cold_launch
+			# timeout 10 adb shell am start -W ${activities[$i]} &
+			# lastpid=$!
+			# timeout 10 adb shell input keyevent 3
+			# kill -9 $lastpid
+			#read -n 1
+			#kill -9 `cat .tmp.ftrace_pid|awk '{if(NR==1) print $1;}'`
+			timeout 3 adb shell input keyevent 3 #simulation user press home key
+			#sleep 5
+			#echo "Force stop package: "${packages[$i]}
+			#adb shell "am force-stop ${packages[$i]}"
+			#sleep 2
+		done
+	done
+	QA_cold_launch_end_time=`date +%s`
+	echo "The Test total use "$(($QA_cold_launch_end_time-$QA_cold_launch_start_time))" Seconds." | tee -a $logfile_QA_cold_launch
+# 4. close all log bash
+	kill_others > tmp.null 2 >> tmp.null
+	
+	logfile_result=logfile_result_QA_cold_launch.$QA_cold_launch_end_time.txt
+	#clac_the_result
+	collect_misc_info | tee -a $logfile_result
+	parse_meminfo $logfile_meminfo | tee -a $logfile_result
+	parse_app_launchtime $logfile_eventlog | tee -a $logfile_result
+	parse_app_crash $logfile_eventlog | tee -a $logfile_result
+	parse_lmk_count_byADJ $logfile_kernellog | tee -a $logfile_result
+	parse_vmstat $logfile_vmstat | tee -a $logfile_result
+}
+
+test_case_cold4 $1

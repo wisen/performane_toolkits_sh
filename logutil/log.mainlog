@@ -1,0 +1,40 @@
+#!/bin/bash
+
+. os.u
+. debug.u
+
+# start_mainlog_terminal logfile
+function start_mainlog_terminal {
+	logfile_maillog=$1
+	shift
+	log_filter=$@
+	
+	#if [ $G_DEBUG == "true" ];then
+	#	echo "Current $FUNCNAME (${FUNCNAME[@]})" >> .tmp.debug
+	#	echo logfile_eventlog=$logfile_eventlog >> .tmp.debug
+	#	echo log_filter=$log_filter >> .tmp.debug
+	#fi
+	debug_log $0 $FUNCNAME $LINENO $BASH_LINENO logfile_maillog=$logfile_maillog log_filter=$log_filter
+	
+	if [ -z $log_filter ];then
+		log_filter=""
+	fi
+	
+	if [ $log_filter == "all" ];then
+		log_filter=""
+	else
+		log_filter="-s $log_filter"
+	fi
+	
+	if [ $myscript_os == "cygwin" ];then
+		# clean the event log buffer
+		adb logcat -b events -c
+		$terminal_execfile -t "Record ANR" -h always -w max --log $logfile_maillog -e adb logcat $log_filter &
+	fi
+	
+	if [ $myscript_os == "msys" ];then
+		# clean the event log buffer
+		adb logcat -b events -c
+		$terminal_execfile -t "Record ANR" -h always -w max --log $logfile_maillog -e adb logcat $log_filter &
+	fi
+}

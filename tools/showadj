@@ -1,0 +1,21 @@
+#!/bin/bash
+
+. color.u
+
+function dump_adj_by_pid {
+	adb shell ps | grep com |awk '{print $2,$9;}' > .tmp.pid.list
+	blue "ADJ\tScore\tScoAdj\tPName"
+	while read line
+	do
+		pid=`echo $line|awk '{print $1}'`
+		pname=`echo $line|awk '{print $2}'`
+		oom_adj=`adb shell cat /proc/$pid/oom_adj`
+		oom_score=`adb shell cat /proc/$pid/oom_score`
+		oom_score_adj=`adb shell cat /proc/$pid/oom_score_adj`
+		echo -e "$oom_adj\t$oom_score\t$oom_score_adj\t$pname"
+	done < .tmp.pid.list
+}
+
+dump_adj_by_pid
+
+

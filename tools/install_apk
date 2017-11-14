@@ -1,0 +1,32 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for recording Android OS memory info
+# Date: 2017-02-13
+
+. color.u
+
+adb devices|sed '/^$/d'|awk '{if(NR>1) printf("%s\n", $1);}'
+
+red_white "Please enter the Serial No:"
+read device_no
+echo
+echo
+echo "******************************"
+file_list=`ls *apk`
+apk_num=`ls *apk|wc -l`
+#install_flag=false
+
+echo "There are total $apk_num Apks:"
+
+i=0;
+for file in $file_list;do
+    #echo $file
+    suffix=`echo $file|awk -F . '{print $NF}'`
+	#echo suffix=$suffix;
+	if [ $suffix == "apk" ];then
+		green "####"Install the ${i}th apk: $file
+		date "+%Y-%m-%d %H:%M:%S"
+		adb -s $device_no install -r $file
+		i=`expr $i + 1`
+	fi
+done

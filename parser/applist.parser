@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# parse_app_list applist
+function prepare_app_list {
+	i=0
+	app_file=$1
+	while read line
+	do
+		#echo "Start app: "$line
+		#adb shell "am start -W $line"
+		activities[$i]=`echo $line|sed 's/^M//g'`
+		echo "Parse file: activities[$i]="${activities[$i]}
+		#sleep 5
+		packages[$i]=`echo $line|awk -F "/" '{print $1}'`
+		echo "Parse file: packages[$i]="${packages[$i]}
+		#echo "Force Stop package: "$stop_package
+		#adb shell "am force-stop $stop_package"
+		#adb shell "echo 3 > /proc/sys/vm/drop_caches"
+		#adb shell "sync"
+		i=$(($i+1))
+	done < $app_file
+	
+	echo "app count: "$i
+}

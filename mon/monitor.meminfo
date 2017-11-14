@@ -1,0 +1,69 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for monitoring some memory infomation
+# Date: 2017-02-26
+
+. color.u
+
+function monitor_meminfo {
+	# 这个脚本用来观察memfree cached buffer以及active和inactive之间的关系
+	# 当我们打开一个app，消耗的是MemFree，可以方便的看到MemFree在减少
+	# 当我按下menu key，选择清除一个app的时候，发现MemFree并没有明显的变大，说明我们在按下menu key，在rcent list中清楚一个app的时候系统并没有很快释放memory
+	# 同样我们使用am force-stop也没有使memfree明显变大
+	# 在adb shell 敲sync也没有改善
+	# 在adb shell 中敲 echo 3 > /proc/sys/vm/drop_caches 有明显效果，memfree变大
+	# 但是drop_caches后会影响app的launch time，比如我开一个今日头条，然后按home键到桌面，接着在rcent list清除今日头条，这个时候再回到桌面启动今日头条记录它的启动时间为A
+	# 然后按home回到桌面，接着在rcent list清除今日头条，然后drop_caches，这个时候再到桌面去启动今日头条，记录它的启动时间为B，
+	# 你会不管你做多少次这样的实验，B总是要大于A，那么原因就是在rcent list清除app后，app还有一些cache保留在系统中，再次启动的时候自然会快些，而drop caches后，相当于每次都是第一次启动，就会慢
+
+	# lowmemorykiller.c  other_file = global_page_state(NR_FILE_PAGES) - global_page_state(NR_SHMEM) - total_swapcache_pages(); //other_file=NR-Shmem-SwapCached
+	# meminfo.c          cached = global_page_state(NR_FILE_PAGES) - total_swapcache_pages() - i.bufferram;                     //Cached=NR-SwapCached-Buffers
+	# 所以threshold=other_file=Cached+Buffers-Shmem
+
+	# update on 2017/03/06, source file: kernel/fs/proc/meminfo.c
+	# 系统可用内存=free+buffers+cached
+	# MemFree=i.freeram=global_page_state(NR_FREE_PAGES); Buffers=i.bufferram=nr_blockdev_pages(); Cached=global_page_state(NR_FILE_PAGES) - total_swapcache_pages() - i.bufferram;
+	# 增加可用内存监视 CanUse=free+buffers+cached
+	log_file=meminfo".$(date +%s)"".log"
+	title="MemFree\tBuffers\tCached\tSwapCah\tActanon\tInanon\tActfile\tInafile\tThHold\tCanUse\tSWAPUSE"
+	#title="MemFree\tBuffers\tCached\tSwapCah\tActive\tInact\tActanon\tInanon\tActfile\tInafile\tThHold\tCanUse"
+	#title="MmFree\tBuffers\tCached\tSwapCah\tActive\tInact\tShmem\tAnon\tThHold\tCanUse\tAvail\tMapped"
+	echo -e $title > ${log_file}
+	line=0
+	while true
+	do
+		if [ `expr ${line} % 50` == 0 ];then
+			#echo -e ${title}
+			blue_white ${title}
+		fi
+		line=`expr ${line} + 1`
+		
+		adb shell cat /proc/meminfo |awk '/MemFree:/{a[0]=$2/1024;} 
+										/Buffers:/{a[1]=$2/1024;}
+										/^Cached:/{a[2]=$2/1024;}
+										/SwapCached:/{a[3]=$2/1024;}
+										#/Active:/{a[4]=$2/1024;}
+										#/Inactive:/{a[5]=$2/1024;}
+										/Active\(anon\):/{a[6]=$2/1024;}
+										/Inactive\(anon\):/{a[7]=$2/1024;}
+										/Active\(file\):/{a[8]=$2/1024;}
+										/Inactive\(file\):/{a[9]=$2/1024;}
+										/Shmem:/{a[10]=$2/1024;}
+										/AnonPages:/{a[11]=$2/1024;}
+										/MemAvailable:/{a[12]=$2/1024;}
+										/Mapped:/{a[13]=$2/1024;}
+										/SwapTotal:/{a[14]=$2/1024;}
+										/SwapFree:/{a[15]=$2/1024;}
+										
+										END{
+											threshold=a[2]+a[1]-a[10];
+											canuse=a[0]+a[1]+a[2];
+											swapused=a[14]-a[15];
+											printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", a[0],a[1],a[2],a[3],a[6],a[7],a[8],a[9],threshold,canuse,swapused);
+											#printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],threshold);
+											#printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", a[0],a[1],a[2],a[3],a[4],a[5],a[10],a[11],threshold,canuse,a[12],a[13]);
+										}
+										'|tee -a ${log_file}
+		sleep 1
+	done
+}

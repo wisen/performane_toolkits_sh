@@ -1,0 +1,1279 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for recording Android OS memory info
+# Date: 2017-02-10
+
+. os.u
+
+script_name=record_memory
+	
+function record_memory_info {
+	file_basename="meminfo"
+	time=$(date +%s)
+	echo "start time: $(date)" > tmp.time.last
+	current_file=${file_basename}".${time}"".log"
+	touch ${current_file}
+	echo ${current_file}
+	while true
+	do
+		((file_size=`du -k ${current_file} | awk '{print $1}'`))
+		echo ${file_size}
+			if [ ${file_size} -gt 10240 ];then
+					time=$(date +%s)
+					echo ${time} > tmp.time.last
+					current_file=${file_basename}".${time}"".log"
+			fi
+
+			#echo "start:"$(date +%s.%N)
+			adb shell dumpsys meminfo >> ${current_file}
+			#echo "end:"$(date +%s.%N)
+			#python -c "import time;time.sleep(1.5)";
+	done
+}
+
+function record_S1 {
+	file_basename="meminfo"
+	time=$(date +%s)
+	echo "start time: $(date)" > tmp.time.last
+	current_file=s1.${file_basename}".${time}"".log"
+	touch ${current_file}
+	#echo ${current_file}
+	((line_max=$1))
+	###########record the adj level start##########
+	# FG=0, Visible=100, Perceptible=200, Backup=300, CacheMin=900, CacheMax=906
+	echo "###########record the adj level start##########" >> ${current_file}
+	echo "ADJ: "`adb shell cat /sys/module/lowmemorykiller/parameters/adj|awk '{gsub(/,/," ",$0);print $0}'`|tee -a ${current_file}
+	echo "ThresHold: "`adb shell cat /sys/module/lowmemorykiller/parameters/minfree|awk '{gsub(/,/," ",$0);for(i=1;i<=NF;i++) print $i*4/1024}'|awk '{ORS=" ";print} END{printf "\n";}'`|tee -a ${current_file}
+	echo "###########record the adj level end############" >> ${current_file}
+	###########record the adj level end############
+	###########record the HSYNC start##############
+	echo "###########record the HSYNC start##############" >> ${current_file}
+	echo "HSYNC: "`adb shell dumpsys SurfaceFlinger --latency|awk '{if(NR==1) print $0}'` |tee  -a ${current_file}
+	echo "###########record the HSYNC end################" >> ${current_file}
+	###########record the HSYNC end################
+	title="Total\tFixSZ\tNative\tSystem\tPersist\tPerS\tFG\tVisible\tAServ\tCutable\tPrev\tBServ\tCached\tKD\tZRAM\tCACHE\tCachedNum"
+	echo -e ${title} >> ${current_file}
+	line=0
+	while true
+	do
+	    #每50行输出一行title，方便了解每列数据的title
+		if [ `expr ${line} % 50` == 0 ];then
+			echo -e ${title}
+		fi
+		
+		if [ $line -gt $line_max ];then
+			echo "You have recorded "${line}" line, exit."
+			exit
+		fi
+		
+		line=`expr ${line} + 1`
+		
+		((file_size=`du -k ${current_file} | awk '{print $1}'`))
+		#echo ${file_size}
+			if [ ${file_size} -gt 20480 ];then
+					time=$(date +%s)
+					echo ${time} > tmp.time.last
+					current_file=${file_basename}".${time}"".log"
+			fi
+
+			#echo "start:"$(date +%s.%N)
+			#echo "Native System Persistent Foreground Visible AServ Prev BServ Cached KD ZRAM"
+			#a[0]=total;
+			#a[1]=fixsz;a[2]=Native;a[3]=System;a[4]=Persistent;a[5]=PersistentService;a[6]=launchersz;
+			#a[7]=cutablesz;a[8]=Foreground;a[9]=Visible;a[10]=AService;a[11]=Previous;a[12]=BService;a[13]=Cached;
+			adb shell dumpsys meminfo |awk 'BEGIN{i=0;k=0;l=0;fixsz=0;cutablesz=0;launchersz=0;cached_num=0;}
+											/kB: Native/{if(0==i)a[2]=$1/1024;i++;}
+											/kB: System/{a[3]=$1/1024;}
+											/kB: Persistent/{if(0==k)a[4]=$1/1024;k++;}
+											/kB: Persistent Service/{a[5]=$1/1024;}
+											/kB: Foreground/{a[6]=$1/1024;}
+											/kB: Visible/{a[7]=$1/1024;}
+											/kB: A Services/{a[8]=$1/1024;}
+											/kB: Previous/{a[10]=$1/1024;}
+											/kB: B Services/{a[11]=$1/1024;}
+											/kB: Cached/{a[12]=$1/1024;}
+											/kB: Cached/,/Total PSS by category/{cached_num++;}
+											/Used RAM:/{a[13]=$9/1024;}
+											/ZRAM:/{a[14]=$2/1024;}
+											/CACHE RAM:/{gsub(/K/,"",$3);a[15]=$3/1024;}
+											END{
+												a[1]=a[2]+a[3]+a[4]+a[5]+a[6]+a[7]+a[8];
+												a[9]=a[10]+a[11]+a[12];
+												a[0]=a[1]+a[9];
+												for(j=0;j<=15;j++) {if(a[j]) printf "%2.2f\t",a[j];else printf "%2.2f\t",0;}
+												if(cached_num-3>0) printf "%d\t",cached_num-3;else printf "%d\t",0;
+												}
+											'|awk '{ORS=" ";print} END{printf "\n";}'|tee -a ${current_file}
+			#上面END中j<=10:Total=Native+System+Persist+PerS+FG+Visible+AServ+Prev+BServ+Cached, KD和ZRAM并不算在内
+			#echo "end:"$(date +%s.%N)
+			#python -c "import time;time.sleep(5)";
+			sleep 5
+	done
+}
+
+function record_W3 {
+	file_basename="meminfo"
+	time=$(date +%s)
+	echo "start time: $(date)" > tmp.time.last
+	current_file=w3.${file_basename}".${time}"".log"
+	touch ${current_file}
+	#echo $1
+	((line_max=$1))
+	#echo ${current_file}
+	###########record the adj level start##########
+	# FG=0, Visible=100, Perceptible=200, Backup=300, CacheMin=900, CacheMax=906
+	#echo "###########record the adj level start##########" >> ${current_file}
+	#echo "ADJ: "`adb shell cat /sys/module/lowmemorykiller/parameters/adj|awk '{gsub(/,/," ",$0);print $0}'`|tee -a ${current_file}
+	#echo "ThresHold: "`adb shell cat /sys/module/lowmemorykiller/parameters/minfree|awk '{gsub(/,/," ",$0);for(i=1;i<=NF;i++) print $i*4/1024}'|awk '{ORS=" ";print} END{printf "\n";}'`|tee -a ${current_file}
+	#echo "###########record the adj level end############" >> ${current_file}
+	#threshold=`adb shell dumpsys meminfo|awk '/Tuning:/{print $6/1024}'`
+	echo "ThresHold: "`adb shell dumpsys meminfo|awk '/Tuning:/{print $6/1024}'`|tee -a ${current_file}
+	###########record the adj level end############
+	###########record the HSYNC start##############
+	#echo "###########record the HSYNC start##############" >> ${current_file}
+	echo "HSYNC: "`adb shell dumpsys SurfaceFlinger --latency|awk '{if(NR==1) print $0}'` |tee  -a ${current_file}
+	#echo "###########record the HSYNC end################" >> ${current_file}
+	###########record the HSYNC end################
+	title="Total\tFixSZ\tNative\tSystem\tPersist\tPerS\tFG\tVisible\tAServ\tCutable\tPrev\tBServ\tCached\tKD\tZRAM\tCahNum\tCACHE"
+	echo -e ${title} >> ${current_file}
+	line=0
+	while true
+	do
+	    #每50行输出一行title，方便了解每列数据的title
+		if [ `expr ${line} % 50` == 0 ];then
+			echo -e ${title}
+		fi
+		
+		if [ $line -gt $line_max ];then
+			echo "You have recorded "${line}" line, exit."
+			exit
+		fi
+		
+		line=`expr ${line} + 1`
+		
+		((file_size=`du -k ${current_file} | awk '{print $1}'`))
+		#echo ${file_size}
+			if [ ${file_size} -gt 20480 ];then
+					time=$(date +%s)
+					echo ${time} > tmp.time.last
+					current_file=${file_basename}".${time}"".log"
+			fi
+
+			#echo "start:"$(date +%s.%N)
+			#echo "Native System Persistent Foreground Visible AServ Prev BServ Cached KD ZRAM"
+			#a[0]=total;
+			#a[1]=fixsz;a[2]=Native;a[3]=System;a[4]=Persistent;a[5]=PersistentService;a[6]=launchersz;
+			#a[7]=cutablesz;a[8]=Foreground;a[9]=Visible;a[10]=AService;a[11]=Previous;a[12]=BService;a[13]=Cached;
+			adb shell dumpsys meminfo |awk 'BEGIN{i=0;k=0;l=0;fixsz=0;cutablesz=0;launchersz=0;cached_num=0;}
+											/kB: Native/{if(0==i)a[2]=$1/1024;i++;}
+											/kB: System/{a[3]=$1/1024;}
+											/kB: Persistent/{if(0==k)a[4]=$1/1024;k++;}
+											/kB: Persistent Service/{a[5]=$1/1024;}
+											/kB: Foreground/{a[6]=$1/1024;}
+											/kB: Visible/{a[7]=$1/1024;}
+											/kB: A Services/{a[8]=$1/1024;}
+											/kB: Previous/{a[10]=$1/1024;}
+											/kB: B Services/{a[11]=$1/1024;}
+											/kB: Cached/{a[12]=$1/1024;}
+											/kB: Cached/,/Total PSS by category/{cached_num++;}
+											/Used RAM:/{a[13]=$9/1024;}
+											/ZRAM:/{a[14]=$2/1024;}
+											END{
+												a[1]=a[2]+a[3]+a[4]+a[5]+a[6]+a[7]+a[8];
+												a[9]=a[10]+a[11]+a[12];
+												a[0]=a[1]+a[9];
+												for(j=0;j<=14;j++) {if(a[j]) b[j]=sprintf("%2.2f\t", a[j]);else b[j]=sprintf("%2.2f\t", 0);}
+												if(cached_num-3>0) b[15]=sprintf("%d\t", cached_num-3);else b[15]=sprintf("%d\t", 0);
+												tmp=b[0]b[1]b[2]b[3]b[4]b[5]b[6]b[7]b[8]b[9]b[10]b[11]b[12]b[13]b[14]b[15];
+												print tmp;
+												}
+											' > tmp.w3.meminfo
+											
+			str=`cat tmp.w3.meminfo`					
+			adb shell cat /proc/meminfo|sed 's/kB//g'|awk -v a_str="${str}" 'BEGIN{i=0;} 
+										/Cached:/{if (0==i) {$2=$2/1024;c=$2}i++} 
+										END{
+											print a_str c;
+										}
+										'|tee -a ${current_file}
+			#上面END中j<=10:Total=Native+System+Persist+PerS+FG+Visible+AServ+Prev+BServ+Cached, KD和ZRAM并不算在内
+			#echo "end:"$(date +%s.%N)
+			#python -c "import time;time.sleep(5)";
+			sleep 5
+	done
+}
+
+function record_XUI {
+	file_basename="meminfo"
+	time=$(date +%s)
+	echo "start time: $(date)" > tmp.time.last
+	current_file=xui.${file_basename}".${time}"".log"
+	touch ${current_file}
+	((line_max=$1))
+	
+	###########record the adj level start##########
+	# FG=0, Visible=100, Perceptible=200, Backup=300, CacheMin=900, CacheMax=906
+	echo "###########record the adj level start##########" >> ${current_file}
+	echo "ADJ: "`adb shell cat /sys/module/lowmemorykiller/parameters/adj|awk '{gsub(/,/," ",$0);print $0}'`|tee -a ${current_file}
+	echo "ThresHold: "`adb shell cat /sys/module/lowmemorykiller/parameters/minfree|awk '{gsub(/,/," ",$0);for(i=1;i<=NF;i++) print $i*4/1024}'|awk '{ORS=" ";print} END{printf "\n";}'`|tee -a ${current_file}
+	echo "###########record the adj level end############" >> ${current_file}
+	###########record the adj level end############
+	###########record the HSYNC start##############
+	echo "###########record the HSYNC start##############" >> ${current_file}
+	echo "HSYNC: "`adb shell dumpsys SurfaceFlinger --latency|awk '{if(NR==1) print $0}'` |tee  -a ${current_file}
+	echo "###########record the HSYNC end################" >> ${current_file}
+	###########record the HSYNC end################
+	#echo ${current_file}
+	title="Total\tFixSZ\tNative\tSystem\tPersist\tFG\tVisible\tPercept\tAServ\tCutable\tHome\tPrev\tBServ\tCached\tKD\tZRAM\tCACHE\tCacheNum"
+	#title="Total\t|FixSZ\t|Native\t|System\t|Persis\t|FG\t|CutSZ\t|Visi\t|Perce\t|AServ\t|Home\t|Prev\t|BServ\t|Cached\t|KD\t|ZRAM\t|CACHE\t|"
+	echo -e ${title} >> ${current_file}
+	line=0
+	while true
+	do
+	    #每50行输出一行title，方便了解每列数据的title
+		if [ `expr ${line} % 50` == 0 ];then
+			echo -e ${title}
+		fi
+		
+		if [ $line -gt $line_max ];then
+			echo "You have recorded "${line}" line, exit."
+			exit
+		fi
+		
+		line=`expr ${line} + 1`
+		
+		((file_size=`du -k ${current_file} | awk '{print $1}'`))
+		#echo ${file_size}
+			if [ ${file_size} -gt 20480 ];then
+					time=$(date +%s)
+					echo ${time} > tmp.time.last
+					current_file=${file_basename}".${time}"".log"
+			fi
+
+			#echo "start:"$(date +%s.%N)
+			#echo "Native System Persistent Foreground Visible AServ Prev BServ Cached KD ZRAM"
+			#KD=shmem+slab+page_tables+kernel_stack,if you want to print the KD, you must apply the KD patch:
+			#KD patch===> pw.print(" Kernel Dynamic: ");pw.println(stringifyKBSize(memInfo.getRawInfo()[Debug.MEMINFO_SHMEM]+memInfo.getRawInfo()[Debug.MEMINFO_SLAB]+memInfo.getRawInfo()[Debug.MEMINFO_PAGE_TABLES]+memInfo.getRawInfo()[Debug.MEMINFO_KERNEL_STACK]));
+			#a[0]=total
+			#a[1]=fixsz;a[2]=native;a[3]=system;a[4]=presist;a[5]=FG;a[6]=visiable;a[7]=Perceptible;a[8]=Aserv;
+			#a[9]=Cutable;a[10]=home;a[11]=prev;a[12]=Bserv;a[13]=cached;
+			adb shell dumpsys meminfo|sed 's/,//g' |sed 's/K:/ K:/g'|awk 'BEGIN{i=0;k=0;cached_num=0;}
+											/K: Native/{if(0==i)a[2]=$1/1024;i++;}
+											/K: System/{a[3]=$1/1024;}
+											/K: Persistent/{if(0==k)a[4]=$1/1024;k++;}
+											/K: Foreground/{a[5]=$1/1024;}
+											/K: Visible/{a[6]=$1/1024;}
+											/K: Perceptible/{a[7]=$1/1024;}
+											/K: A Services/{a[8]=$1/1024;}
+											/K: Home/{a[10]=$1/1024;}
+											/K: Previous/{a[11]=$1/1024;}
+											/K: B Services/{a[12]=$1/1024;}
+											/K: Cached/{a[13]=$1/1024;}
+											/K: Cached/,/Total PSS by category/{cached_num++;}
+											/Kernel Dynamic:/{gsub(/K/,"",$3);a[14]=$3/1024;}
+											/ZRAM:/{gsub(/K/,"",$2);a[15]=$2/1024;}
+											/CACHE RAM:/{gsub(/K/,"",$3);a[16]=$3/1024;}
+											END{
+												a[1]=a[2]+a[3]+a[4]+a[5]+a[6]+a[7]+a[8];
+												a[9]=a[10]+a[11]+a[12]+a[13];
+												a[0]=a[1]+a[9];
+												for(j=0;j<=16;j++) {if(a[j]) printf "%2.2f\t",a[j];else printf "%2.2f\t",0;}
+												if(cached_num-3>0) printf "%d\t",cached_num-3;else printf "%d\t",0;
+											}
+											'|awk '{ORS=" ";print} END{printf "\n";}'|tee -a ${current_file};
+											#|tee -a ${current_file}
+			#上面END中j<=10:Total=Native+System+Persist+PerS+FG+Visible+AServ+Prev+BServ+Cached, KD和ZRAM并不算在内
+			#echo "end:"$(date +%s.%N)
+			#echo "----------------------------------------------------------------------------------------------------------------------------------------"
+			#python -c "import time;time.sleep(5)";
+			sleep 5
+	done
+}
+
+function record_XUI_User {
+	file_basename="meminfo"
+	time=$(date +%s)
+	echo "start time: $(date)" > tmp.time.last
+	current_file=xui.${file_basename}".${time}"".log"
+	touch ${current_file}
+	((line_max=$1))
+	
+	###########record the adj level start##########
+	# FG=0, Visible=100, Perceptible=200, Backup=300, CacheMin=900, CacheMax=906
+	#echo "###########record the adj level start##########" >> ${current_file}
+	#echo "ADJ: "`adb shell cat /sys/module/lowmemorykiller/parameters/adj|awk '{gsub(/,/," ",$0);print $0}'`|tee -a ${current_file}
+	#echo "ThresHold: "`adb shell cat /sys/module/lowmemorykiller/parameters/minfree|awk '{gsub(/,/," ",$0);for(i=1;i<=NF;i++) print $i*4/1024}'|awk '{ORS=" ";print} END{printf "\n";}'`|tee -a ${current_file}
+	echo "ThresHold: "`adb shell dumpsys meminfo|awk '/Tuning:/{print $0}'|sed 's/,//g'|sed 's/K//g'|awk '{print $6/1024}'`|tee -a ${current_file}
+	#echo "###########record the adj level end############" >> ${current_file}
+	###########record the adj level end############
+	###########record the HSYNC start##############
+	#echo "###########record the HSYNC start##############" >> ${current_file}
+	#echo "HSYNC: "`adb shell dumpsys SurfaceFlinger --latency|awk '{if(NR==1) print $0}'` |tee  -a ${current_file}
+	echo "HSYNC: "`adb shell dumpsys SurfaceFlinger --latency|awk '{if(NR==1) print $0}'` |tee  -a ${current_file}
+	#echo "###########record the HSYNC end################" >> ${current_file}
+	###########record the HSYNC end################
+	
+	#echo ${current_file}
+	title="Total\tFixSZ\tNative\tSystem\tPersist\tFG\tVisible\tPercept\tAServ\tCutable\tHome\tPrev\tBServ\tCached\tZRAM\tCahNum\tKD\tCACHE"
+	#title="Total\t|FixSZ\t|Native\t|System\t|Persis\t|FG\t|CutSZ\t|Visi\t|Perce\t|AServ\t|Home\t|Prev\t|BServ\t|Cached\t|KD\t|ZRAM\t|CACHE\t|"
+	echo -e ${title} >> ${current_file}
+	line=0
+	while true
+	do
+	    #每50行输出一行title，方便了解每列数据的title
+		if [ `expr ${line} % 50` == 0 ];then
+			echo -e ${title}
+		fi
+		
+		if [ $line -gt $line_max ];then
+			echo "You have recorded "${line}" line, exit."
+			exit
+		fi
+		
+		line=`expr ${line} + 1`
+		
+		((file_size=`du -k ${current_file} | awk '{print $1}'`))
+		#echo ${file_size}
+			if [ ${file_size} -gt 20480 ];then
+					time=$(date +%s)
+					echo ${time} > tmp.time.last
+					current_file=${file_basename}".${time}"".log"
+			fi
+
+			#echo "start:"$(date +%s.%N)
+			#echo "Native System Persistent Foreground Visible AServ Prev BServ Cached KD ZRAM"
+			#KD=shmem+slab+page_tables+kernel_stack,if you want to print the KD, you must apply the KD patch:
+			#KD patch===> pw.print(" Kernel Dynamic: ");pw.println(stringifyKBSize(memInfo.getRawInfo()[Debug.MEMINFO_SHMEM]+memInfo.getRawInfo()[Debug.MEMINFO_SLAB]+memInfo.getRawInfo()[Debug.MEMINFO_PAGE_TABLES]+memInfo.getRawInfo()[Debug.MEMINFO_KERNEL_STACK]));
+			#a[0]=total
+			#a[1]=fixsz;a[2]=native;a[3]=system;a[4]=presist;a[5]=FG;a[6]=visiable;a[7]=Perceptible;a[8]=Aserv;
+			#a[9]=Cutable;a[10]=home;a[11]=prev;a[12]=Bserv;a[13]=cached;
+			adb shell dumpsys meminfo|sed 's/,//g' |sed 's/K:/ K:/g'|awk 'BEGIN{i=0;k=0;cached_num=0;}
+											/K: Native/{if(0==i)a[2]=$1/1024;i++;}
+											/K: System/{a[3]=$1/1024;}
+											/K: Persistent/{if(0==k)a[4]=$1/1024;k++;}
+											/K: Foreground/{a[5]=$1/1024;}
+											/K: Visible/{a[6]=$1/1024;}
+											/K: Perceptible/{a[7]=$1/1024;}
+											/K: A Services/{a[8]=$1/1024;}
+											/K: Home/{a[10]=$1/1024;}
+											/K: Previous/{a[11]=$1/1024;}
+											/K: B Services/{a[12]=$1/1024;}
+											/K: Cached/{a[13]=$1/1024;}
+											/K: Cached/,/Total PSS by category/{cached_num++;}
+											/ZRAM:/{gsub(/K/,"",$2);a[14]=$2/1024;}
+											END{
+												a[1]=a[2]+a[3]+a[4]+a[5]+a[6]+a[7]+a[8];
+												a[9]=a[10]+a[11]+a[12]+a[13];
+												a[0]=a[1]+a[9];
+												for(j=0;j<=14;j++) {if(a[j]) b[j]=sprintf("%2.2f\t", a[j]);else b[j]=sprintf("%2.2f\t", 0);}
+												if(cached_num-3>0) b[15]=sprintf("%d\t", cached_num-3);else b[15]=sprintf("%d\t", 0);
+												tmp=b[0]b[1]b[2]b[3]b[4]b[5]b[6]b[7]b[8]b[9]b[10]b[11]b[12]b[13]b[14]b[15];
+												print tmp;
+												}
+											'> tmp.xui.user.meminfo
+											#|tee -a ${current_file}
+			str=`cat tmp.xui.user.meminfo`					
+			adb shell cat /proc/meminfo|sed 's/kB//g'|awk -v a_str="${str}" 'BEGIN{i=0;} 
+										/Cached:/{if (0==i) {$2=$2/1024;a[0]=$2}i++} 
+										/Shmem:/{$2=$2/1024;a[1]=$2}
+										/Slab:/{$2=$2/1024;a[2]=$2}
+										/KernelStack:/{$2=$2/1024;a[3]=$2}
+										/PageTables:/{$2=$2/1024;a[4]=$2}
+										END{
+											kd=a[1]+a[2]+a[3]+a[4];
+											cache=a[0];
+											printf("%s%d\t%d\n",a_str,kd,cache);
+										}
+										'|tee -a ${current_file}
+			#上面END中j<=10:Total=Native+System+Persist+PerS+FG+Visible+AServ+Prev+BServ+Cached, KD和ZRAM并不算在内
+			#echo "end:"$(date +%s.%N)
+			#echo "----------------------------------------------------------------------------------------------------------------------------------------"
+			#python -c "import time;time.sleep(5)";
+			sleep 5
+	done
+}
+
+function record_XUI_User2 {
+	file_basename="meminfo"
+	time=$(date +%s)
+	echo "start time: $(date)" > tmp.time.last
+	current_file=xui.${file_basename}".${time}"".log"
+	touch ${current_file}
+	((line_max=$1))
+	
+	###########record the adj level start##########
+	# FG=0, Visible=100, Perceptible=200, Backup=300, CacheMin=900, CacheMax=906
+	#echo "###########record the adj level start##########" >> ${current_file}
+	#echo "ADJ: "`adb shell cat /sys/module/lowmemorykiller/parameters/adj|awk '{gsub(/,/," ",$0);print $0}'`|tee -a ${current_file}
+	#echo "ThresHold: "`adb shell cat /sys/module/lowmemorykiller/parameters/minfree|awk '{gsub(/,/," ",$0);for(i=1;i<=NF;i++) print $i*4/1024}'|awk '{ORS=" ";print} END{printf "\n";}'`|tee -a ${current_file}
+	#echo "ThresHold: "`adb shell dumpsys meminfo|awk '/Tuning:/{print $0}'|sed 's/,//g'|sed 's/K//g'|awk '{print $6/1024}'`|tee -a ${current_file}
+	#echo "###########record the adj level end############" >> ${current_file}
+	###########record the adj level end############
+	###########record the HSYNC start##############
+	#echo "###########record the HSYNC start##############" >> ${current_file}
+	#echo "HSYNC: "`adb shell dumpsys SurfaceFlinger --latency|awk '{if(NR==1) print $0}'` |tee  -a ${current_file}
+	#echo "HSYNC: "`adb shell dumpsys SurfaceFlinger --latency|awk '{if(NR==1) print $0}'` |tee  -a ${current_file}
+	#echo "###########record the HSYNC end################" >> ${current_file}
+	###########record the HSYNC end################
+	
+	#echo ${current_file}
+	title="Total\tPersist\tFG\tVisible\tPercept\tAServ\tHome\tPrev\tBServ\tCached\tCahNum\tCACHE"
+	#title="Total\t|FixSZ\t|Native\t|System\t|Persis\t|FG\t|CutSZ\t|Visi\t|Perce\t|AServ\t|Home\t|Prev\t|BServ\t|Cached\t|KD\t|ZRAM\t|CACHE\t|"
+	echo -e ${title} >> ${current_file}
+	line=0
+	while true
+	do
+	    #每50行输出一行title，方便了解每列数据的title
+		if [ `expr ${line} % 50` == 0 ];then
+			echo -e ${title}
+		fi
+		
+		if [ $line -gt $line_max ];then
+			echo "You have recorded "${line}" line, exit."
+			exit
+		fi
+		
+		line=`expr ${line} + 1`
+		
+		((file_size=`du -k ${current_file} | awk '{print $1}'`))
+		#echo ${file_size}
+			if [ ${file_size} -gt 20480 ];then
+					time=$(date +%s)
+					echo ${time} > tmp.time.last
+					current_file=${file_basename}".${time}"".log"
+			fi
+			adb shell dumpsys meminfo|sed 's/,//g' |sed 's/K:/ K:/g'|awk 'BEGIN{i=0;k=0;cached_num=0;}
+											/K: Persistent/{if(0==k)a[1]=$1/1024;k++;}
+											/K: Foreground/{a[2]=$1/1024;}
+											/K: Visible/{a[3]=$1/1024;}
+											/K: Perceptible/{a[4]=$1/1024;}
+											/K: A Services/{a[5]=$1/1024;}
+											/K: Home/{a[6]=$1/1024;}
+											/K: Previous/{a[7]=$1/1024;}
+											/K: B Services/{a[8]=$1/1024;}
+											/K: Cached/{a[9]=$1/1024;}
+											/K: Persistent/,/Total PSS by category/{cached_num++;}
+											END{
+												a[0]=a[1]+a[2]+a[3]+a[4]+a[5]+a[6]+a[7]+a[8]+a[9];
+												for(j=0;j<=9;j++) {if(a[j]) b[j]=sprintf("%2.2f\t", a[j]);else b[j]=sprintf("%2.2f\t", 0);}
+												if(cached_num-10>0) b[10]=sprintf("%d\t", cached_num-10);else b[10]=sprintf("%d\t", 0);
+												tmp=b[0]b[1]b[2]b[3]b[4]b[5]b[6]b[7]b[8]b[9]b[10];
+												print tmp;
+												}
+											'> tmp.xui.user.meminfo
+											#|tee -a ${current_file}
+			str=`cat tmp.xui.user.meminfo`					
+			adb shell cat /proc/meminfo|sed 's/kB//g'|awk -v a_str="${str}" 'BEGIN{i=0;} 
+										/Cached:/{if (0==i) {$2=$2/1024;a[0]=$2}i++} 
+										/Shmem:/{$2=$2/1024;a[1]=$2}
+										/Slab:/{$2=$2/1024;a[2]=$2}
+										/KernelStack:/{$2=$2/1024;a[3]=$2}
+										/PageTables:/{$2=$2/1024;a[4]=$2}
+										END{
+											cache=a[0];
+											printf("%s%d\n",a_str,cache);
+										}
+										'|tee -a ${current_file}
+			#上面END中j<=10:Total=Native+System+Persist+PerS+FG+Visible+AServ+Prev+BServ+Cached, KD和ZRAM并不算在内
+			#echo "end:"$(date +%s.%N)
+			#echo "----------------------------------------------------------------------------------------------------------------------------------------"
+			#python -c "import time;time.sleep(5)";
+			sleep 1
+	done
+}
+
+function record_AN {
+	file_basename="meminfo"
+	time=$(date +%s)
+	echo "start time: $(date)" > tmp.time.last
+	current_file=xui.${file_basename}".${time}"".log"
+	touch ${current_file}
+	
+	###########record the adj level start##########
+	# FG=0, Visible=100, Perceptible=200, Backup=300, CacheMin=900, CacheMax=906
+	echo "###########record the adj level start##########" >> ${current_file}
+	echo "ADJ: "`adb shell cat /sys/module/lowmemorykiller/parameters/adj|awk '{gsub(/,/," ",$0);print $0}'`|tee -a ${current_file}
+	echo "ThresHold: "`adb shell cat /sys/module/lowmemorykiller/parameters/minfree|awk '{gsub(/,/," ",$0);for(i=1;i<=NF;i++) print $i*4/1024}'|awk '{ORS=" ";print} END{printf "\n";}'`|tee -a ${current_file}
+	echo "###########record the adj level end############" >> ${current_file}
+	###########record the adj level end############
+	###########record the HSYNC start##############
+	echo "###########record the HSYNC start##############" >> ${current_file}
+	echo "HSYNC: "`adb shell dumpsys SurfaceFlinger --latency|awk '{if(NR==1) print $0}'` |tee  -a ${current_file}
+	echo "###########record the HSYNC end################" >> ${current_file}
+	###########record the HSYNC end################
+	#echo ${current_file}
+	title="Total\tFreeRam\tCahPss\tCahKer\tFree\tUsedRam\tUsedPss\tKernel\tLost\tZRAM\tThHold\tCache"
+	#title="Total\t|FixSZ\t|Native\t|System\t|Persis\t|FG\t|CutSZ\t|Visi\t|Perce\t|AServ\t|Home\t|Prev\t|BServ\t|Cached\t|KD\t|ZRAM\t|CACHE\t|"
+	echo -e ${title} >> ${current_file}
+	line=0
+	while true
+	do
+	    #每50行输出一行title，方便了解每列数据的title
+		if [ `expr ${line} % 50` == 0 ];then
+			echo -e ${title}
+		fi
+		line=`expr ${line} + 1`
+		
+		((file_size=`du -k ${current_file} | awk '{print $1}'`))
+		#echo ${file_size}
+			if [ ${file_size} -gt 20480 ];then
+					time=$(date +%s)
+					echo ${time} > tmp.time.last
+					current_file=${file_basename}".${time}"".log"
+			fi
+
+			#echo "start:"$(date +%s.%N)
+			#echo "Native System Persistent Foreground Visible AServ Prev BServ Cached KD ZRAM"
+			#KD=shmem+slab+page_tables+kernel_stack,if you want to print the KD, you must apply the KD patch:
+			#KD patch===> pw.print(" Kernel Dynamic: ");pw.println(stringifyKBSize(memInfo.getRawInfo()[Debug.MEMINFO_SHMEM]+memInfo.getRawInfo()[Debug.MEMINFO_SLAB]+memInfo.getRawInfo()[Debug.MEMINFO_PAGE_TABLES]+memInfo.getRawInfo()[Debug.MEMINFO_KERNEL_STACK]));
+			#a[0]=total
+			#a[1]=fixsz;a[2]=native;a[3]=system;a[4]=presist;a[5]=FG;a[6]=visiable;a[7]=Perceptible;a[8]=Aserv;
+			#a[9]=Cutable;a[10]=home;a[11]=prev;a[12]=Bserv;a[13]=cached;
+			adb shell dumpsys meminfo|sed 's/,//g'|sed 's/(//g'|sed 's/)//g'|sed 's/K/ /g'|awk 'BEGIN{} 
+										/Total RAM:/{$3=$3/1024;a[1]=$3} 
+										/Free RAM:/{$3=$3/1024;$4=$4/1024;$8=$8/1024;$12=$12/1024;$15=$15/1024;$19=$19/1024;a[2]=$3;a[3]=$4;a[4]=$8;a[5]=$12;} 
+										/Used RAM:/{$3=$3/1024;$4=$4/1024;$8=$8/1024;$11=$11/1024;$15=$15/1024;$19=$19/1024;a[6]=$3;a[7]=$4;a[8]=$8;} 
+										/Lost RAM:/{$3=$3/1024;a[9]=$3;} 
+										/ZRAM:/{$2=$2/1024;$6=$6/1024;$9=$9/1024;a[10]=$2;} 
+										/Tuning:/{$6=$6/1024;$9=$9/1024;a[11]=$6;}
+										END{
+											for(j=1;j<=11;j++) {b[j]=sprintf("%2.2f\t", a[j]);}
+											tmp=b[1]b[2]b[3]b[4]b[5]b[6]b[7]b[8]b[9]b[10]b[11];
+											print tmp;
+										}
+										' > tmp.AN.meminfo
+			str=`cat tmp.AN.meminfo`					
+			adb shell cat /proc/meminfo|sed 's/kB//g'|awk -v a_str="${str}" 'BEGIN{i=0;} 
+										/Cached:/{if (0==i) {$2=$2/1024;c=$2}i++} 
+										END{
+											print a_str, c;
+										}
+										'
+			#上面END中j<=10:Total=Native+System+Persist+PerS+FG+Visible+AServ+Prev+BServ+Cached, KD和ZRAM并不算在内
+			#echo "end:"$(date +%s.%N)
+			#echo "----------------------------------------------------------------------------------------------------------------------------------------"
+			python -c "import time;time.sleep(5)";
+	done
+}
+
+function record_proc_meminfo {
+	file_basename="meminfo"
+	time=$(date +%s)
+	echo "start time: $(date)" > tmp.time.last
+	current_file=${file_basename}".${time}"".log"
+	touch ${current_file}
+	echo ${current_file}
+	while true
+	do
+		((file_size=`du -k ${current_file} | awk '{print $1}'`))
+		echo ${file_size}
+			if [ ${file_size} -gt 10240 ];then
+					time=$(date +%s)
+					echo ${time} > tmp.time.last
+					current_file=${file_basename}".${time}"".log"
+			fi
+
+			#echo "start:"$(date +%s.%N)
+			adb shell cat /proc/meminfo >> ${current_file}
+			#echo "end:"$(date +%s.%N)
+			python -c "import time;time.sleep(5)";
+	done
+}
+
+function record_two_source {
+	file_basename="meminfo"
+	time=$(date +%s)
+	echo "start time: $(date)" > tmp.time.last
+	current_file=${file_basename}".${time}"".log"
+	touch ${current_file}
+	echo ${current_file}
+	while true
+	do
+		((file_size=`du -k ${current_file} | awk '{print $1}'`))
+		echo ${file_size}
+			if [ ${file_size} -gt 10240 ];then
+					time=$(date +%s)
+					echo ${time} > tmp.time.last
+					current_file=${file_basename}".${time}"".log"
+			fi
+
+			#echo "start:"$(date +%s.%N)
+			adb shell dumpsys meminfo >> ${current_file}
+			echo "Memory info from Proc: start" >> ${current_file}
+			adb shell cat /proc/meminfo >> ${current_file}
+			echo "Memory info from Proc: end" >> ${current_file}
+			#echo "end:"$(date +%s.%N)
+			#python -c "import time;time.sleep(5)";
+	done
+}
+
+function record_gfxinfo {
+	while true
+	do
+		adb shell dumpsys gfxinfo >> tmp.gfxinfo.file
+		python -c "import time;time.sleep(1.5)";
+	done
+
+}
+
+
+function record_fps_info {
+	# file_basename="fpsinfo"
+	# time=$(date +%s)
+	# echo "start time: $(date)" > tmp.time.last
+	# current_file=${file_basename}".${time}"".log"
+	# touch ${current_file}
+	# echo ${current_file}
+	rm -rf tmp*
+	echo 0 > tmp.flag.file
+	while true
+	do
+		# ((file_size=`du -k ${current_file} | awk '{print $1}'`))
+		# echo ${file_size}
+			# if [ ${file_size} -gt 10240 ];then
+					# time=$(date +%s)
+					# echo ${time} > tmp.time.last
+					# current_file=${file_basename}".${time}"".log"
+			# fi
+
+			#echo "start:"$(date +%s.%N)
+			#adb shell dumpsys SurfaceFlinger --latency | awk '{if(NR>1 && NR<129) {}'
+			
+			flag=`cat tmp.flag.file|awk '{print $1}'`
+			echo "flag = "${flag}
+			adb shell dumpsys SurfaceFlinger --latency|awk -v a_flag="${flag}" '
+																						BEGIN{
+																							i=1;
+																						}
+			
+																						{
+																							if(NR>1 && NR<129){
+																								print $0; 
+																								print $0>"tmp.fps.file";
+																								print $0>>"tmp.fps.file.debug";
+																								
+																								i++;
+																							}
+																						}
+																					'
+			if [ $flag -eq 1 ];then
+				echo "11111"
+				lastline=`cat tmp.fps.lastline|awk '{print $1}'`
+			else
+				echo "00000"
+				lastline=0	
+			fi
+			
+			echo $flag"--"${lastline}
+			#echo "lastline= "${lastline}
+			
+			#if [ ! -f tmp.fps.file ];then
+				cat tmp.fps.file|awk -v a_lastline="${lastline}" -v a_flag="${flag}" '
+																BEGIN{
+																	if(a_flag == 0 ){
+																		print a_flag;
+																	}else{
+																		print a_flag,a_lastline;
+																	}
+																}
+																
+																{
+																	
+																	if(a_flag==0){
+																		print NR,$0>>"tmp.fps.record.file";
+																		
+																	} else {
+																
+																		if($2~a_lastline){
+																			print NR,$0>>"tmp.fps.record.file";
+																		}
+																	}
+																	
+																	if(NR==127){
+																		print $2>"tmp.fps.lastline";
+																		print $2>>"tmp.fps.lastline.debug";
+																	}
+																}
+																
+																END{
+																	if(a_flag==0){
+																		print "set flag=1";
+																		print "1" > "tmp.flag.file";
+																	}
+																}
+															'
+			#fi
+			
+			#cat tmp.fps.file.curr > tmp.fps.file.prev
+			
+			python -c "import time;time.sleep(10)";
+	done
+}
+
+function testsf {
+	echo -e "/034func: test"
+	line=0
+	while true
+	do
+		#mo=`expr ${line} % 5`
+		#echo $mo
+		if [ `expr ${line} % 5` == 0 ];then
+			echo -e "hello:"$line
+		fi
+		line=`expr $line + 1`
+		sleep 1
+	done
+}
+
+function ksm_usage {
+	echo "record_memory ksm #record ksm"
+	echo "record_memory ksm start #start ksm"
+	echo "record_memory ksm stop #stop ksm"
+	echo "record_memory ksm status #show ksm status"
+	echo "record_memory ksm -p pages_to_scan -s sleep_millisecs #set ksm"
+}
+
+function show_ksm {
+	run=`adb shell cat /sys/kernel/mm/ksm/run|awk '{if(NF==1) print $1}'`
+	pages_to_scan=`adb shell cat /sys/kernel/mm/ksm/pages_to_scan|awk '{if(NF==1) print $1}'`
+	sleep_millisecs=`adb shell cat /sys/kernel/mm/ksm/sleep_millisecs|awk '{if(NF==1) print $1}'`
+	
+	full_scans=`adb shell cat /sys/kernel/mm/ksm/full_scans|awk '{if(NF==1) print $1}'`
+	pages_shared=`adb shell cat /sys/kernel/mm/ksm/pages_shared|awk '{if(NF==1) print $1}'`
+	pages_sharing=`adb shell cat /sys/kernel/mm/ksm/pages_sharing|awk '{if(NF==1) print $1}'`
+	pages_unshared=`adb shell cat /sys/kernel/mm/ksm/pages_unshared|awk '{if(NF==1) print $1}'`
+	pages_volatile=`adb shell cat /sys/kernel/mm/ksm/pages_volatile|awk '{if(NF==1) print $1}'`
+
+	echo "########################################"
+	echo "RUN:            $run"
+	echo "PageToScan:     $pages_to_scan"
+	echo "Sleep:          $sleep_millisecs"
+	echo "Shared:         $pages_shared"
+	echo "Sharing:        $pages_sharing"
+	echo "########################################"
+}
+
+function modify_ksm {
+	#echo $1 $2 $3 $4
+
+	if [ $# == 1 ];then
+		if [ $1 == "stop" ];then
+			adb shell "echo 0 > /sys/kernel/mm/ksm/run"
+			#adb shell "echo 1 > /sys/kernel/mm/ksm/run"
+			show_ksm
+			exit
+		fi
+		
+		if [ $1 == "start" ];then
+			adb shell "echo 1 > /sys/kernel/mm/ksm/run"
+			show_ksm
+			exit
+		fi
+		
+		if [ $1 == "status" ];then
+			show_ksm
+			exit
+		fi
+	fi
+	
+	if [ $# == 2 ];then
+		if [ $1 == "-p" ];then
+			page_scan=$2
+			adb shell "echo 0 > /sys/kernel/mm/ksm/run"
+			adb shell "echo $page_scan > /sys/kernel/mm/ksm/pages_to_scan"
+			
+			show_ksm
+			exit
+		fi
+		
+		if [ $1 == "-s" ];then
+			sleep_millisecs=$2
+			adb shell "echo 0 > /sys/kernel/mm/ksm/run"
+			adb shell "echo $sleep_millisecs > /sys/kernel/mm/ksm/sleep_millisecs"
+			
+			show_ksm
+			exit
+		fi
+	fi
+	
+	if [ $# == 4 ];then
+		if [ $1 == "-p" -a $3 == "-s" ];then
+			adb shell "echo 0 > /sys/kernel/mm/ksm/run"
+			page_scan=$2
+			adb shell "echo $page_scan > /sys/kernel/mm/ksm/pages_to_scan"
+			sleep_millisecs=$4
+			adb shell "echo $sleep_millisecs > /sys/kernel/mm/ksm/sleep_millisecs"
+			
+			show_ksm
+			exit
+		fi
+		
+		if [ $1 == "-s" -a $3 == "-p" ];then
+			adb shell "echo 0 > /sys/kernel/mm/ksm/run"
+			page_scan=$4
+			adb shell "echo $page_scan > /sys/kernel/mm/ksm/pages_to_scan"
+			sleep_millisecs=$2
+			adb shell "echo $sleep_millisecs > /sys/kernel/mm/ksm/sleep_millisecs"
+			
+			show_ksm
+			exit
+		fi
+	fi
+	
+	ksm_usage
+	exit
+}
+
+function record_ksm {
+
+	#echo "canshu: $#"
+
+	if [ $# -gt 0 ]; then
+        modify_ksm $1 $2 $3 $4
+	fi
+	
+	run=`adb shell cat /sys/kernel/mm/ksm/run|awk '{if(NF==1) print $1}'`
+	
+	if [ $run == 0 ];then
+		echo "Please Enable the ksm, use adb shell \"echo 1>/sys/kernel/mm/ksm/run\" to enable it"
+		exit
+	fi
+	
+	pid=`adb shell ps -t| grep ksmd|awk '{print $2}'`
+	if [ $pid == 0 ];then
+		echo "There was no ksmd pid, please check it"
+		exit
+	fi
+	
+	pages_to_scan=`adb shell cat /sys/kernel/mm/ksm/pages_to_scan|awk '{if(NF==1) print $1}'`
+	sleep_millisecs=`adb shell cat /sys/kernel/mm/ksm/sleep_millisecs|awk '{if(NF==1) print $1}'`
+	time=$(date +%s)
+	file_name=tmp.ksm.P$pages_to_scan.S$sleep_millisecs.$time.info
+	
+	#pages_to_scan=`adb shell cat /sys/kernel/mm/ksm/pages_to_scan`
+	#sleep_millisecs=`adb shell cat /sys/kernel/mm/ksm/sleep_millisecs`
+	#echo -e "Configure: PageToScan[$pages_to_scan] SleepMillisecs[$sleep_millisecs]"
+	
+	title="FULL\tSHARED\tSHARING\tUNSHARE\tVOL\tSCAN\tSLEEP\tCPU\tS/S"
+	echo -e $title > $file_name
+	line=0
+	
+	while true
+	do
+		#run=`adb shell cat /sys/kernel/mm/ksm/run|awk '{if(NF==1) print $1}'`
+		#if [ $run == 0 ];then
+		#	echo "Please Enable the ksm, use adb shell \"echo 1>/sys/kernel/mm/ksm/run\" to enable it"
+		#	exit
+		#fi
+	
+		if [ `expr ${line} % 50` == 0 ];then
+			echo -e ${title}
+		fi
+		
+		line=$(($line+1))
+		full_scans=`adb shell cat /sys/kernel/mm/ksm/full_scans|awk '{if(NF==1) print $1}'`
+		pages_shared=`adb shell cat /sys/kernel/mm/ksm/pages_shared|awk '{if(NF==1) print $1}'`
+		pages_sharing=`adb shell cat /sys/kernel/mm/ksm/pages_sharing|awk '{if(NF==1) print $1}'`
+		pages_unshared=`adb shell cat /sys/kernel/mm/ksm/pages_unshared|awk '{if(NF==1) print $1}'`
+		pages_volatile=`adb shell cat /sys/kernel/mm/ksm/pages_volatile|awk '{if(NF==1) print $1}'`
+		#echo -e $full_scans
+		#echo -e $pages_shared
+		#echo -e $pages_sharing
+		#echo -e $pages_unshared
+		#echo -e $pages_volatile
+		#echo -e $pages_to_scan
+		
+		pages_to_scan=`adb shell cat /sys/kernel/mm/ksm/pages_to_scan|awk '{if(NF==1) print $1}'`
+		sleep_millisecs=`adb shell cat /sys/kernel/mm/ksm/sleep_millisecs|awk '{if(NF==1) print $1}'`
+		#str="$full_scans $pages_shared $pages_sharing $pages_unshared $pages_volatile $pages_to_scan $sleep_millisecs"
+		#CPU=`adb shell top -n 1|awk '/ksmd/{print $5}'`
+		CPU=`adb shell top -n 1|awk '/ksmd/{print $5}'|awk '{gsub(/%/,"",$0);print $0}'`
+		#SS=$(($pages_sharing/$pages_shared))
+		# pages_sharing/pages_shared代表了merger的效率，打个比方，有3个页面相同，那么此时pages_sharing=2，pages_shared=1，merger效率值为2
+		SS=`echo|awk -v a_pages_sharing="$pages_sharing" -v a_pages_shared="$pages_shared" 'END{printf "%.2f",a_pages_sharing/a_pages_shared}'`
+		
+		#echo $str
+		
+		echo -e $full_scans"\t"$pages_shared"\t"$pages_sharing"\t"$pages_unshared"\t"$pages_volatile"\t"$pages_to_scan"\t"$sleep_millisecs"\t"$CPU"\t"$SS|tee -a $file_name
+		
+		#sleep 1
+	done
+}
+
+function record_app {
+	app_name=$1
+	echo "Record App "$app_name"'s min avg and max"
+	echo "========================================"
+	echo -e "Runtime\tMin\tAVG\tMAX"
+	firsttime=0
+	if [ -f tmp.app.$app_name.info ];then
+		rm tmp.app.$app_name.info
+	fi
+	
+	echo -e "0\t0\t0\t0" > tmp.app.$app_name.info
+	
+	while true
+	do
+		
+		#runtime=`adb shell dumpsys meminfo|sed -n '/Total PSS by process:/,/Total PSS by OOM adjustment:/p'|sed '/Total/d'|sed 's/\,//g'|awk '{print $1/1024,$2}'|sed 's/K://g'|grep "$app_name"|awk '{print $1}'`
+		runtime=`adb shell dumpsys meminfo "$app_name"|awk '/TOTAL:/{print $2/1024}'`
+		if [ -z "$runtime" ];then
+			sleep 5
+			break
+		fi
+		
+		cat tmp.app.$app_name.info|awk -v a_firsttime="$firsttime" -v a_runtime="$runtime" '
+										{
+											if (NR==1){
+												pmin=$2;
+												pavg=$3;
+												pmax=$4;							
+												if (a_firsttime == 0){
+													pmin=a_runtime;
+													pavg=a_runtime;
+													pmax=a_runtime;
+												} else {
+													
+													if (a_runtime>pmax) {pmax=a_runtime;} else {pmax=$4;}
+													if (a_runtime<pmin) {pmin=a_runtime;} else {pmin=$2;}
+													pavg=(a_runtime+$3)/2;	
+												}
+											}	
+										}
+										END{
+											printf("%2.2f\t%2.2f\t%2.2f\t%2.2f\n", a_runtime,pmin,pavg,pmax);
+										}
+									'|tee tmp.app.$app_name.info
+		
+		firsttime=$(($firsttime + 1))
+		sleep 5
+	done
+}
+
+function store_kernel {
+	if [ -f tmp.${script_name}.pid_store ];then
+		echo > tmp.${script_name}.pid_store
+	fi
+	
+	echo "store_kernel in SUB PID: $$" > tmp.${script_name}.pid_store
+
+	if [ -f tmp.kernel_log ];then
+		echo > tmp.kernel_log
+	fi
+	
+	adb shell dmesg > tmp.kernel_log
+	last_timestamp=`cat tmp.kernel_log|awk 'END{print $0}'|sed 's/\[//g'|sed 's/\]//g'|awk 'END{print $1}'`
+	
+	{
+		while [ 1 ]  
+		do  
+			#cat tmp.tmp.kernel_log >> tmp.kernel_log
+			adb shell dmesg|sed -n '/'$last_timestamp'/,$p'>>tmp.kernel_log
+			last_timestamp=`cat tmp.kernel_log|awk 'END{print $0}'|sed 's/\[//g'|sed 's/\]//g'|awk 'END{print $1}'`
+			sleep 1  
+		done 
+	}&
+}
+
+function store_kernel2 {
+	{
+		time=$(date +%s)
+		filename=tmp.kernel.$time.log
+		while [ 1 ]  
+		do  
+			#cat tmp.tmp.kernel_log >> tmp.kernel_log
+			adb wait-for-device
+			start_time=$(date +%Y%m%d%H%M%S)
+			echo "Start record Kernel log at: $start_time"
+			adb shell cat /proc/kmsg
+		done 
+	}
+}
+
+function store_vmstat {
+	{
+
+		while [ 1 ]  
+		do  
+			adb shell "vmstat 1"
+		done 
+	}
+}
+
+function store_vmstat2 {
+	{
+		echo -e "Cache\tReclaim\tUnRecl\tFree\talloc\timmedi\tdirty\tdtthres"
+		while [ 1 ]  
+		do  
+			adb shell "cat /proc/vmstat"|awk '
+											
+											/nr_inactive_file/{inac_file=$2;}
+											/nr_active_file/{ac_file=$2;}
+											/nr_slab_reclaimable/{reclaimable=$2;}
+											/nr_slab_unreclaimable/{unreclaimable=$2;}
+											/nr_free_pages/{free=$2;}
+											/nr_alloc_batch/{alloc=$2;}
+											/nr_vmscan_immediate_reclaim/{immediate=$2;}
+											/nr_dirty/{dirty=$2;}
+											/nr_dirty_threshold/{dirty_threshold=$2;}
+											
+											END{
+												printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n",
+												(inac_file+ac_file)*4/1024, reclaimable*4/1024, unreclaimable*4/1024, free*4/1024, alloc*4/1024,
+												immediate*4/1024, dirty*4/1024, dirty_threshold*4/1024);
+											}
+											'
+			sleep 1
+		done 
+	}
+}
+
+function store_top {
+
+	{
+
+		while [ 1 ]  
+		do  
+			adb shell "top -m 10 -d 1"
+		done 
+	}
+}
+
+function store_procrank {
+
+	{
+		#if [ $myscript_os == "cygwin" ];then
+			#cmd adb push rebuild_tool/procrank_32 /data/
+		#fi
+
+		#if [ $myscript_os == "msys" ];then	
+			#$terminal_execfile -t "Record vmstat" -h always -w max --log $logfile_vmstat -e record_memory vmstat  &
+		#fi
+		echo
+		title="Count\tTolPss\tCache"
+		echo -e $title
+		while [ 1 ]  
+		do  
+			#adb shell "top -m 10 -d 1"
+			#adb shell ps|grep u0_ | awk '{sum+=$5} END{print sum/1024, NR;}'
+			cache=`adb shell cat /proc/meminfo |awk '
+										/^Cached:/{cache=$2/1024;}
+										END{
+											print cache;
+										}
+										'`
+			adb shell "exec /data/procrank_32"|grep com|sed 's/K//g'|awk -v a_cache="$cache" '{sum+=$4} END{printf("%d\t%.2f\t%.2f\n",NR, sum/1024, a_cache);}'
+			sleep 1
+		done 
+	}
+}
+
+
+function show_kernel {
+	echo "show_kernel in Parent PID: $$" >> tmp.${script_name}.pid_store
+
+	if [ ! -f tmp.kernel_log ];then
+		touch tmp.kernel_log
+	fi
+	echo
+	echo 
+	echo
+	tail -f tmp.kernel_log
+}
+
+function kill_sub {
+	subpid=`cat tmp.${script_name}.pid_store|awk -F ":" '{print $2}'`
+	kill -9 ${subpid}
+}
+
+function record_case4 {
+
+	start_time=$(date +%Y%m%d%H%M%S)
+	logfile="tmp.record_case4.$start_time.log"
+	
+	title="Time\t\tMemFree\tBuffers\tCached\tSwapCah\tActive\tInact\tShmem\tAnon\tThHold\tCanUse\tAvail\tSwapT\tSwapF\tAocStal"
+	#echo -e $title
+	line=0
+	while true
+	do
+		if [ `expr ${line} % 50` == 0 ];then
+			echo -e ${title}
+		fi
+		line=`expr ${line} + 1`
+		
+		adb wait-for-device
+		adb shell cat /proc/meminfo |awk '/MemFree:/{a[0]=$2/1024;} 
+										/Buffers:/{a[1]=$2/1024;}
+										/^Cached:/{a[2]=$2/1024;}
+										/SwapCached:/{a[3]=$2/1024;}
+										/Active:/{a[4]=$2/1024;}
+										/Inactive:/{a[5]=$2/1024;}
+										#/Active\(anon\):/{a[6]=$2/1024;}
+										#/Inactive\(anon\):/{a[7]=$2/1024;}
+										#/Active\(file\):/{a[8]=$2/1024;}
+										#/Inactive\(file\):/{a[9]=$2/1024;}
+										/Shmem:/{a[10]=$2/1024;}
+										/AnonPages:/{a[11]=$2/1024;}
+										/MemAvailable:/{a[12]=$2/1024;}
+										/SwapTotal:/{a[13]=$2/1024;}
+										/SwapFree:/{a[14]=$2/1024;}
+										
+										END{
+											threshold=a[2]+a[1]-a[10];
+											canuse=a[0]+a[1]+a[2];
+											#printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],threshold);
+											printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", a[0],a[1],a[2],a[3],a[4],a[5],a[10],a[11],threshold,canuse,a[12],a[13],a[14]);
+										}
+										' > tmp.record_case4.meminfo
+		str=`cat tmp.record_case4.meminfo|awk '{if(NR==1) print $0}'`
+		str2=`adb shell cat /proc/vmstat |awk '/allocstall/{a[7]=$2;} END{print a[7];}'`
+		time=$(date +%Y%m%d%H%M%S)
+		echo -e "$time\t$str\t$str2"
+		sleep 1
+	done
+
+}
+
+function usage {
+	echo "${script_name} usage:"
+	echo "${script_name} mem #record memory usage from dumpsys meminfo"
+	echo "${script_name} proc #record memory usage from proc"
+	echo "${script_name} two #record memory usage both proc and dumpsys meminfo"
+	echo "${script_name} fps #record fps dynamic"
+	echo "${script_name} -p projectName recordnum #record memory and calc it for project"
+	echo "${script_name} app appname #record the memory of a app's min avg and max"
+	echo "${script_name} -m AN #record memory for Android N"
+	echo "${script_name} kernel #display the kernel log(grep \"is below limit\|lowmemorykiller\")(base on dmsg)"
+	echo "${script_name} kernel2 #record the kernel log(base ob kmsg)"
+	echo "${script_name} killsub #cuple use with ${script_name} kernel, kill the process which fork in ${script_name} kernel"
+	echo "${script_name} test #for test"
+	exit
+}
+
+#main here
+if [ 0 -eq $# ];then
+	usage
+else
+	if [ $1 == "mem" ];then
+		record_memory_info;exit;
+	fi
+	
+	if [ "kernel" == $1 ];then
+		$0 store_kernel;
+		show_kernel;
+		exit;
+	fi
+	
+	if [ "kernel2" == $1 ];then
+		store_kernel2;
+		exit;
+	fi
+	
+	if [ "vmstat" == $1 ];then
+		store_vmstat;
+		exit;
+	fi
+	
+	if [ "vmstat2" == $1 ];then
+		store_vmstat2;
+		exit;
+	fi
+	
+	if [ "top" == $1 ];then
+		store_top;
+		exit;
+	fi
+	
+	if [ "procrank" == $1 ];then
+		store_procrank;
+		exit;
+	fi
+	
+	if [ "store_kernel" == $1 ];then
+		store_kernel;exit
+	fi
+	
+	if [ "killsub" == $1 ];then
+		kill_sub;exit
+	fi
+	
+	if [ $1 == "proc" ];then
+		record_proc_meminfo;exit;
+	fi
+	
+	if [ $1 == "two" ];then
+		record_two_source;exit;
+	fi
+	
+	if [ $1 == "fps" ];then
+		record_fps_info;exit;
+	fi
+	
+	if [ $1 == "test" ];then
+		testsf;exit;
+	fi
+	
+	if [ $1 == "-p" ];then
+	
+		if [ $# -lt 3  ];then
+			usage
+		else
+			if [ $2 == "s1" ];then
+				record_S1 $3;exit;
+			fi
+			
+			if [ $2 == "xui" ];then
+				record_XUI_User $3;exit;
+			fi
+			
+			if [ $2 == "xui2" ];then
+				record_XUI_User2 $3;exit;
+			fi
+			
+			if [ $2 == "w3" ];then
+				record_W3 $3;exit;
+			fi
+		fi	
+	fi
+	
+	if [ $1 == "-pdebug" ];then
+	
+		if [ $# -lt 3  ];then
+			usage
+		else
+			
+			if [ $2 == "xui" ];then
+				record_XUI $3;exit;
+			fi
+		
+		fi	
+	fi
+	
+	if [ $1 == "case4" ];then
+		record_case4;exit;
+	fi
+	
+	if [ $1 == "gfx" ];then
+		record_gfxinfo;exit;
+	fi
+	
+	if [ $1 == "app" ];then
+		record_app $2;exit;
+	fi
+	
+	if [ $1 == "ksm" ];then
+		record_ksm $2 $3 $4 $5;exit;
+	fi
+	
+	if [ $1 == "mksm" ];then
+		modify_ksm $2 $3 $4 $5;exit;
+	fi
+	
+	if [ $1 == "-m" ];then
+		if [ $2 == "AN" ];then
+			record_AN;exit;
+		fi
+	fi
+	
+	usage
+fi

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+. os.u
+
+function monitor_all {
+
+	# monitor meminfo
+	if [ $myscript_os == "cygwin" ];then
+		$terminal_execfile -t "monitor meminfo" -h always -w max -e monitor meminfo &
+	fi
+
+	# monitor vmstat
+	if [ $myscript_os == "cygwin" ];then
+		$terminal_execfile -t "monitor vmstat" -h always -w max -e monitor vmstat &
+	fi
+}

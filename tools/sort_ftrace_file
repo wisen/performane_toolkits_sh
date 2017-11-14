@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ -d sort ];then
+	rm -r sort
+fi
+mkdir sort
+
+for file in `ls logfile_ftrace*`
+do
+	echo "Process file $file"
+	packname=`echo $file|awk -F "#" '{print $2}'`
+	timestamp=`echo $file|awk -F "#" '{print $3}'`
+	utctime=`echo $file|awk -F "#" '{print $4}'`
+	sed '/#/d' $file | sed 's/://g' > ./sort/sort_ftrace#$packname#$timestamp#$utctime#.txt
+done
+
+

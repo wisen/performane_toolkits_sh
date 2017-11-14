@@ -1,0 +1,27 @@
+#!/bin/bash
+. color.u
+
+if [ -f $ASHELL_ROOT/.last_login_time ];then
+	last_login_time=`cat $ASHELL_ROOT/.last_login_time|awk 'NR==1{print $0}'`
+fi
+
+#if [ -f $ASHELL_ROOT/.last_logout_time ];then
+	#last_logout_time=`cat $ASHELL_ROOT/.last_logout_time|awk 'NR==1{print $0}'`
+#fi
+
+da=`sh clac_date`
+
+green "Welcome to aShell $ASHELL_VERSION (built by wisen_wang)"
+echo
+space 4;echo  "*aShell is a toolkit for debuging Android convenient."
+echo
+
+if [ -f $ASHELL_ROOT/.last_login_time ];then
+	echo "Last  login: $last_login_time "
+fi
+
+#if [ -f $ASHELL_ROOT/.last_logout_time ];then
+	#echo "Last logout: $last_logout_time "
+#fi
+#echo "Lunar Today: $da"
+echo

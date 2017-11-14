@@ -1,0 +1,113 @@
+#!/bin/bash
+
+. math.u
+
+function clean_screen {
+	echo -e "\033[2J"
+}
+
+function clean_property {
+	echo -e "\033[0m"
+}
+
+function highlight {
+	echo -e "\033[1m"$*"\033[0m"
+}
+
+function reverse {
+	echo -e "\033[7m"$*"\033[0m"
+}
+
+function set_cursor {
+	echo -e "\033[$1;$2H"
+}
+
+function blink {
+	echo -e "\033[5m"$*"\033[0m"
+}
+
+function underline {
+	echo -e "\033[4m"$*"\033[0m"
+}
+
+function showstr_fred {
+	echo -e "\033[31m"$*"\033[0m"
+}
+
+function showstr_fyellow {
+	echo -e "\033[33m"$*"\033[0m"
+}
+
+function showstr_fblue {
+	echo -e "\033[34m"$*"\033[0m"
+}
+
+function showstr_fgreen {
+	echo -e "\033[32m"$*"\033[0m"
+}
+
+function showstr_bred_fwhite {
+	echo -e "\033[41;37m"$*"\033[0m"
+}
+
+function showstr_bblack_fwhite {
+	echo -e "\033[40;37m"$*"\033[0m"
+}
+
+function showstr_bgreen_fwhite {
+	echo -e "\033[42;37m"$*"\033[0m"
+}
+
+function showstr_byellow_fwhite {
+	echo -e "\033[43;37m"$*"\033[0m"
+}
+
+function showstr_bblue_fwhite {
+	echo -e "\033[44;37m"$*"\033[0m"
+}
+
+function showstr_bpurple_fwhite {
+	echo -e "\033[45;37m"$*"\033[0m"
+}
+
+function showstr_bskyblue_fwhite {
+	echo -e "\033[46;37m"$*"\033[0m"
+}
+
+function showstr_bwhite_fblack {
+	echo -e "\033[47;30m"$*"\033[0m"
+}
+
+function red_white {
+	showstr_bred_fwhite $*
+}
+
+function red {
+	showstr_fred $*
+}
+
+function blue {
+	showstr_fblue $*
+}
+
+function yellow {
+	showstr_fyellow $*
+}
+
+function green {
+	showstr_fgreen $*
+}
+
+function blue_white {
+	showstr_bblue_fwhite $*
+}
+
+# space num_of_space
+function space {
+	if [ ! -z $1 ];then
+		for ((i=0;i<$1;i=$i+1))
+		do
+			echo -e " \c";
+		done
+	fi
+}

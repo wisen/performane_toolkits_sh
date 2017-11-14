@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. env.u
+
+prepare_prebuilt_tools $SCRIPT_ROOT/prebuilt_tools

@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# prepare_app_anr logfile
+function prepare_app_anr {
+	logfile_mainlog=$1
+	
+	echo "#######################################################"
+	echo "#             Collect ANR Informations                #"
+	echo "#######################################################"
+	for ((i=0;i<${#activities[@]};i=$i+1))
+	do
+		#echo ${activities[$i]}
+		activity=`echo ${activities[$i]}|awk -F "/" '{if(NR==1) print $2;}'`
+		#echo $activity
+		#cat $logfile |awk -F "/" '{print $2;}'|sed 's/]//g'|awk -F "," -v a_activity="$activity" 'BEGIN{count=0;} /a_activity/{sum=sum+$3;count++;} END{print a_activity,count,sum/count;}'
+		#cat $logfile |awk -F "/" '{print $2;}'|sed 's/]//g'
+		sed 's/]//g' $logfile_mainlog |grep "${activities[$i]}"|awk -F "," -v a_activity="${activities[$i]}" '
+																		BEGIN{count=0;min=0;max=0;} 
+																		{
+																			if(0==count){
+																				min=$4;max=$4;
+																			} else {
+																				if($4<min) min=$4;
+																				if($4>max) max=$4;
+																			}
+																			sum=sum+$4;
+																			count++;
+																		} 
+																		END{if (count!=0) printf("%s, %d, %d, %d, %d\n",a_activity, count, min, sum/count, max); }
+																		'
+		#sleep 2
+	done
+	echo
+	echo
+}

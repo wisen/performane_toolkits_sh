@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# parse_vmstat logfile
+function parse_vmstat {
+	logfile_vmstat=$1
+
+	echo "#######################################################"
+	echo "#             VMstat related information              #"
+	echo "#######################################################"
+
+	sed '/procs/d' $logfile_vmstat|sed '/swpd/d' |sed '/^$/d'|awk '
+																	BEGIN{
+																		line=0
+																		printf("%s\n", "r\tb\tswpd\tfree\tbuff\tcache\tsi\tso\tbi\tbo\tin\tcs\tus\tsy\tid\twa");
+																	}
+																	
+																	{
+																		if(NR==1) {
+																			r=$1;
+																			b=$2;
+																			swpd=$3;
+																			free=$4;
+																			buff=$5;
+																			cache=$6;
+																			si=$7;
+																			so=$8;
+																			bi=$9;
+																			bo=$10;
+																			inin=$11;
+																			cs=$12;
+																			us=$13;
+																			sy=$14;
+																			id=$15;
+																			wa=$16;
+																		} else {
+																			r=(r+$1)/2;
+																			b=(b+$2)/2;
+																			swpd=(swpd+$3)/2;
+																			free=(free+$4)/2;
+																			buff=(buff+$5)/2;
+																			cache=(cache+$6)/2;
+																			si=(si+$7)/2;
+																			so=(so+$8)/2;
+																			bi=(bi+$9)/2;
+																			bo=(bo+$10)/2;
+																			inin=(inin+$11)/2;
+																			cs=(cs+$12)/2;
+																			us=(us+$13)/2;
+																			sy=(sy+$14)/2;
+																			id=(id+$15)/2;
+																			wa=(wa+$16)/2;
+																		}
+																		#line++;
+																		#printf("%d: %.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n",
+																		#			r,b,swpd,free,buff,cache,si,so,bi,bo,inin,cs,us,sy,id,wa);
+																	}
+																	
+																	END{
+																		
+																		printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n",
+																				r,b,swpd/1024,free/1024,buff/1024,cache/1024,si,so,bi,bo,inin,cs,us,sy,id,wa);
+																	}
+																'
+	echo
+	echo
+}
