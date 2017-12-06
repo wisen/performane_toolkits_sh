@@ -4,6 +4,7 @@
 # Date: 2017-02-26
 
 . color.u
+. devices.u
 
 function monitor_meminfo {
 	# 这个脚本用来观察memfree cached buffer以及active和inactive之间的关系

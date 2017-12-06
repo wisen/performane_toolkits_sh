@@ -5,10 +5,24 @@
 
 . color.u
 
-adb devices|sed '/^$/d'|awk '{if(NR>1) printf("%s\n", $1);}'
+#adb devices|sed '/^$/d'|awk '{if(NR>1) printf("%s\n", $1);}'
+dev_SN=($(adb devices|sed '/^$/d'|awk '{if(NR>1) printf("%s\n", $1);}'))
 
-red_white "Please enter the Serial No:"
-read device_no
+yellow "INDEX\tProduct\t\t\tSN"
+for ((j=0;j<${#dev_SN[@]};j=$j+1))
+do
+	#echo ${dev_SN[$j]}
+	dev_Product[$j]=`adb -s ${dev_SN[$j]} shell getprop ro.product.device|awk '{if(NR==1) print $0;}'`
+	dev_Index[$j]=$j
+	green "${dev_Index[$j]}\t${dev_Product[$j]}\t\t${dev_SN[$j]}"
+done
+
+red_white "Please enter the Device Index:"
+#read device_no
+read device_ind
+device_sn=${dev_SN[$device_ind]}
+red "Please confirm your chose: [$device_ind] $device_sn ${dev_Product[$device_ind]}"
+read
 echo
 echo
 echo "******************************"
@@ -26,7 +40,7 @@ for file in $file_list;do
 	if [ $suffix == "apk" ];then
 		green "####"Install the ${i}th apk: $file
 		date "+%Y-%m-%d %H:%M:%S"
-		adb -s $device_no install -r $file
+		adb -s $device_sn install -r $file
 		i=`expr $i + 1`
 	fi
 done
