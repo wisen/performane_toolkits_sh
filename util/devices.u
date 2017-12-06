@@ -4,19 +4,18 @@
 # Date: 2017-12-06
 
 . color.u
-dev_SN=($(adb devices|sed '/^$/d'|awk '{if(NR>1) printf("%s\n", $1);}'))
+#dev_SN=($(adb devices|sed '/^$/d'|awk '{if(NR>1) printf("%s\n", $1);}'))
+dev_SN=($(adb devices|sed '/^$/d'|awk '{if(NR>1){if($3!="permissions") printf("%s\n", $1); else printf("NoPermissions\n");}}'))
 
-yellow "INDEX\tProduct\t\t\tSN"
 for ((j=0;j<${#dev_SN[@]};j=$j+1))
 do
 	#echo ${dev_SN[$j]}
-	dev_Product[$j]=`adb -s ${dev_SN[$j]} shell getprop ro.product.device|awk '{if(NR==1) print $0;}'`
+	if [ "NoPermissions" == ${dev_SN[$j]} ];then
+		dev_Product[$j]="NoPermDevice"
+	else
+		dev_Product[$j]=`adb -s ${dev_SN[$j]} shell getprop ro.product.device|awk '{if(NR==1) print $0;}'`
+	fi
 	dev_Index[$j]=$j
 	green "${dev_Index[$j]}\t${dev_Product[$j]}\t\t${dev_SN[$j]}"
+	dev_counts=$(($dev_counts+1))
 done
-
-red_white "Please enter the Device Index:"
-read device_ind
-device_sn=${dev_SN[$device_ind]}
-red "You choose $device_sn"
-

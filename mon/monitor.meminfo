@@ -4,7 +4,7 @@
 # Date: 2017-02-26
 
 . color.u
-. devices.u
+. devices_var.u
 
 function monitor_meminfo {
 	# 这个脚本用来观察memfree cached buffer以及active和inactive之间的关系
@@ -39,7 +39,7 @@ function monitor_meminfo {
 		fi
 		line=`expr ${line} + 1`
 		
-		adb shell cat /proc/meminfo |awk '/MemFree:/{a[0]=$2/1024;} 
+		adb -s $device_sn shell cat /proc/meminfo |awk '/MemFree:/{a[0]=$2/1024;} 
 										/Buffers:/{a[1]=$2/1024;}
 										/^Cached:/{a[2]=$2/1024;}
 										/SwapCached:/{a[3]=$2/1024;}

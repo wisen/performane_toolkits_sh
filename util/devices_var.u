@@ -1,0 +1,23 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: List Android Devices
+# Date: 2017-12-06
+
+. color.u
+. devices.u
+
+if [ $dev_counts == 1 ];then
+	device_ind=0
+elif [ $dev_counts -gt 1 ];then
+	red_white "Please enter the Device Index:"
+	read device_ind
+
+	if [ ! -n "$device_ind" ];then
+		device_ind=0
+	fi
+fi
+
+device_sn=${dev_SN[$device_ind]}
+green "Connect to [$device_ind] $device_sn ${dev_Product[$device_ind]}"
+echo
+echo

@@ -1,0 +1,41 @@
+#!/bin/bash
+
+. color.u
+#. devices.u
+
+
+if [ 0 == $# ];then
+	#adb devices
+	ad devices
+else
+	if [ "devices" == $1 ];then
+		. devices.u
+		true
+	else
+		. devices_var.u
+
+		if [ "shell" == $1 ];then
+			if [ 1 == $# ];then
+				adb -s $device_sn shell
+			else
+				shift
+				adb -s $device_sn shell $@
+			fi
+		elif [ "push" == $1 ];then
+			shift
+			adb -s $device_sn push $@
+		elif [ "pull" == $1 ];then
+			shift
+			adb -s $device_sn pull $@
+		elif [ "logcat" == $1 ];then
+			shift
+			adb -s $device_sn logcat $@
+		elif [ "reboot" == $1 ];then
+			shift
+			adb -s $device_sn reboot
+		else
+			red "parameters error!"
+		fi
+
+	fi
+fi
