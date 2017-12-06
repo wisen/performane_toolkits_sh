@@ -2,10 +2,10 @@
 
 . color.u
 
-#G_DEBUG=true
-G_DEBUG=false
-#G_DEBUG_RUNTIME=true
-G_DEBUG_RUNTIME=false
+G_DEBUG=true
+#G_DEBUG=false
+G_DEBUG_RUNTIME=true
+#G_DEBUG_RUNTIME=false
 debug_output_log=${SCRIPT_ROOT}/.tmp.debug
 
 # debug_log $0 $FUNCNAME $LINENO $BASH_LINENO va1=$va1 va2=$va2 ....

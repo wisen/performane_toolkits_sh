@@ -37,4 +37,10 @@ function start_trace_terminal {
 		adb logcat -b events -c
 		$terminal_execfile -t "Record Event log" -h always -w max --log $logfile_eventlog -e adb logcat -b events $log_filter &
 	fi
+
+	if [ $linux_os == "Linux" ];then
+		adb logcat -b events -c
+		#$terminal_execfile -t "Record Event log" -h always -w max --log $logfile_eventlog -e adb logcat -b events $log_filter &
+		adb logcat -b events $log_filter > $logfile_eventlog &
+	fi
 }

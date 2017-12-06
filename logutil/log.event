@@ -14,7 +14,7 @@ function start_event_terminal {
 	#	echo logfile_eventlog=$logfile_eventlog >> .tmp.debug
 	#	echo log_filter=$log_filter >> .tmp.debug
 	#fi
-	debug_log $0 $FUNCNAME $LINENO $BASH_LINENO logfile_eventlog=$logfile_eventlog log_filter=$log_filter
+	debug_log $0 $FUNCNAME $LINENO $BASH_LINENO logfile_eventlog=$logfile_eventlog log_filter=$log_filter execfile=$terminal_execfile os=$linux_os
 	
 	if [ -z $log_filter ];then
 		log_filter=""
@@ -36,6 +36,13 @@ function start_event_terminal {
 		# clean the event log buffer
 		adb logcat -b events -c
 		$terminal_execfile -t "Record Event log" -h always -w max --log $logfile_eventlog -e adb logcat -b events $log_filter &
+	fi
+
+    if [ $linux_os == "Linux" ];then
+	    debug_log $0 $FUNCNAME $LINENO $BASH_LINENO $linux_os 
+		adb logcat -b events -c
+		#$terminal_execfile -t "Record Event log" -h always -w max --log $logfile_eventlog -e adb logcat -b events $log_filter &
+		adb logcat -b events $log_filter > $logfile_eventlog &
 	fi
 }
 
