@@ -1,7 +1,9 @@
 #!/bin/bash
 
 . color.u
+. devices_var.u
 . monitor.meminfo
+. monitor.meminfo_for_AndroidO
 . monitor.vmstat
 . dump.misc
 . monitor.zoneinfo
@@ -45,6 +47,11 @@ fi
 if [ $# -eq 1 ];then
 	if [ $1 == "meminfo" ];then
 		monitor_meminfo
+		exit
+	fi
+
+	if [ $1 == "meminfo2" ];then
+		monitor_meminfo_for_AndroidO
 		exit
 	fi
 

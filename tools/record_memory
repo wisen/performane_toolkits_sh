@@ -4,6 +4,7 @@
 # Date: 2017-02-10
 
 . os.u
+. devices_var.u
 
 script_name=record_memory
 	
@@ -961,14 +962,14 @@ function store_kernel {
 		echo > tmp.kernel_log
 	fi
 	
-	adb shell dmesg > tmp.kernel_log
+	adb -s $device_sn shell dmesg > tmp.kernel_log
 	last_timestamp=`cat tmp.kernel_log|awk 'END{print $0}'|sed 's/\[//g'|sed 's/\]//g'|awk 'END{print $1}'`
 	
 	{
 		while [ 1 ]  
 		do  
 			#cat tmp.tmp.kernel_log >> tmp.kernel_log
-			adb shell dmesg|sed -n '/'$last_timestamp'/,$p'>>tmp.kernel_log
+			adb -s $device_sn shell dmesg|sed -n '/'$last_timestamp'/,$p'>>tmp.kernel_log
 			last_timestamp=`cat tmp.kernel_log|awk 'END{print $0}'|sed 's/\[//g'|sed 's/\]//g'|awk 'END{print $1}'`
 			sleep 1  
 		done 
@@ -982,10 +983,10 @@ function store_kernel2 {
 		while [ 1 ]  
 		do  
 			#cat tmp.tmp.kernel_log >> tmp.kernel_log
-			adb wait-for-device
+			#adb wait-for-device
 			start_time=$(date +%Y%m%d%H%M%S)
 			echo "Start record Kernel log at: $start_time"
-			adb shell cat /proc/kmsg
+			adb -s $device_sn shell cat /proc/kmsg
 		done 
 	}
 }
@@ -995,7 +996,7 @@ function store_vmstat {
 
 		while [ 1 ]  
 		do  
-			adb shell "vmstat 1"
+			adb -s $device_sn shell "vmstat 1"
 		done 
 	}
 }
@@ -1005,7 +1006,7 @@ function store_vmstat2 {
 		echo -e "Cache\tReclaim\tUnRecl\tFree\talloc\timmedi\tdirty\tdtthres"
 		while [ 1 ]  
 		do  
-			adb shell "cat /proc/vmstat"|awk '
+			adb -s $device_sn shell "cat /proc/vmstat"|awk '
 											
 											/nr_inactive_file/{inac_file=$2;}
 											/nr_active_file/{ac_file=$2;}
@@ -1034,7 +1035,7 @@ function store_top {
 
 		while [ 1 ]  
 		do  
-			adb shell "top -m 10 -d 1"
+			adb -s $device_sn shell "top -m 10 -d 1"
 		done 
 	}
 }

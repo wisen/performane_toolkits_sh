@@ -3,6 +3,8 @@
 # get_ppid pid
 # 返回传入的pid的父进程
 function get_ppid {
+	local pid
+	local ppid
 	pid=$1
 	#echo [$0]:pid=$pid
 	ppid=`ps x|awk -v a_pid="${pid}" '
@@ -30,6 +32,9 @@ function get_ppid {
 # get_pid_list pid
 # 返回传入的pid的父进程列表，直到父进程ID=1
 function get_pid_list {
+	local pid_list
+	local tmp_i
+	local ppid
 	pid_list=$1
 	#echo "Current $FUNCNAME (${FUNCNAME[@]}) pid_list=$pid_list"
 	
@@ -53,6 +58,7 @@ function get_pid_list {
 # kill_others
 # 该函数将会杀死除了自己和父进程以外的其它进程
 function kill_others {
+	local pid
 	#echo self list: `get_pid_list $$`
 	for pid in `ps x|awk '{if($1=="I"){print $2;}else{print $1;}}'`
 	do
@@ -66,6 +72,7 @@ function kill_others {
 # kill_myfamily
 # 该函数杀死自己家族包括自己
 function kill_myfamily {
+	local pid
     #echo self list: `get_pid_list $$`
 	for pid in `ps x|awk '{if($1=="I"){print $2;}else{print $1;}}'`
 	do
@@ -77,6 +84,7 @@ function kill_myfamily {
 # kill_ftrace
 # 该函数杀死ftrace recording 进程
 function kill_ftrace {
+	local pid
     #kill -9 `cat .tmp.ftrace_pid|awk '{if(NR==1) print $1;}'`
 	while read pid
 	do
@@ -87,6 +95,7 @@ function kill_ftrace {
 # kill_by_processName
 # 该函数会根据传进来的processname，来杀死相关的进程
 function kill_by_processName {
+	local pid
 	if [ -z $1 ];then
 		red "Please enter the a processname!"
 	fi

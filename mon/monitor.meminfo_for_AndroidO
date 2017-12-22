@@ -6,7 +6,7 @@
 . color.u
 #. devices_var.u
 
-function monitor_meminfo {
+function monitor_meminfo_for_AndroidO {
 	# 这个脚本用来观察memfree cached buffer以及active和inactive之间的关系
 	# 当我们打开一个app，消耗的是MemFree，可以方便的看到MemFree在减少
 	# 当我按下menu key，选择清除一个app的时候，发现MemFree并没有明显的变大，说明我们在按下menu key，在rcent list中清楚一个app的时候系统并没有很快释放memory
@@ -26,7 +26,7 @@ function monitor_meminfo {
 	# MemFree=i.freeram=global_page_state(NR_FREE_PAGES); Buffers=i.bufferram=nr_blockdev_pages(); Cached=global_page_state(NR_FILE_PAGES) - total_swapcache_pages() - i.bufferram;
 	# 增加可用内存监视 CanUse=free+buffers+cached
 	log_file=meminfo".$(date +%s)"".log"
-	title="MemFree\tBuffers\tCached\tSwapCah\tActanon\tInanon\tActfile\tInafile\tThHold\tMapped\tSWAPUSE\tVMALLOC"
+	title="MemFree\tBuffers\tCached\tSwapCah\tActanon\tInanon\tActfile\tInafile\tThHold\tMapped\tSWAPUSE\tPress"
 	#title="MemFree\tBuffers\tCached\tSwapCah\tActive\tInact\tActanon\tInanon\tActfile\tInafile\tThHold\tCanUse"
 	#title="MmFree\tBuffers\tCached\tSwapCah\tActive\tInact\tShmem\tAnon\tThHold\tCanUse\tAvail\tMapped"
 	echo -e $title > ${log_file}
@@ -39,7 +39,7 @@ function monitor_meminfo {
 		fi
 		line=`expr ${line} + 1`
 		
-		adb -s $device_sn shell cat /proc/meminfo |awk '/MemFree:/{a[0]=$2/1024;} 
+		comm_str1=`adb -s $device_sn shell cat /proc/meminfo |awk '/MemFree:/{a[0]=$2/1024;} 
 										/Buffers:/{a[1]=$2/1024;}
 										/^Cached:/{a[2]=$2/1024;}
 										/SwapCached:/{a[3]=$2/1024;}
@@ -61,11 +61,19 @@ function monitor_meminfo {
 											threshold=a[2]+a[1]-a[10];
 											canuse=a[0]+a[1]+a[2];
 											swapused=a[14]-a[15];
-											printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", a[0],a[1],a[2],a[3],a[6],a[7],a[8],a[9],threshold,a[13],swapused,a[16]);
+											printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", a[0],a[1],a[2],a[3],a[6],a[7],a[8],a[9],threshold,a[13],swapused);
 											#printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],threshold);
 											#printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", a[0],a[1],a[2],a[3],a[4],a[5],a[10],a[11],threshold,canuse,a[12],a[13]);
-										}
-										'|tee -a ${log_file}
+										}'`
+		#echo -e $comm_str1
+		#comm_str2=`adb -s $device_sn shell cat /dev/memcg/memory.usage_in_bytes`
+		#comm_str3=`adb -s $device_sn shell cat /dev/memcg/memory.memsw.usage_in_bytes`
+		#mem_pressure=$(($comm_str2*100/$comm_str3))
+		mem_pressure=$((`adb shell cat /dev/memcg/memory.usage_in_bytes`*100/`adb shell cat /dev/memcg/memory.memsw.usage_in_bytes`))
+		comm_str=$comm_str1" "$mem_pressure
+		echo -e $comm_str | awk '{
+								printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%d\n",$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12);
+								}'|tee -a ${log_file}
 		sleep 1
 	done
 }
