@@ -1,0 +1,83 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for mark some unneseceery macro in your source code
+# Date: 2017-02-13
+
+. color.u
+
+# $1: the macro you want to mark, must be define
+# $2: 0-->The macro is not set; 1-->The macro=y
+# $3: source code path, default is the current path 
+
+#example: 
+#if CONFIG_NUMA is not set
+#	1. #ifdef CONFIG_NUMA ==> #if 0//#ifdef CONFIG_NUMA
+#	2. #ifndef CONFIG_NUMA ==> #if 1//#ifndef CONFIG_NUMA
+#	3. defined(CONFIG_NUMA) ==> 0/*defined(CONFIG_NUMA)*/
+#if CONFIG_NUMA=y
+#	1. #ifdef CONFIG_NUMA ==> #if 1//#ifdef CONFIG_NUMA
+#	2. #ifndef CONFIG_NUMA ==> #if 0//#ifndef CONFIG_NUMA
+#	3. defined(CONFIG_NUMA) ==> 1/*defined(CONFIG_NUMA)*/
+
+
+function usage {
+	echo
+	blue "\t\$1: the macro you want to mark, must be define"
+	blue "\t\$2: 0-->The macro is not set; 1-->The macro=y"
+	blue "\t\$3: source code path, default is the current path"
+	echo
+	blue "\texample, if you want to mark the macro CONFIG_NUMA: #ifdef CONFIG_NUMA ==> #if 0\/\/#ifdef CONFIG_NUMA"
+	echo
+}
+
+if [ ! -n "$1" ];then
+	red "\$1 must be define"
+	usage
+	exit
+else
+	macro_str=$1
+fi
+
+if [ ! -n "$2" ];then
+	red "\$2 must be define to 0 or 1"
+	usage
+	exit
+else
+	ori_str="#ifdef $macro_str"
+	ori_str2="#ifndef $macro_str"
+	ori_str3="defined($macro_str)"
+	
+	if [ 0 == $2 ];then
+		comment_str="$macro_str is not set"
+		replace_str="#if 0\/\/#ifdef $macro_str\/\/$comment_str"
+		replace_str2="#if 1\/\/#ifndef $macro_str\/\/$comment_str"
+		replace_str3="0\/\*defined($macro_str)\*\/"
+	elif [ 1 == $2 ];then
+		comment_str="$macro_str=y"
+		replace_str="#if 1\/\/#ifdef $macro_str\/\/$comment_str"
+		replace_str2="#if 0\/\/#ifndef $macro_str\/\/$comment_str"
+		replace_str3="1\/\*defined($macro_str)\*\/"
+	else
+		red "\$2 must be define to 0 or 1"
+		usage
+		exit
+	fi	
+fi
+
+if [ ! -n "$3" ];then
+	src_path=`pwd`
+else
+	src_path=$3
+fi
+
+green $comment_str
+green "Codebase: $src_path"
+echo
+
+cmdfile=parse_kernel_config
+echo > $cmdfile
+
+echo "sed -i 's/$ori_str$/$replace_str/g' \`grep '$ori_str$' -rl $src_path\`" >> $cmdfile
+echo "sed -i 's/$ori_str2$/$replace_str2/g' \`grep '$ori_str2$' -rl $src_path\`" >> $cmdfile
+echo "sed -i 's/$ori_str3/$replace_str3/g' \`grep '$ori_str3' -rl $src_path\`" >> $cmdfile
+

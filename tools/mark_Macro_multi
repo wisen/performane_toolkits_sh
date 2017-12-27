@@ -1,0 +1,96 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for mark some unneseceery macro in your source code
+# Date: 2017-02-13
+
+. color.u
+
+# $1: config file
+# $2: kernel source code
+
+# sample:
+# #ifdef CONFIG_HIGHMEM
+# #ifndef CONFIG_HIGHMEM
+# IS_ENABLED(CONFIG_NUMA)
+# defined(CONFIG_64BIT)
+# #define PLAT_PHYS_OFFSET	UL(CONFIG_PHYS_OFFSET)
+
+if [ ! -n "$1" ];then
+	red "\$1 must be define to kernel config file"
+	exit
+else
+	config_file=$1
+fi
+
+if [ ! -n "$2" ];then
+	src_path=`pwd`
+else
+	src_path=$2
+fi
+
+tmp_config_file=.tmp_kernel_config_file
+tmp_config_file2=.tmp_kernel_config_file2
+
+grep CONFIG_ $config_file > $tmp_config_file
+#echo $config_file
+
+i=0
+while read line
+do
+	echo $line
+	if [ ${line:0:1} == "#" ];then
+		config_array[$i]=`echo $line|awk '{print $2}'`
+		value[$i]="n"
+	else
+		config_array[$i]=`echo $line|awk -F "=" '{print $1}'`
+		value[$i]=`echo $line|awk -F "=" '{print $2}'`
+	fi
+
+	i=$(($i+1))
+done < $tmp_config_file
+
+echo > $tmp_config_file2
+cmdfile=parse_kernel_config
+echo > $cmdfile
+echo ". color.u" > $cmdfile
+echo "echo Total $i items to be analysis:" >> $cmdfile
+for ((j=0;j<$i;j=$j+1))
+do
+	echo ${config_array[$j]}:${value[$j]} >> $tmp_config_file2
+	
+	ori_str="#ifdef ${config_array[$j]}"
+	ori_str2="#ifndef ${config_array[$j]}"
+	ori_str3="defined(${config_array[$j]})"
+	
+	if [ "n" == "${value[$j]}" ];then
+		replace_str="#if 0\/\/#ifdef $macro_str\/\/$comment_str"
+		replace_str2="#if 1\/\/#ifndef $macro_str\/\/$comment_str"
+		replace_str3="0\/\*defined($macro_str)\*\/"
+		echo "green \"$j-1 runnig\"" >> $cmdfile
+		echo "sed -i 's/$ori_str$/$replace_str/g' \`grep '$ori_str$' -rl $src_path\`" >> $cmdfile
+		echo "green \"$j-2 runnig\"" >> $cmdfile
+		echo "sed -i 's/$ori_str2$/$replace_str2/g' \`grep '$ori_str2$' -rl $src_path\`" >> $cmdfile
+		echo "green \"$j-3 runnig\"" >> $cmdfile
+		echo "sed -i 's/$ori_str3/$replace_str3/g' \`grep '$ori_str3' -rl $src_path\`" >> $cmdfile
+	elif [ "y" == "${value[$j]}" ];then
+		replace_str="#if 1\/\/#ifdef $macro_str\/\/$comment_str"
+		replace_str2="#if 0\/\/#ifndef $macro_str\/\/$comment_str"
+		replace_str3="1\/\*defined($macro_str)\*\/"
+		echo "green \"$j-1 runnig\"" >> $cmdfile
+		echo "sed -i 's/$ori_str$/$replace_str/g' \`grep '$ori_str$' -rl $src_path\`" >> $cmdfile
+		echo "green \"$j-2 runnig\"" >> $cmdfile
+		echo "sed -i 's/$ori_str2$/$replace_str2/g' \`grep '$ori_str2$' -rl $src_path\`" >> $cmdfile
+		echo "green \"$j-3 runnig\"" >> $cmdfile
+		echo "sed -i 's/$ori_str3/$replace_str3/g' \`grep '$ori_str3' -rl $src_path\`" >> $cmdfile
+	else
+		ori_str4="${config_array[$j]}"
+		replace_str4="${value[$j]}\/\*${config_array[$j]}=${value[$j]}\*\/"
+		echo "green \"$j-1 runnig\"" >> $cmdfile
+		echo "sed -i 's/$ori_str4/$replace_str4/g' \`grep '$ori_str4' -rl $src_path\`" >> $cmdfile
+	fi
+done
+
+
+
+
+
