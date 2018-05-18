@@ -39,7 +39,7 @@ function dump_misc {
 	echo "ext_free_bytes: "`adb shell "cat /proc/sys/vm/extra_free_kbytes"`
 	echo "dirty_radio:    "`adb shell "cat /proc/sys/vm/dirty_ratio"`
 	echo "dirty_bg_radio: "`adb shell "cat /proc/sys/vm/dirty_background_ratio"`
-	echo "swapness:"$(adb shell cat //proc/sys/vm/swappiness)
+	echo "swappiness:"$(adb shell cat //proc/sys/vm/swappiness)
 	echo "extfrag_threshold:"$(adb shell cat //proc/sys/vm/extfrag_threshold)
 	echo
 	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" ];then

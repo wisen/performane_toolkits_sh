@@ -1,0 +1,56 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for monitoring some memory infomation
+# Date: 2017-02-26
+
+. color.u
+#. devices_var.u
+
+function monitor_cpu {
+
+	log_file=cpuinfo".$(date +%s)"".log"
+	title="CTXT\tC_AVG\tProcs\tPor_AVG\tRunAble"
+
+	echo -e $title > ${log_file}
+	line=0
+	first=1
+	while true
+	do
+		if [ `expr ${line} % 40` == 0 ];then
+			#echo -e ${title}
+			blue_white ${title}
+		fi
+		line=`expr ${line} + 1`
+		#echo $first
+		
+		read ctxt_curr proc_curr runnable_curr < <(adb -s $device_sn shell cat /proc/stat | awk '/ctxt/{ctxt_curr=$2;} /processes/{proc_curr=$2;} /procs_running/{runnable_curr=$2;} END{ print(ctxt_curr, proc_curr, runnable_curr);}')
+		#echo $linevar
+		#OIFS=$IFS; IFS="|"; set -- $linevar; ctxt_curr=$1;proc_curr=$2;runnable_curr=$3; IFS=$OIFS
+		#echo -e "debug: $ctxt_curr $ctxt_last $proc_curr $proc_last $runnable_curr"
+		
+		if [ $first == "1" ];then
+			ctxt_last=${ctxt_curr}
+			proc_last=${proc_curr}
+			#runnable_last=${runnable_curr}
+		else
+			divider=`expr ${first} - 1`
+
+			ctxt_num=`expr ${ctxt_curr} - ${ctxt_last}`
+			ctxt_sum=`expr ${ctxt_sum} + ${ctxt_num}`
+			ctxt_avg=`expr ${ctxt_sum} / ${divider}`
+
+			proc_num=`expr ${proc_curr} - ${proc_last}`
+			proc_sum=`expr ${proc_sum} + ${proc_num}`
+			proc_avg=`expr ${proc_sum} / ${divider}`
+
+			#echo -e "debug: $first $ctxt_curr $ctxt_last $proc_curr $proc_last $runnable_curr"
+			#runnable_num=`expr ${runnable_curr} - ${runnable_last}`
+			echo -e "$ctxt_num\t$ctxt_avg\t$proc_num\t$proc_avg\t$runnable_curr" |tee -a ${log_file}
+			ctxt_last=${ctxt_curr}
+			proc_last=${proc_curr}
+		fi
+			
+		sleep 1
+		first=`expr ${first} + 1`
+	done
+}

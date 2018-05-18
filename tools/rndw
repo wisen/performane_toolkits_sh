@@ -1,0 +1,14 @@
+#!/bin/bash
+
+tmp_counts=$1
+i=0
+while true
+do
+	if [ $i -gt $tmp_counts ];then
+		exit
+	fi
+	rnd_sz=`expr $RANDOM % 19 + 1`
+	echo "$i $rnd_sz"
+	dd if=/dev/random of=./_tmp_${i}.dat bs=${rnd_sz}k count=1
+	i=`expr $i + 1`
+done

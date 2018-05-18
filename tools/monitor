@@ -1,5 +1,6 @@
 #!/bin/bash
 
+. os.u
 . color.u
 . devices_var.u
 . monitor.meminfo
@@ -10,6 +11,8 @@
 . monitor.art
 . monitor.gpu
 . monitor.gfx
+. monitor.cpu
+. monitor.buddyinfo
 
 function usage {
 	echo
@@ -39,7 +42,7 @@ if [ $# -gt 1 ];then
 		monitor_gfx_by_processname $2
 		exit
 	fi
-	
+
 	usage
 	exit
 fi
@@ -50,8 +53,18 @@ if [ $# -eq 1 ];then
 		exit
 	fi
 
-	if [ $1 == "meminfo2" ];then
+	if [ $1 == "meminfoO" ];then
 		monitor_meminfo_for_AndroidO
+		exit
+	fi
+	
+	if [ $1 == "slabinfo" ];then
+		monitor_slabinfo
+		exit
+	fi
+	
+	if [ $1 == "cpu" ];then
+		monitor_cpu
 		exit
 	fi
 
@@ -77,6 +90,17 @@ if [ $# -eq 1 ];then
 
 	if [ $1 == "all" ];then
 		monitor_all 
+		exit
+	fi
+	
+	if [ $1 == "buddy" ];then
+
+		$terminal_execfile --tab --maximize -e monitor_dma
+		$terminal_execfile --tab --maximize -e monitor_normal
+		$terminal_execfile --tab --maximize -e monitor_high
+
+		#monitor_buddyinfo normal
+		#monitor_buddyinfo high
 		exit
 	fi
 fi

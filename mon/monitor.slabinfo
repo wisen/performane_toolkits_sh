@@ -6,7 +6,7 @@
 . color.u
 #. devices_var.u
 
-function monitor_meminfo_for_AndroidO {
+function monitor_slabinfo {
 	# 这个脚本用来观察memfree cached buffer以及active和inactive之间的关系
 	# 当我们打开一个app，消耗的是MemFree，可以方便的看到MemFree在减少
 	# 当我按下menu key，选择清除一个app的时候，发现MemFree并没有明显的变大，说明我们在按下menu key，在rcent list中清楚一个app的时候系统并没有很快释放memory
@@ -25,12 +25,10 @@ function monitor_meminfo_for_AndroidO {
 	# 系统可用内存=free+buffers+cached
 	# MemFree=i.freeram=global_page_state(NR_FREE_PAGES); Buffers=i.bufferram=nr_blockdev_pages(); Cached=global_page_state(NR_FILE_PAGES) - total_swapcache_pages() - i.bufferram;
 	# 增加可用内存监视 CanUse=free+buffers+cached
-	log_file=meminfo".$(date +%s)"".log"
-	title="MemFree\tBuffers\tCached\tSwapCah\tActanon\tInanon\tActfile\tInafile\tAnon\tFile\tMapped\tKERNEL\tSWAPUSE\tZRAMUSE\tPress"
-	#title="MemFree\tBuffers\tCached\tSwapCah\tActanon\tInanon\tActfile\tInafile\tThHold\tMapped\tSWAPUSE\tZRAMUSE\tPress"
+	log_file=slabinfo".$(date +%s)"".log"
+	title="MemFree\tBuffers\tCached\tSwapCah\tActanon\tInanon\tActfile\tInafile\tThHold\tMapped\tSWAPUSE\tVMALLOC"
 	#title="MemFree\tBuffers\tCached\tSwapCah\tActive\tInact\tActanon\tInanon\tActfile\tInafile\tThHold\tCanUse"
 	#title="MmFree\tBuffers\tCached\tSwapCah\tActive\tInact\tShmem\tAnon\tThHold\tCanUse\tAvail\tMapped"
-	#kernel=slab+kernelstack+pagetable+vmallocused
 	echo -e $title > ${log_file}
 	line=0
 	while true
@@ -41,7 +39,7 @@ function monitor_meminfo_for_AndroidO {
 		fi
 		line=`expr ${line} + 1`
 		
-		comm_str1=`adb -s $device_sn shell cat /proc/meminfo |awk '/MemFree:/{a[0]=$2/1024;} 
+		adb -s $device_sn shell cat /proc/meminfo |awk '/MemFree:/{a[0]=$2/1024;} 
 										/Buffers:/{a[1]=$2/1024;}
 										/^Cached:/{a[2]=$2/1024;}
 										/SwapCached:/{a[3]=$2/1024;}
@@ -58,32 +56,16 @@ function monitor_meminfo_for_AndroidO {
 										/SwapTotal:/{a[14]=$2/1024;}
 										/SwapFree:/{a[15]=$2/1024;}
 										/VmallocUsed:/{a[16]=$2/1024;}
-										/Slab:/{a[17]=$2/1024;}
-										/KernelStack:/{a[18]=$2/1024;}
-										/PageTables:/{a[19]=$2/1024;}
 										
 										END{
-											#threshold=a[2]+a[1]-a[10];
-											anon=a[6]+a[7];
-											file=a[8]+a[9];
+											threshold=a[2]+a[1]-a[10];
 											canuse=a[0]+a[1]+a[2];
 											swapused=a[14]-a[15];
-											kernel=a[16]+a[17]+a[18]+a[19];
-											#MemFree	Buffers	Cached	SwapCah	Actanon	Inanon	Actfile	Inafile	Anon	File	Mapped KERNEL	SWAPUSE	Press
-											printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", a[0],a[1],a[2],a[3],a[6],a[7],a[8],a[9],anon,file,a[13],kernel,swapused);
+											printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", a[0],a[1],a[2],a[3],a[6],a[7],a[8],a[9],threshold,a[13],swapused,a[16]);
 											#printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],threshold);
 											#printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", a[0],a[1],a[2],a[3],a[4],a[5],a[10],a[11],threshold,canuse,a[12],a[13]);
-										}'`
-		#echo -e $comm_str1
-		#comm_str2=`adb -s $device_sn shell cat /dev/memcg/memory.usage_in_bytes`
-		#comm_str3=`adb -s $device_sn shell cat /dev/memcg/memory.memsw.usage_in_bytes`
-		#mem_pressure=$(($comm_str2*100/$comm_str3))
-		mem_pressure=$((`adb shell cat /dev/memcg/memory.usage_in_bytes` * 100 / `adb shell cat /dev/memcg/memory.memsw.usage_in_bytes`))
-		zram_used="$((`adb shell cat /proc/zraminfo|awk '/MemUsed:/{used=$2/1024} END{printf("%d\n", used);}'`))"
-		comm_str=$comm_str1" "$zram_used" "$mem_pressure
-		echo -e $comm_str | awk '{
-								printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%d\n",$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15);
-								}'|tee -a ${log_file}
+										}
+										'|tee -a ${log_file}
 		sleep 1
 	done
 }

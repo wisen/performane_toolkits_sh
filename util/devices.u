@@ -5,7 +5,7 @@
 
 . color.u
 #dev_SN=($(adb devices|sed '/^$/d'|awk '{if(NR>1) printf("%s\n", $1);}'))
-dev_SN=($(adb devices|sed '/^$/d'|awk '{if(NR>1){if($3!="permissions") printf("%s\n", $1); else printf("NoPermissions\n");}}'))
+dev_SN=($(adb devices|sed '/^$/d'|awk '{if(NR>1){if($1!="*"){if($3!="permissions") printf("%s\n", $1); else printf("NoPermissions\n");}}}'))
 
 for ((j=0;j<${#dev_SN[@]};j=$j+1))
 do

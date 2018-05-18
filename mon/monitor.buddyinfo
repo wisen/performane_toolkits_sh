@@ -1,0 +1,36 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for monitoring some memory infomation
+# Date: 2017-02-26
+
+. color.u
+#. devices_var.u
+
+function monitor_buddyinfo {
+	log_file=buddyinfo".$(date +%s)"".log"
+	title="Zone\t4K\t8K\t16K\t32K\t64K\t128K\t256K\t512K\t1024K\t2048K\t4096K\tRate"
+	echo -e $title > ${log_file}
+	line=0
+	zonestr=$1
+	
+	while true
+	do
+		if [ `expr ${line} % 40` == 0 ];then
+			#echo -e ${title}
+			blue_white ${title}
+			echo $zonestr $device_sn
+		fi
+		line=`expr ${line} + 1`
+		echo $zonestr
+		adb -s $device_sn shell cat /proc/buddyinfo |awk -v azonestr="${zonestr}" '
+										BEGIN{
+											
+										}
+										/Normal/{if(azonestr == "normal") printf("%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%.2f\n", $4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$5/($5+2*$6+4*$7+8*$8+16*$9+32*$10+64*$11+128*$12+256*$13+512*$14+1024*$15));}
+										/HighMem/{if(azonestr == "high") printf("%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%.2f\n", $4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$5/($5+2*$6+4*$7+8*$8+16*$9+32*$10+64*$11+128*$12+256*$13+512*$14+1024*$15));}
+										/Dma/{if(azonestr == "dma") printf("%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%.2f\n", $4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$5/($5+2*$6+4*$7+8*$8+16*$9+32*$10+64*$11+128*$12+256*$13+512*$14+1024*$15));}
+										
+										'|tee -a ${log_file}
+		sleep 1
+	done
+}

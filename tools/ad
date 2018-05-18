@@ -3,6 +3,7 @@
 . color.u
 #. devices.u
 
+echo $#
 
 if [ 0 == $# ];then
 	#adb devices
@@ -28,6 +29,7 @@ else
 			shift
 			adb -s $device_sn pull $@
 		elif [ "logcat" == $1 ];then
+		echo "here"
 			shift
 			adb -s $device_sn logcat $@
 		elif [ "reboot" == $1 ];then

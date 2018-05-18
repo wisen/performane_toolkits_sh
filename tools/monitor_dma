@@ -1,0 +1,31 @@
+#!/bin/bash
+
+. color.u
+. devices_var.u
+
+function monitor_buddyinfo_dma {
+	log_file=buddyinfo_dma".$(date +%s)"".log"
+	title="Zone\t4K\t8K\t16K\t32K\t64K\t128K\t256K\t512K\t1024K\t2048K\t4096K\tRate"
+	echo -e $title > ${log_file}
+	line=0
+	zonestr=$1
+	
+	while true
+	do
+		if [ `expr ${line} % 40` == 0 ];then
+			#echo -e ${title}
+			blue_white ${title}
+		fi
+		line=`expr ${line} + 1`
+		adb -s $device_sn shell cat /proc/buddyinfo |awk '
+										BEGIN{
+											
+										}
+										/DMA/{printf("%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%.2f\n", $4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$5/($5+2*$6+4*$7+8*$8+16*$9+32*$10+64*$11+128*$12+256*$13+512*$14+1024*$15));}
+										
+										'|tee -a ${log_file}
+		sleep 1
+	done
+}
+
+monitor_buddyinfo_dma
