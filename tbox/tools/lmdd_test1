@@ -7,12 +7,12 @@ tmp_wfile=tmp".$(date +%s)"".lmddtstw"
 tmp_rfile=tmp".$(date +%s)"".lmddtstr"
 result_file=lmddtst".$(date +%s)"".log"
 
-adb shell stop
-adb shell sleep 20
+#adb shell stop
+#adb shell sleep 20
 
-red "start write test: "$(date)
+red "start write test: "$(date) | tee ${result_file}
 
-echo "write" | tee ${result_file}
+#echo "write" | tee ${result_file}
 str=""
 title1=""
 title2=""
@@ -20,25 +20,34 @@ title2=""
 for((i=1;i<=$test_cycles;i++))
 do
     data_str=""
-    for sz in 8k 32k 64k 128k 512k 8m 32m 64m 128m
+    for sz in 8k 16k 32k 64k 128k 256k 512k 1m 2m 4m 8m 16m 32m 64m 128m 256m
     do
-        if [ 1 -eq $i ];then
-            if [ "8k" != $sz ];then
-                title1=${title1}"\t\t"$sz
-            else
-                title1="8k"
-            fi
-            title2=$title2"data\tsdcard\t"
-        fi
 
         data_speed=$(adb shell //data/lmdd if=internal of=//data/dumb move=$sz fsync=1|awk '{printf("%0.2f",$6);}')
-        sdcard_speed=$(adb shell //data/lmdd if=internal of=//sdcard/dumb move=$sz fsync=1|awk '{printf("%0.2f",$6);}')
-        data_str=${data_str}"${data_speed}\t${sdcard_speed}\t"
+        #data_speed=$(adb shell //data/lmdd if=internal of=//data/dumb move=$sz fsync=1|awk -v cou=$i '{printf("%d\\t%0.2f",cou,$6);}')
+        #sdcard_speed=$(adb shell //data/lmdd if=internal of=//sdcard/dumb move=$sz fsync=1|awk '{printf("%0.2f",$6);}')
+        #data_str=${data_str}"${data_speed}\t${sdcard_speed}\t"
+        #data_str=${data_str}"${data_speed}\t"
+        if [ 1 -eq $i ];then
+            if [ "8k" != $sz ];then
+                title1=${title1}"\t"$sz
+            else
+                title1="Times\t8k"
+            fi
+            #title2=$title2"data\tsdcard\t"
+        fi
+
+		if [ "8k" == "$sz" ];then
+        	data_str="$i\t${data_speed}\t"
+		else
+        	data_str=${data_str}"${data_speed}\t"
+		fi
+
     done
 
     if [ 1 -eq $i ];then
         echo -e $title1 | tee -a ${result_file}
-        echo -e $title2 | tee -a ${result_file}
+        #echo -e $title2 | tee -a ${result_file}
     fi
 
     echo -e $data_str | tee -a $tmp_wfile
@@ -63,12 +72,11 @@ str=$(cat ${tmp_wfile} |awk -v count=$test_cycles '{
                                                     s14=s14+$14;
                                                     s15=s15+$15;
                                                     s16=s16+$16;
-                                                    s17=s17+$17;
-                                                    s18=s18+$18;
+														s17=s17+$17;
                                                     }
                                                     END{
-                                                    printf("%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f",
-                                                    s1/count,
+                                                    printf("%s\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f",
+                                                    "Avg",
                                                     s2/count,
                                                     s3/count,
                                                     s4/count,
@@ -83,12 +91,11 @@ str=$(cat ${tmp_wfile} |awk -v count=$test_cycles '{
                                                     s13/count,
                                                     s14/count,
                                                     s15/count,
-                                                    s16/count,
-                                                    s17/count,
-                                                    s18/count);
+														s16/count,
+                                                    s17/count);
                                                     }')
 
-echo -e $str"*\n" | tee -a ${result_file}
+echo -e $str"\n" | tee -a ${result_file}
 
 echo | tee -a ${result_file}
 echo | tee -a ${result_file}
@@ -103,26 +110,33 @@ title2=""
 for((i=1;i<=$test_cycles;i++))
 do
     data_str=""
-    for sz in 8k 32k 64k 128k 512k 8m 32m 64m 128m
+    for sz in 8k 16k 32k 64k 128k 256k 512k 1m 2m 4m 8m 16m 32m 64m 128m 256m
     do
-        if [ 1 -eq $i ];then
-            if [ "8k" != $sz ];then
-                title1=${title1}"\t\t"$sz
-            else
-                title1="8k"
-            fi
-            title2=$title2"data\tsdcard\t"
-        fi
         adb shell "echo 3 > //proc/sys/vm/drop_caches"
         data_speed=$(adb shell //data/lmdd if=//data/dumb of=internal move=$sz fsync=1|awk '{printf("%0.2f",$6);}')
-        adb shell "echo 3 > //proc/sys/vm/drop_caches"
-        sdcard_speed=$(adb shell //data/lmdd if=//sdcard/dumb of=internal move=$sz fsync=1|awk '{printf("%0.2f",$6);}')
-        data_str=${data_str}"${data_speed}\t${sdcard_speed}\t"
+        #adb shell "echo 3 > //proc/sys/vm/drop_caches"
+        #sdcard_speed=$(adb shell //data/lmdd if=//sdcard/dumb of=internal move=$sz fsync=1|awk '{printf("%0.2f",$6);}')
+        #data_str=${data_str}"${data_speed}\t${sdcard_speed}\t"
+        #data_str=${data_str}"${data_speed}\t"
+		if [ 1 -eq $i ];then
+            if [ "8k" != $sz ];then
+                title1=${title1}"\t"$sz
+            else
+                title1="Times\t8k"
+            fi
+            #title2=$title2"data\tsdcard\t"
+        fi
+
+		if [ "8k" == "$sz" ];then
+        	data_str="$i\t${data_speed}\t"
+		else
+        	data_str=${data_str}"${data_speed}\t"
+		fi
     done
 
     if [ 1 -eq $i ];then
         echo -e $title1 | tee -a ${result_file}
-        echo -e $title2 | tee -a ${result_file}
+        #echo -e $title2 | tee -a ${result_file}
     fi
 
     echo -e $data_str | tee -a $tmp_rfile
@@ -147,12 +161,11 @@ str=$(cat ${tmp_rfile} |awk -v count=$test_cycles '{
                                                     s14=s14+$14;
                                                     s15=s15+$15;
                                                     s16=s16+$16;
-                                                    s17=s17+$17;
-                                                    s18=s18+$18;
+														s17=s17+$17;
                                                     }
                                                     END{
-                                                    printf("%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f",
-                                                    s1/count,
+                                                    printf("%s\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f",
+                                                    "Avg",
                                                     s2/count,
                                                     s3/count,
                                                     s4/count,
@@ -167,11 +180,10 @@ str=$(cat ${tmp_rfile} |awk -v count=$test_cycles '{
                                                     s13/count,
                                                     s14/count,
                                                     s15/count,
-                                                    s16/count,
-                                                    s17/count,
-                                                    s18/count);
+														s16/count,
+                                                    s17/count);
                                                     }')
 
-echo -e $str"*\n" | tee -a ${result_file}
+echo -e $str"\n" | tee -a ${result_file}
 
 red "end test: "$(date)
