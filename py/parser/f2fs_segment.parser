@@ -1,0 +1,139 @@
+import subprocess
+import datetime
+import time
+import re
+import sys
+import pandas as pd
+import plotly.offline as py
+import plotly.graph_objs as go
+from plotly import tools
+
+'''
+format: segment_type|valid_blocks
+segment_type(0:HD, 1:WD, 2:CD, 3:HN, 4:WN, 5:CN)
+0         0|500 3|241 1|512 2|38  4|326 5|6   1|512 1|512 1|512 1|512
+10        1|512 0|55  1|512 1|512 1|220 3|317 0|12  4|86  0|4   0|2
+20        0|5   2|502 2|181 0|1   4|24  0|4   0|3   4|25  0|4   4|23
+30        0|1   0|3   2|37  3|331 4|67  0|6   4|72  0|1   4|30  0|3
+40        4|24  0|6   4|28  2|389 2|512 2|176 0|4   0|5   4|108 2|331
+50        3|210 2|512 2|512 2|213 4|28  2|418 2|512 2|512 2|141 0|2
+'''
+
+def adjust_value(v):
+    if (v > 0) and (v < 512):
+        return 256
+    
+    #if (v > 0) and (v <= 64):
+    #    return 32
+    #if (v > 64) and (v <= 128):
+    #    return 96
+    #if (v > 128) and (v <= 192):
+    #    return 160
+    #if (v > 192) and (v <= 256):
+    #    return 224
+    #if (v > 256) and (v <= 320):
+    #    return 288
+    #if (v > 320) and (v <= 384):
+    #    return 352
+    #if (v > 384) and (v <= 448):
+    #    return 416
+    #if (v > 448) and (v < 512):
+    #    return 480
+    return v
+
+def parse_info(line):
+    ret = re.split(r'\d\|',line)
+    if ret is None:
+        return None
+    
+    if len(ret) == 1:
+        return None
+
+    index = ret[0].strip()
+    info = ret[1:]
+    l = len(info)
+
+    x=[]
+    y=[]
+    z=[]
+    for i in range(l):
+        x.append(int(i))
+        y.append(int(index))
+        k = adjust_value(int(info[i]))
+        #k = int(info[i])
+        print(k)
+        z.append(k)
+
+    return {"x":x, "y":y, "z":z}
+    
+
+def get_f2fs_segment_info():
+    segment= {"x":[], "y":[], "z":[]}
+
+    cmd = ["adb", "shell", "cat", "/proc/fs/f2fs/dm-0/segment_info"]
+    try:
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except OSError as e:
+        print(e)
+        return None
+
+    
+    while True:
+        line = proc.stderr.readline().strip()
+        if len(line) is not 0:
+            print(line)
+            return None
+    
+
+        line = proc.stdout.readline().strip()
+        if len(line) is 0:
+            break
+        try:
+            line = str(line, encoding = "utf-8")
+        except UnicodeDecodeError as e:
+            print(e)
+            continue
+    
+        info = parse_info(line)
+        if info is not None:
+            segment["x"] += info["x"]
+            segment["y"] += info["y"]
+            segment["z"] += info["z"]
+
+    return segment    
+
+
+def to_fig(segment):
+    if segment is None:
+        return
+
+    print(segment["x"])
+    print(segment["y"])
+    print(segment["z"])
+
+    data = [
+        go.Heatmap(
+            x=segment["x"],
+            y=segment["y"],
+            z=segment["z"],
+            colorscale='Viridis',
+        )
+    ]
+
+    layout = go.Layout(
+        title='F2FS Segment Info',
+        height = (len(segment["z"])//10)*8,
+        xaxis = dict(title = "segment index"),
+        yaxis = dict(title = "segment index"),
+    )
+
+    fig = go.Figure(data=data, layout=layout)
+    py.plot(fig, filename='f2fs_segment_info')
+
+
+
+if __name__ == '__main__':
+    segment = get_f2fs_segment_info()
+    to_fig(segment)
+
+

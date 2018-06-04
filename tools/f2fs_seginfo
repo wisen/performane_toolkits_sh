@@ -4,7 +4,7 @@
 
 tmp_recordfile=tmp".$(date +%s)"".f2fs_seginfo"
 
-adb shell cat /proc/fs/f2fs/dm-2/segment_info | awk '{if(NR>2){$1="";print $0;}}'|awk '{for(i=1;i<=NF;i++){x=i-1+(NR-1)*NF;a[x]=$i;print a[x];}} '|awk -F "|" '{print $2}' > $tmp_recordfile
+adb shell "cat /proc/fs/f2fs/dm-0/segment_info" | awk '{if(NR>2){$1="";print $0;}}'|awk '{for(i=1;i<=NF;i++){x=i-1+(NR-1)*NF;a[x]=$i;print a[x];}} '|awk -F "|" '{print $2}' > $tmp_recordfile
 
 total_segments=$(cat $tmp_recordfile|wc -l)
 pure_free_segments=$(cat $tmp_recordfile|awk '{if($1==0) print $0}'|wc -l)
@@ -22,3 +22,5 @@ used_space=$(($used_blocks*4/1024))
 echo "Total space: $total_space MB"
 echo "used_space: $used_space MB"
 echo "Fragment ratio: "`echo null|awk -v total=$total_segments -v remain=$remain_segments '{printf("%.2f", remain/total);}'`
+
+python ${SCRIPT_ROOT}/py/parser/f2fs_segment.parser
