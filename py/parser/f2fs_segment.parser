@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import subprocess
 import datetime
 import time
@@ -52,6 +54,7 @@ def parse_info(line):
     index = ret[0].strip()
     info = ret[1:]
     l = len(info)
+    #print(l)
 
     x=[]
     y=[]
@@ -61,7 +64,7 @@ def parse_info(line):
         y.append(int(index))
         k = adjust_value(int(info[i]))
         #k = int(info[i])
-        print(k)
+        #print(k)
         z.append(k)
 
     return {"x":x, "y":y, "z":z}
@@ -78,13 +81,16 @@ def get_f2fs_segment_info():
         return None
 
     
+    i=0
     while True:
         line = proc.stderr.readline().strip()
         if len(line) is not 0:
             print(line)
             return None
     
-
+        if(i==10):
+            break
+        i = i + 1
         line = proc.stdout.readline().strip()
         if len(line) is 0:
             break
@@ -122,14 +128,14 @@ def to_fig(segment):
 
     layout = go.Layout(
         title='F2FS Segment Info',
-        height = (len(segment["z"])//10)*8,
+#        height = (len(segment["z"])//10)*8,
         xaxis = dict(title = "segment index"),
         yaxis = dict(title = "segment index"),
     )
 
     fig = go.Figure(data=data, layout=layout)
-    py.plot(fig, filename='f2fs_segment_info')
-
+    py.plot(fig, filename='f2fs_segment_info.html')
+    print(fig)
 
 
 if __name__ == '__main__':

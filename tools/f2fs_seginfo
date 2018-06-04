@@ -2,9 +2,13 @@
 
 . color.u
 
-tmp_recordfile=tmp".$(date +%s)"".f2fs_seginfo"
+#tmp_timestamp=$(date +%s)
+tmp_timestamp=$(date +%Y%m%d%H%M%S)
+tmp_recordfile=tmp.$tmp_timestamp.f2fs_seginfo
 
-adb shell "cat /proc/fs/f2fs/dm-0/segment_info" | awk '{if(NR>2){$1="";print $0;}}'|awk '{for(i=1;i<=NF;i++){x=i-1+(NR-1)*NF;a[x]=$i;print a[x];}} '|awk -F "|" '{print $2}' > $tmp_recordfile
+dm_inx=`adb shell mount|grep f2fs|grep "\/data"|awk '{print $1}'|awk -F "-" '{print $2}'`
+
+adb shell "cat /proc/fs/f2fs/dm-${dm_inx}/segment_info" | awk '{if(NR>2){$1="";print $0;}}'|awk '{for(i=1;i<=NF;i++){x=i-1+(NR-1)*NF;a[x]=$i;print a[x];}} '|awk -F "|" '{print $2}' > $tmp_recordfile
 
 total_segments=$(cat $tmp_recordfile|wc -l)
 pure_free_segments=$(cat $tmp_recordfile|awk '{if($1==0) print $0}'|wc -l)
@@ -21,6 +25,12 @@ used_space=$(($used_blocks*4/1024))
 
 echo "Total space: $total_space MB"
 echo "used_space: $used_space MB"
-echo "Fragment ratio: "`echo null|awk -v total=$total_segments -v remain=$remain_segments '{printf("%.2f", remain/total);}'`
+ratio=`echo null|awk -v total=$total_segments -v remain=$remain_segments '{printf("%.2f", remain/total);}'`
+#echo "Fragment ratio: "`echo null|awk -v total=$total_segments -v remain=$remain_segments '{printf("%.2f", remain/total);}'`
+echo "Fragment ratio: "$ratio
 
-python ${SCRIPT_ROOT}/py/parser/f2fs_segment.parser
+summary="${total_space}MB/${used_space}MB [$ratio]"
+
+device_version_and_timestamp=`adb shell getprop ro.build.display.id`.$tmp_timestamp
+
+python ${SCRIPT_ROOT}/py/parser/f2fs_segment.parser_v2 $tmp_recordfile $summary $device_version_and_timestamp
