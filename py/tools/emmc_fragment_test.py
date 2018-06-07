@@ -81,21 +81,36 @@ class FragmentUI:
 		Label(text="wr threads:", font=("Monospace Regular",16)).grid(column=0,row=3)
 		self.wrname = StringVar()
 		wrnameEntered = Entry(frm, width=10, textvariable=self.wrname)
-		wrnameEntered.grid(column=1, row=3)      
+		wrnameEntered.grid(column=1, row=3)
+		wrnameEntered.insert(10, self.wrthreads)
 		wrnameEntered.focus()   
 		
 		Label(text="del threads:", font=("Monospace Regular",16)).grid(column=0,row=4)
 		self.delname = StringVar()
 		delnameEntered = Entry(frm, width=10, textvariable=self.delname)
-		delnameEntered.grid(column=1, row=4)      
-
+		delnameEntered.insert(10, self.delthreads)
+		delnameEntered.grid(column=1, row=4)
+	
 		Label(text="sleep time:", font=("Monospace Regular",16)).grid(column=0,row=5)
 		self.sleepname = StringVar()
 		sleepnameEntered = Entry(frm, width=10, textvariable=self.sleepname)
+		sleepnameEntered.insert(10, self.sleeptime)
 		sleepnameEntered.grid(column=1, row=5)
 		
+		Label(text="Max percent:", font=("Monospace Regular",16)).grid(column=0,row=6)
+		self.maxname = StringVar()
+		maxnameEntered = Entry(frm, width=10, textvariable=self.maxname)
+		maxnameEntered.insert(10, self.stop_wr)
+		maxnameEntered.grid(column=1, row=6) 
+		
+		Label(text="Min percent:", font=("Monospace Regular",16)).grid(column=0,row=7)
+		self.minname = StringVar()
+		minnameEntered = Entry(frm, width=10, textvariable=self.minname)
+		minnameEntered.insert(10, self.stop_del)
+		minnameEntered.grid(column=1, row=7) 
+	
 		update_config_btn = Button(frm, text="update", foreground='red', command=self.update_config)
-		update_config_btn.grid(column=1,row=6)		
+		update_config_btn.grid(column=1,row=8)		
 		
 		## UI loop start
 		self.ui = root
@@ -104,12 +119,14 @@ class FragmentUI:
 
 	def update_config(self):
 		self.wrthreads = int(self.wrname.get())
-		print(self.wrthreads)
+		#print(self.wrthreads)
 		self.delthreads = int(self.delname.get())
-		print(self.delthreads)
+		#print(self.delthreads)
 		self.sleeptime = int(self.sleepname.get())
-		print(self.sleeptime)
-		print(self)
+		#print(self.sleeptime)
+		self.stop_wr = float(self.maxname.get())
+		self.stop_del = float(self.minname.get())
+		#print(self)
 		return
 		
 	def start_func(self):
@@ -210,16 +227,16 @@ class FragmentUI:
 		#print(self.stop_wr)
 		if float(cmd_out.strip('%')) > self.stop_wr*100:
 			print("stop wr thread....")
-			self.devices[dev_sn]["wrfn"] == "off"
+			self.devices[dev_sn]["wrfn"] = "off"
 			print("start delete thread....")
-			self.devices[dev_sn]["delfn"] == "on"
+			self.devices[dev_sn]["delfn"] = "on"
 			self.create_del_thread(dev_sn)
 			
 		if float(cmd_out.strip('%')) < self.stop_del*100:
 			print("stop delete thread...")
-			self.devices[dev_sn]["delfn"] == "off"
+			self.devices[dev_sn]["delfn"] = "off"
 			print("start wr thread...")
-			self.devices[dev_sn]["wrfn"] == "on"
+			self.devices[dev_sn]["wrfn"] = "on"
 			self.create_wr_thread(dev_sn)
 			
 		return
@@ -333,7 +350,8 @@ class FragmentUI:
 		return
 
 	def del_func(self,dev_sn,path):
-		cmd_str="file_list=`ls "+path+"/*k.dat`;j=0;for file in $file_list;do rm -f $file;j=`expr $j + 1`;echo '$j: delete "+path+"/$file';if [ $j -gt 10 ];then break;fi;done;sync;"
+		#cmd_str="while [ 1 ];do file_list=`ls "+path+"/*k.dat`;j=0;for file in $file_list;do rm -f $file;j=`expr $j + 1`;echo '$j: delete "+path+"/$file';if [ $j -gt 10 ];then break;fi;done;sync;exit;done"
+		cmd_str="rm -rf "+self.path+self.dir+"$(($RANDOM%99+1))/*_$(($RANDOM%99+1))k.dat"
 		cmd = ["adb", "-s", dev_sn, "shell", cmd_str]
 
 		while self.devices[dev_sn]["s"] == "online" and self.devices[dev_sn]["delfn"] == "on":
@@ -366,7 +384,9 @@ class FragmentUI:
 				if len(self.devices) != 0:
 					#print("monitor start")
 					for k in self.devices.keys():
-						print(k)
+						#print(k)
+						#self.query_device_status(k)
+						self.show_status(k)
 						#self.flush_device_info(k)
 			else:
 				return
