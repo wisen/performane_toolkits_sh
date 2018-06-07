@@ -104,8 +104,11 @@ class FragmentUI:
 
 	def update_config(self):
 		self.wrthreads = int(self.wrname.get())
+		print(self.wrthreads)
 		self.delthreads = int(self.delname.get())
+		print(self.delthreads)
 		self.sleeptime = int(self.sleepname.get())
+		print(self.sleeptime)
 		print(self)
 		return
 		
@@ -153,10 +156,25 @@ class FragmentUI:
 		else:
 			self.show_init_status()
 
+	def query_dm_inx(self, dev_sn):
+		cmd = ["adb", "-s", dev_sn, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
+		print("query_dm_inx:"+" ".join(cmd))
+		try:
+			#proc = subprocess.call(cmd, shell=False)
+			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		except OSError as e:
+			print(e)
+			return None
+		
+		cmd_out = bytes.decode(proc.stdout.read().split()[0])[-1]
+		self.dminx = cmd_out
+		return
+			
 	def show_init_status(self):
 		dev_sn=self.lb_devices.get(self.lb_devices.curselection())
 		self.devices[dev_sn]={"s":"offline","df":0.0,"frag":0.0,"stime":datetime.datetime.now(),"wrfn":"off","delfn":"off"}
-		print(type(dev_sn))
+		self.query_dm_inx(dev_sn)
+		#print(type(dev_sn))
 		self.show_status(dev_sn)
 			
 	def show_online_status(self):
@@ -172,7 +190,7 @@ class FragmentUI:
 	def query_device_storage(self, dev_sn):
 		#adb shell df -h | grep "/dev/block/dm-" | grep "\/data" | awk '{print $5}'
 		cmd = ["adb", "-s", dev_sn, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
-		print(cmd)
+		print("query_device_storage:"+" ".join(cmd))
 		try:
 			#proc = subprocess.call(cmd, shell=False)
 			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -182,14 +200,16 @@ class FragmentUI:
 		
 		cmd_out = bytes.decode(proc.stdout.read().split()[4])
 		self.devices[dev_sn]["df"] = cmd_out
-		if float(cmd_out.strip('%')) > self.stop_wr:
+		#print(float(cmd_out.strip('%')))
+		#print(self.stop_wr)
+		if float(cmd_out.strip('%')) > self.stop_wr*100:
 			print("stop wr thread....")
 			self.devices[dev_sn]["wrfn"] == "off"
 			print("start delete thread....")
 			self.devices[dev_sn]["delfn"] == "on"
 			self.create_del_thread(dev_sn)
 			
-		if float(cmd_out.strip('%')) < self.stop_del:
+		if float(cmd_out.strip('%')) < self.stop_del*100:
 			print("stop delete thread...")
 			self.devices[dev_sn]["delfn"] == "off"
 			print("start wr thread...")
@@ -239,7 +259,9 @@ class FragmentUI:
 	def calc_fragment_ratio(self, dev_sn):
 		segment= {"0":0, "512":0, "z":[]}
 
-		cmd = ["adb", "-s", dev_sn, "shell", "cat", "/proc/fs/f2fs/dm-0/segment_info"]
+		path = "/proc/fs/f2fs/dm-"+self.dminx+"/segment_info"
+		cmd = ["adb", "-s", dev_sn, "shell", "cat", path]
+		print("calc_fragment_ratio:"+" ".join(cmd))
 		try:
 			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		except OSError as e:
@@ -248,10 +270,10 @@ class FragmentUI:
 
 		#i=0
 		while True:
-			line = proc.stderr.readline().strip()
-			if len(line) is not 0:
-				print(line)
-				return None
+			#line = proc.stderr.readline().strip()
+			#if len(line) is not 0:
+			#	print(line)
+			#	return None
 
 			#if(i==10):
 			#	break
