@@ -148,6 +148,12 @@ class FragmentUI:
 		status_str=status_str+"stime: "+self.devices[dev_sn]["stime"].strftime('%Y-%m-%d %H:%M:%S')+"\n"
 		status_str=status_str+"write: "+str(self.devices[dev_sn]["wrfn"])+"\n"
 		status_str=status_str+"delete: "+str(self.devices[dev_sn]["delfn"])+"\n"
+		status_str=status_str+"\nGlobal config: \n"
+		status_str=status_str+"write threads: "+str(self.wrthreads)+"\n"
+		status_str=status_str+"del threads: "+str(self.delthreads)+"\n"
+		status_str=status_str+"sleep time: "+str(self.sleeptime)+"\n"
+		status_str=status_str+"Max percent: "+str(self.stop_wr*100)+"%\n"
+		status_str=status_str+"Min percent: "+str(self.stop_del*100)+"%\n"
 		self.scr.insert(END,status_str)		
 	
 	def init_item(self,event):
