@@ -329,7 +329,7 @@ class FragmentUI:
 				proc = subprocess.call(cmd, shell=False)
 			except OSError as e:
 				print(e)
-				return None
+		
 		return
 
 	def del_func(self,dev_sn,path):
@@ -344,7 +344,7 @@ class FragmentUI:
 				proc = subprocess.call(cmd, shell=False)
 			except OSError as e:
 				print(e)
-				return None
+		
 		return
 
 	def flush_device_info(self, dev_sn):
