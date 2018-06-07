@@ -1,16 +1,22 @@
 #!/usr/bin/env python 
 
+import os
+import math
 import subprocess
 import datetime
 import time
 import re
-import sys
+import random
+import threading
+
 from tkinter import *
 from tkinter import ttk
 from tkinter import scrolledtext
-import random
-import datetime
-import threading
+
+import numpy as np
+import pandas as pd
+import plotly.offline as py
+import plotly.graph_objs as go
 
 class FragmentUI:
 
@@ -273,7 +279,8 @@ class FragmentUI:
 				cnt_0 += 1
 			if int(info[i]) == 512:
 				cnt_512 += 1
-			k = self.adjust_value(int(info[i]))
+			#k = self.adjust_value(int(info[i]))
+			k = int(info[i])
 			z.append(k)
 
 		#print(z)
@@ -320,6 +327,7 @@ class FragmentUI:
 				#segment += info
 		#print(segment)
 		ratio = (len(segment["z"])-segment["0"]-segment["512"])/len(segment["z"])
+		self.draw_fragment_info(segment["z"], ratio, dev_sn)
 		#print(ratio)
 		return ratio
 		
@@ -431,6 +439,49 @@ class FragmentUI:
 					tmp_dev.append(bytes.decode(line.split()[0]))
 			else:
 				return tmp_dev
+
+	def draw_fragment_info(self, segment, ratio, dev_sn):
+		aa = []
+		cnt = 0
+		for line in segment:
+			x = int(line)
+			if(x>0) and (x<512):
+				x=256
+			aa.append(x)
+			cnt=cnt+1
+		
+		dy1 = 100
+		dx1 = int(cnt/dy1) + 1
+		i=0
+		dcnt=dx1*dy1
+		if(dcnt>cnt):
+			for i in range(cnt,dcnt):
+				aa.append(int(999))
+
+		bb = []
+		bb = np.array(aa).reshape(dx1,dy1)
+
+		xa = np.array(range(dx1))
+		ya = np.array(range(dy1))
+		trace = go.Heatmap(
+					x=xa,
+					y=ya[::-1],
+					z=bb,
+					#colorscale='Viridis',
+					colorscale='Jet',
+					)
+		data=[trace]
+
+		layout = go.Layout(
+			title='F2FS Fragments Info '+dev_sn+" "+str(float('%.2f' % ratio)),
+			#height = (len(segment["z"])//10)*8,
+			xaxis = dict(title = "segment row"),
+			yaxis = dict(title = "segment col"),
+		)
+
+		fig = go.Figure(data=data, layout=layout)
+		output_filename="f2fs_fragment_v2_"+dev_sn+".html"
+		py.plot(fig,filename=output_filename)
 
 if __name__ == '__main__':
 	obj = FragmentUI("fg tool")
