@@ -1,0 +1,3 @@
+#!/bin/bash
+
+python $SCRIPT_ROOT/eMMC_Test/UI.py

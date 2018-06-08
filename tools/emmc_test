@@ -1,3 +1,0 @@
-#!/bin/bash
-
-python ${SCRIPT_ROOT}/py/tools/emmc_fragment_test.py

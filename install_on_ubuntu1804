@@ -5,12 +5,14 @@
 
 basepath=$(cd `dirname .`; pwd)
 #echo $basepath
-scriptpath="$basepath:$basepath/applist/:$basepath/bin/:$basepath/case/:$basepath/config/:$basepath/logutil/:$basepath/mon/:$basepath/parser/:$basepath/prebuilt_tools/:$basepath/tools/:$basepath/test/:$basepath/util/"
-
-echo "PATH=$scriptpath:\${PATH}" >> ~/.bashrc
-echo "export SCRIPT_ROOT=${basepath}" >> ~/.bashrc
 
 (cat <<EOF
+
+## Custom Start ##
+scriptpath="$basepath:$basepath/applist/:$basepath/bin/:$basepath/case/:$basepath/config/:$basepath/logutil/:$basepath/mon/:$basepath/parser/:$basepath/prebuilt_tools/:$basepath/tools/:$basepath/test/:$basepath/util/:$basepath/eMMC_Test/bin/"
+PATH=\${scriptpath}:\${PATH}
+export SCRIPT_ROOT=${basepath}
+
 ASHELL_ROOT=\$SCRIPT_ROOT/tbox/
 ASHELL_VERSION=1.0.1
 export ASHELL_ROOT
@@ -71,15 +73,15 @@ export JRE_HOME=/home/wisen/data/java/jre-10.0.1
 #export JRE_HOME=/home/wisen/data/java/jre1.8.0_172
 
 export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib  
-export PATH=${JAVA_HOME}/bin:$PATH
+export PATH=\${JAVA_HOME}/bin:\${PATH}
 ###set java env end###
 
 ###Mount sdb2 start###
 cat /proc/mounts | grep "\/dev\/sdb2" > /dev/null
 if [ $? -ne 0 ];then
-sudo -S mount -t ntfs /dev/sdb2 /home/wisen/data <<EOF
+sudo -S mount -t ntfs /dev/sdb2 /home/wisen/data <<MMM
 56630873
-EOF
+MMM
 fi
 
 if [ $? -eq 0 ] 
@@ -90,9 +92,41 @@ else
 fi
 ###Mount sdb2 end###
 
+###Mount reallytek start###
+cat /proc/mounts | grep "//192.168.1.71/reallytek/" > /dev/null
+if [ $? -ne 0 ];then
+sudo -S mount -t cifs -o username="wanbin.wang",pass="Bb123456" //192.168.1.71/reallytek/ /home/wisen/smb/71/reallytek/ <<AAA
+56630873
+AAA
+fi
+
+if [ $? -eq 0 ]
+then
+    echo "Mount reallytek sucess" > /dev/null
+else
+    echo -e "\033[31m Mount reallytek fail..  \033[0m"
+fi
+###Mount reallytek end###
+
+###Mount Transsionsharing start###
+cat /proc/mounts | grep ""//192.168.1.75/Transsionsharing/ > /dev/null
+if [ $? -ne 0 ];then
+sudo -S mount -t cifs -o username="wanbin.wang",pass="Bb123456" //192.168.1.75/Transsionsharing/ /home/wisen/smb/75/Transsionsharing <<BBB
+56630873
+BBB
+fi
+
+if [ $? -eq 0 ]
+then
+    echo "Mount Transsionsharing sucess" > /dev/null
+else
+    echo -e "\033[31m Mount Transsionsharing fail..  \033[0m"
+fi
+###Mount Transsionsharing end###
+
 ###set cuda path start###
 export CUDA_HOME=/usr/local/cuda-9.2/bin
-export PATH=$PATH:$CUDA_HOME/bin
+export PATH=\${PATH}:\${CUDA_HOME}/bin
 export LD_LIBRARY_PATH=/usr/local/cuda-9.2/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 ###set cuda path end###
 
@@ -101,6 +135,8 @@ PS1='\[\033[01;33m\]\u\[\033[00m\]\[\033[01;31m\][\[\033[00m\]\[\033[04;32m\]\t\
 #export HOME=\$ASHELL_ROOT/home/
 #cd \$HOME
 cd ~/test
+
+## Custom END ##
 EOF
 ) >> ~/.bashrc
 

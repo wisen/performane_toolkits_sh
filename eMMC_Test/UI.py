@@ -39,6 +39,9 @@ class FragmentUI:
 		self.ui.destroy()
 		print("close windows....")
 		return
+
+	def _quit(self):
+		self.window_cloe()
 		
 	def init_ui(self,listitems):
 		root = Tk()
@@ -46,11 +49,33 @@ class FragmentUI:
 		root.geometry("720x400")
 		root.resizable(width=False, height=False)
 		self.root = root
+		
+		s = ttk.Style()
+		s.theme_use('classic')
 
-		frm = LabelFrame(root,text="Fragment tool V1.0").grid(column=0,row=0)
+		menuBar = Menu(root, font=("Monospace Regular",16))
+		root.config(menu=menuBar)
+		fileMenu = Menu(menuBar, tearoff=0)
+		menuBar.add_cascade(label="File", menu=fileMenu)
+		fileMenu.add_command(label="New", font=("Monospace Regular",16))
+		#fileMenu.add_command(label="Exit")
+		fileMenu.add_separator()
+		fileMenu.add_command(label="Exit", command=self._quit, font=("Monospace Regular",16))
+		
+		configMenu = Menu(menuBar, tearoff=0)
+		menuBar.add_cascade(label="Config", menu=configMenu)
+		configMenu.add_command(label="Global", font=("Monospace Regular",16))
+		
+		helpMenu = Menu(menuBar, tearoff=0)
+		menuBar.add_cascade(label="Help", menu=helpMenu)
+		helpMenu.add_command(label="About", font=("Monospace Regular",16))
+		helpMenu.add_separator()
+		helpMenu.add_command(label="Help", font=("Monospace Regular",16))
+		
+		frm = ttk.LabelFrame(root,text="Fragment tool V1.0").grid(column=0,row=0)
 
 		## frm_devices start
-		Label(text="choose a device", font=("Monospace Regular",16)).grid(column=0,row=0,columnspan=2)
+		ttk.Label(text="choose a device", font=("Monospace Regular",16)).grid(column=0,row=0,columnspan=2)
 
 		var = StringVar()
 		lb_devices = Listbox(frm, font=("Monospace Regular",16), width=20, listvariable = var)
@@ -63,12 +88,12 @@ class FragmentUI:
 		for item in list_item:
 			lb_devices.insert(END, item)
 
-		start_btn = Button(frm, text=">>>", foreground='red', command=self.start_func)
+		start_btn = ttk.Button(frm, text=">>>", command=self.start_func)
 		start_btn.grid(column=2,row=1)
-		stop_btn = Button(frm, text="<<<", foreground='red', command=self.stop_func)
+		stop_btn = ttk.Button(frm, text="<<<", command=self.stop_func)
 		stop_btn.grid(column=2,row=2)
 			
-		Label(text="monitor devices", font=("Monospace Regular",16)).grid(column=3,row=0)
+		ttk.Label(text="monitor devices", font=("Monospace Regular",16)).grid(column=3,row=0)
 		var = StringVar()
 		lb_monitors = Listbox(frm, font=("Monospace Regular",16), width=20, listvariable = var)
 		lb_monitors.grid(column=3,row=1,rowspan=2)
@@ -77,45 +102,45 @@ class FragmentUI:
 		lb_monitors.bind('<ButtonRelease-1>', self.monitor_item)
 
 		## frm_status start
-		Label(text="device status", font=("Monospace Regular",16)).grid(column=4,row=0)
+		ttk.Label(text="device status", font=("Monospace Regular",16)).grid(column=4,row=0)
 		scrolW = 30 # 设置文本框的长度
 		scrolH = 13 # 设置文本框的高度
 		scr = scrolledtext.ScrolledText(frm, width=scrolW, height=scrolH, wrap=WORD, font=("Monospace Regular",12)) 
 		scr.grid(column=4, row=1, rowspan=2)
 		self.scr = scr
 
-		Label(text="wr threads:", font=("Monospace Regular",16)).grid(column=0,row=3)
+		ttk.Label(text="wr threads:", font=("Monospace Regular",16)).grid(column=0,row=3)
 		self.wrname = StringVar()
-		wrnameEntered = Entry(frm, width=10, textvariable=self.wrname)
+		wrnameEntered = ttk.Entry(frm, width=10, textvariable=self.wrname)
 		wrnameEntered.grid(column=1, row=3)
 		wrnameEntered.insert(10, self.wrthreads)
 		wrnameEntered.focus()   
 		
-		Label(text="del threads:", font=("Monospace Regular",16)).grid(column=0,row=4)
+		ttk.Label(text="del threads:", font=("Monospace Regular",16)).grid(column=0,row=4)
 		self.delname = StringVar()
-		delnameEntered = Entry(frm, width=10, textvariable=self.delname)
+		delnameEntered = ttk.Entry(frm, width=10, textvariable=self.delname)
 		delnameEntered.insert(10, self.delthreads)
 		delnameEntered.grid(column=1, row=4)
 	
-		Label(text="sleep time:", font=("Monospace Regular",16)).grid(column=0,row=5)
+		ttk.Label(text="sleep time:", font=("Monospace Regular",16)).grid(column=0,row=5)
 		self.sleepname = StringVar()
-		sleepnameEntered = Entry(frm, width=10, textvariable=self.sleepname)
+		sleepnameEntered = ttk.Entry(frm, width=10, textvariable=self.sleepname)
 		sleepnameEntered.insert(10, self.sleeptime)
 		sleepnameEntered.grid(column=1, row=5)
 		
-		Label(text="Max percent:", font=("Monospace Regular",16)).grid(column=0,row=6)
+		ttk.Label(text="Max percent:", font=("Monospace Regular",16)).grid(column=0,row=6)
 		self.maxname = StringVar()
-		maxnameEntered = Entry(frm, width=10, textvariable=self.maxname)
+		maxnameEntered = ttk.Entry(frm, width=10, textvariable=self.maxname)
 		maxnameEntered.insert(10, self.stop_wr)
 		maxnameEntered.grid(column=1, row=6) 
 		
-		Label(text="Min percent:", font=("Monospace Regular",16)).grid(column=0,row=7)
+		ttk.Label(text="Min percent:", font=("Monospace Regular",16)).grid(column=0,row=7)
 		self.minname = StringVar()
-		minnameEntered = Entry(frm, width=10, textvariable=self.minname)
+		minnameEntered = ttk.Entry(frm, width=10, textvariable=self.minname)
 		minnameEntered.insert(10, self.stop_del)
 		minnameEntered.grid(column=1, row=7) 
 	
-		update_config_btn = Button(frm, text="update", foreground='red', command=self.update_config)
+		update_config_btn = ttk.Button(frm, text="Update", command=self.update_config)
 		update_config_btn.grid(column=1,row=8)		
 		
 		## UI loop start
@@ -473,7 +498,7 @@ class FragmentUI:
 		data=[trace]
 
 		layout = go.Layout(
-			title='F2FS Fragments Info '+dev_sn+" "+str(float('%.2f' % ratio)),
+			title="["+dev_sn+"] frag info: ["+self.devices[dev_sn]["df"]+"] "+str(float('%.2f' % ratio)),
 			#height = (len(segment["z"])//10)*8,
 			xaxis = dict(title = "segment row"),
 			yaxis = dict(title = "segment col"),
