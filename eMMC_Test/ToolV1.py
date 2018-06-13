@@ -9,10 +9,11 @@ import re
 import random
 import threading
 
+from tkinter import messagebox as mBox
 from tkinter import *
 from tkinter import ttk
 from tkinter import scrolledtext
-
+	
 import numpy as np
 import pandas as pd
 import plotly.offline as py
@@ -42,6 +43,22 @@ class FragmentUI:
 
 	def _quit(self):
 		self.window_cloe()
+	
+	def pop(self,event):
+		self.popmenuBar.post(event.x_root,event.y_root)
+
+	def No_Select(self):
+		mBox.showinfo('Alert', "Please select a device!!!")
+		return
+		
+	def draw_fragment(self):
+		if len(self.lb_monitors.curselection()) == 0:
+			self.No_Select()
+			return
+		else:
+			dev_sn=self.lb_monitors.get(self.lb_monitors.curselection())
+			self.calc_fragment_ratio(dev_sn, True)
+			return
 		
 	def init_ui(self,listitems):
 		root = Tk()
@@ -81,7 +98,7 @@ class FragmentUI:
 		lb_devices = Listbox(frm, font=("Monospace Regular",16), width=20, listvariable = var)
 		lb_devices.grid(column=0,row=1,rowspan=2,columnspan=2)
 		self.lb_devices = lb_devices
-		print(lb_devices)
+		#print(lb_devices)
 
 		lb_devices.bind('<ButtonRelease-1>', self.init_item)
 		list_item = listitems
@@ -101,6 +118,13 @@ class FragmentUI:
 
 		lb_monitors.bind('<ButtonRelease-1>', self.monitor_item)
 
+		## pop nume start
+		popmenuBar = Menu(root, font=("Monospace Regular",16), tearoff=0)
+		popmenuBar.add_command(label="show", command=self.draw_fragment)
+		self.popmenuBar = popmenuBar
+		lb_monitors.bind("<ButtonRelease-3>", self.pop)
+		## pop menu end
+		
 		## frm_status start
 		ttk.Label(text="device status", font=("Monospace Regular",16)).grid(column=4,row=0)
 		scrolW = 30 # 设置文本框的长度
@@ -142,7 +166,7 @@ class FragmentUI:
 	
 		update_config_btn = ttk.Button(frm, text="Update", command=self.update_config)
 		update_config_btn.grid(column=1,row=8)		
-		
+						
 		## UI loop start
 		self.ui = root
 		root.protocol("WM_DELETE_WINDOW", self.window_cloe)
@@ -267,8 +291,9 @@ class FragmentUI:
 			print("stop delete thread...")
 			self.devices[dev_sn]["delfn"] = "off"
 			print("start wr thread...")
-			self.devices[dev_sn]["wrfn"] = "on"
-			self.create_wr_thread(dev_sn)
+			if self.devices[dev_sn]["wrfn"] == "off":
+				self.devices[dev_sn]["wrfn"] = "on"
+				self.create_wr_thread(dev_sn)
 			
 		return
 
@@ -311,7 +336,7 @@ class FragmentUI:
 		#print(z)
 		return {"0":cnt_0, "512":cnt_512, "z":z}
 
-	def calc_fragment_ratio(self, dev_sn):
+	def calc_fragment_ratio(self, dev_sn, draw_fragment=False):
 		segment= {"0":0, "512":0, "z":[]}
 
 		path = "/proc/fs/f2fs/dm-"+self.dminx+"/segment_info"
@@ -352,7 +377,8 @@ class FragmentUI:
 				#segment += info
 		#print(segment)
 		ratio = (len(segment["z"])-segment["0"]-segment["512"])/len(segment["z"])
-		self.draw_fragment_info(segment["z"], ratio, dev_sn)
+		if draw_fragment == True:
+			self.draw_fragment_info(segment["z"], ratio, dev_sn)
 		#print(ratio)
 		return ratio
 		
@@ -372,11 +398,11 @@ class FragmentUI:
 		cmd = ["adb", "-s", dev_sn, "shell", cmd_str]
 
 		while self.devices[dev_sn]["s"] == "online" and self.devices[dev_sn]["wrfn"] == "on":
-			print(cmd_str)
-			print(cmd)
+			#print(cmd_str)
+			#print(cmd)
 
 			try:
-				proc = subprocess.call(cmd, shell=False)
+				proc = subprocess.run(cmd, shell=False)
 			except OSError as e:
 				print(e)
 		
@@ -384,12 +410,12 @@ class FragmentUI:
 
 	def del_func(self,dev_sn,path):
 		#cmd_str="while [ 1 ];do file_list=`ls "+path+"/*k.dat`;j=0;for file in $file_list;do rm -f $file;j=`expr $j + 1`;echo '$j: delete "+path+"/$file';if [ $j -gt 10 ];then break;fi;done;sync;exit;done"
-		cmd_str="rm -rf "+self.path+self.dir+"$(($RANDOM%99+1))/*_$(($RANDOM%99+1))k.dat"
+		cmd_str="rm -rf "+self.path+self.dir+"$(($RANDOM%99+1))/*_$(($RANDOM%99+1))k.dat;sync"
 		cmd = ["adb", "-s", dev_sn, "shell", cmd_str]
 
 		while self.devices[dev_sn]["s"] == "online" and self.devices[dev_sn]["delfn"] == "on":
-			print(cmd_str)
-			print(cmd)
+			#print(cmd_str)
+			#print(cmd)
 
 			try:
 				proc = subprocess.call(cmd, shell=False)
