@@ -24,62 +24,62 @@ class DeviceConfig():
 		self.sleeptime = 10
 		self.stop_wr = False
 		self.stop_del = True
-		print("__init__...")
 
 	def update_config(self):
 		print("update_config...")
-		
+
 	def initUI(self):
 		root = Tk()
-		root.title("Global Config")
-		root.geometry("360x300")
+		root.title("Device Config")
+		root.geometry("300x200+300+200")
 		root.resizable(width=False, height=False)
 		self.root = root
 
-		s = ttk.Style()
-		s.theme_use('classic')
-		
-		frm = ttk.LabelFrame(root,text="Fragment tool V1.0").grid(column=0,row=0)
-		
-		ttk.Label(text="WR threads:", font=("Monospace Regular",16)).grid(column=0,row=3, sticky=W)
+		# s = ttk.Style()
+		# s.theme_use('classic')
+
+		# frm = ttk.LabelFrame(root,text="Global Fragment").grid(column=0,row=0)
+
+		ttk.Label(root, text="WR threads:", font=("Monospace Regular", 16)).grid(column=0, row=0, sticky=W)
 		self.wrname = StringVar()
-		wrnameEntered = ttk.Entry(frm, width=10, textvariable=self.wrname)
-		wrnameEntered.grid(column=1, row=3)
+		wrnameEntered = ttk.Entry(root, width=10, textvariable=self.wrname)
+		wrnameEntered.grid(column=1, row=0)
 		wrnameEntered.insert(10, self.wrthreads)
-		wrnameEntered.focus()   
-		
-		ttk.Label(text="DEL threads:", font=("Monospace Regular",16)).grid(column=0,row=4, sticky=W)
+		wrnameEntered.focus()
+
+		ttk.Label(root, text="DEL threads:", font=("Monospace Regular", 16)).grid(column=0, row=1, sticky=W)
 		self.delname = StringVar()
-		delnameEntered = ttk.Entry(frm, width=10, textvariable=self.delname)
+		delnameEntered = ttk.Entry(root, width=10, textvariable=self.delname)
 		delnameEntered.insert(10, self.delthreads)
-		delnameEntered.grid(column=1, row=4)
-	
-		ttk.Label(text="Sleep time:", font=("Monospace Regular",16)).grid(column=0,row=5, sticky=W)
+		delnameEntered.grid(column=1, row=1)
+
+		ttk.Label(root, text="Sleep time:", font=("Monospace Regular", 16)).grid(column=0, row=2, sticky=W)
 		self.sleepname = StringVar()
-		sleepnameEntered = ttk.Entry(frm, width=10, textvariable=self.sleepname)
+		sleepnameEntered = ttk.Entry(root, width=10, textvariable=self.sleepname)
 		sleepnameEntered.insert(10, self.sleeptime)
-		sleepnameEntered.grid(column=1, row=5)
-		
-		ttk.Label(text="Max percent:", font=("Monospace Regular",16)).grid(column=0,row=6, sticky=W)
+		sleepnameEntered.grid(column=1, row=2)
+
+		ttk.Label(root, text="Max percent:", font=("Monospace Regular", 16)).grid(column=0, row=3, sticky=W)
 		self.maxname = StringVar()
-		maxnameEntered = ttk.Entry(frm, width=10, textvariable=self.maxname)
+		maxnameEntered = ttk.Entry(root, width=10, textvariable=self.maxname)
 		maxnameEntered.insert(10, self.stop_wr)
-		maxnameEntered.grid(column=1, row=6) 
-		
-		ttk.Label(text="Min percent:", font=("Monospace Regular",16)).grid(column=0,row=7, sticky=W)
+		maxnameEntered.grid(column=1, row=3)
+
+		ttk.Label(root, text="Min percent:", font=("Monospace Regular", 16)).grid(column=0, row=4, sticky=W)
 		self.minname = StringVar()
-		minnameEntered = ttk.Entry(frm, width=10, textvariable=self.minname)
+		minnameEntered = ttk.Entry(root, width=10, textvariable=self.minname)
 		minnameEntered.insert(10, self.stop_del)
-		minnameEntered.grid(column=1, row=7) 
-	
-		update_config_btn = ttk.Button(frm, text="Update", command=self.update_config)
-		update_config_btn.grid(column=1,row=8)
-		
+		minnameEntered.grid(column=1, row=4)
+
+		update_config_btn = ttk.Button(root, text="Update", command=self.update_config)
+		update_config_btn.grid(column=1, row=5)
+
 		## UI loop start
-		#self.ui = root
-		#root.protocol("WM_DELETE_WINDOW", self.window_cloe)
+		# self.ui = root
+		# root.protocol("WM_DELETE_WINDOW", self.window_cloe)
 		root.mainloop()
-		
+
+
 if __name__ == '__main__':
-	obj = DeviceConfig("device config tool")
+	obj = DeviceConfig("Device Config")
 	obj.initUI()

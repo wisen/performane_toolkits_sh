@@ -37,9 +37,15 @@ if(dcnt>cnt):
 
 bb = []
 bb = np.array(aa).reshape(dx1,dy1)
+print(dx1)
+print(dy1)
+print(bb)
 
 xa = np.array(range(dx1))
 ya = np.array(range(dy1))
+print(xa)
+print(ya)
+print(len(bb))
 trace = go.Heatmap(
 			x=xa,
 			y=ya[::-1],

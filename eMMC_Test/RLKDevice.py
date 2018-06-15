@@ -11,6 +11,9 @@ import numpy as np
 import pandas as pd
 import plotly.offline as py
 import plotly.graph_objs as go
+import matplotlib.pyplot as plt
+from matplotlib import animation
+import json
 
 class RLKDevice():
 
@@ -18,12 +21,12 @@ class RLKDevice():
 		self.dev_sn = dev_sn
 		##colnums:  sn,status,df,frag,stime,stoptime,seginfo
 		self.db = db
-		self.wrthreads = 3
-		self.wrdelay = 2 ## should set to 0 in final release
+		self.wrthreads = 10
+		self.wrdelay = 0 ## should set to 0 in final release
 		self.delthreads = 5
-		self.deldelay = 2 ## should set to 0 in final release
-		self.mondelay = 5 ## we should monitor the device's storage and fragment status per 5 seconds
-		self.detdelay = 2
+		self.deldelay = 0 ## should set to 0 in final release
+		self.mondelay = 30 ## we should monitor the device's storage and fragment status per 5 seconds
+		self.detdelay = 0
 		self.path = "/sdcard/tmp/"
 		self.dir = "dir"
 		self.stop_wr = 0.95
@@ -47,7 +50,7 @@ class RLKDevice():
 		self.segment = {"0":0, "512":0, "z":[]}
 		self.query_dminx()
 	
-	def destroy():
+	def destroy(self):
 		self.db.commit()
 		self.db.close()
 	
@@ -80,27 +83,24 @@ class RLKDevice():
 				break
 					
 		if self.status != "online":
-			print("device offline")
 			if self.has_moning:
 				self.stop_monthread()
 		return
 
 	def stop_detectthread(self):
-		print("stop_detectthread.....")
+		print("["+self.dev_sn+"]: stopping "+self.dev_sn+"-detect-0")
 		self.detect_stopevt.set()
 		return
 					
 	def start_detectthread(self):
-		print("start_detectthread.....")
+		print("["+self.dev_sn+"]: starting "+self.dev_sn+"-detect-0")
 		self.detect_stopevt = threading.Event()
 		t=RLKThread.RLKThread(stopevt=self.detect_stopevt, name=self.dev_sn+"-detect-0", target=self.detect, args=self.dev_sn, kwargs={}, delay=self.detdelay)
 		t.start()
 					
 	def query_dminx(self):
 		cmd = ["adb", "-s", self.dev_sn, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
-		#print("query_dm_inx:"+" ".join(cmd))
 		try:
-			#proc = subprocess.call(cmd, shell=False)
 			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		except OSError as e:
 			print(e)
@@ -111,11 +111,8 @@ class RLKDevice():
 		return self.dminx
 
 	def query_storage(self):
-		#adb shell df -h | grep "/dev/block/dm-" | grep "\/data" | awk '{print $5}'
 		cmd = ["adb", "-s", self.dev_sn, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
-		#print("query_device_storage:"+" ".join(cmd))
 		try:
-			#proc = subprocess.call(cmd, shell=False)
 			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		except OSError as e:
 			print(e)
@@ -134,9 +131,7 @@ class RLKDevice():
 	def store_deviceinfo(self):
 		self.query_storage()
 		self.query_fragment()
-		#sn text, df text, ratio float, stime datetime, seginfo text
 		self.db.execute(self.cmd, (self.dev_sn, self.storage, self.ratio, datetime.datetime.now(), str(self.segment)))
-		#self.db.execute(self.cmd, (self.dev_sn, self.storage, self.ratio, self.segment))
 		self.db.commit()
 		return
 		
@@ -144,26 +139,23 @@ class RLKDevice():
 		self.status = status
 
 	def stop_wrthreads(self):
-		print("stop_wrthreads.....")
+		print("["+self.dev_sn+"]: stopping wrthreads.....")
 		self.has_wring = False
 		self.wr_stopevt.set()
 		return
 	
 	def start_wrthreads(self):
-		print("start_wrthreads.....")
+		print("["+self.dev_sn+"]: starting wrthreads.....")
 		self.wr_stopevt = threading.Event()
 		self.has_wring = True
 		for i in range(self.wrthreads):
-		#print(i)
 			t=RLKThread.RLKThread(stopevt=self.wr_stopevt, name=self.dev_sn+"-wr-"+str(i), target=self.write, args=self.dev_sn, kwargs={"path":self.path+self.dir+str(i)}, delay=self.wrdelay)
 			t.start()
 	
 	def write(self,dev_sn,path):
-		cmd_str="if [ ! -f "+path["path"]+" ];then mkdir -p "+path["path"]+";fi;"+"_tmp_size=$(($RANDOM%99+1));dd if=/dev/urandom of="+path["path"]+"/$(($RANDOM*1000+$RANDOM))_${_tmp_size}k.dat bs=${_tmp_size}k count=1 status=none;sync;"
+		cmd_str="if [ ! -f "+path["path"]+" ];then mkdir -p "+path["path"]+";fi;"+"_tmp_size=$(($RANDOM%99+1));dd if=/dev/urandom of="+path["path"]+"/$(($RANDOM*1000+$RANDOM))_${_tmp_size}k.dat bs=${_tmp_size}k count=1;sync;"
 		cmd = ["adb", "-s", dev_sn, "shell", cmd_str]
 
-		#print(cmd_str)
-		#print(cmd)
 		try:
 			proc = subprocess.run(cmd, shell=False)
 		except OSError as e:
@@ -171,25 +163,23 @@ class RLKDevice():
 		return
 
 	def stop_delthreads(self):
+		print("["+self.dev_sn+"]: stopping delthreads.....")
 		self.has_deling = False
 		self.del_stopevt.set()
 		return
 	
 	def start_delthreads(self):
+		print("["+self.dev_sn+"]: starting delthreads.....")
 		self.del_stopevt = threading.Event()
 		self.has_deling = True
 		for i in range(self.delthreads):
-		#print(i)
 			i = random.randint(1,self.wrthreads)
 			t=RLKThread.RLKThread(stopevt=self.del_stopevt, name=self.dev_sn+"-del-"+str(i), target=self.delete, args=self.dev_sn, kwargs={"path":self.path+self.dir+str(i)}, delay=self.deldelay)
 			t.start()	
 
 	def delete(self,dev_sn,path):
-		#cmd_str="while [ 1 ];do file_list=`ls "+path+"/*k.dat`;j=0;for file in $file_list;do rm -f $file;j=`expr $j + 1`;echo '$j: delete "+path+"/$file';if [ $j -gt 10 ];then break;fi;done;sync;exit;done"
-		cmd_str="rm -rf "+self.path["path"]+self.dir+"$(($RANDOM%99+1))/*_$(($RANDOM%99+1))k.dat status=none;sync"
+		cmd_str="rm -rf "+self.path["path"]+self.dir+"$(($RANDOM%99+1))/*_$(($RANDOM%99+1))k.dat;sync"
 		cmd = ["adb", "-s", dev_sn, "shell", cmd_str]
-		#print(cmd_str)
-		#print(cmd)
 		try:
 			proc = subprocess.call(cmd, shell=False)
 		except OSError as e:
@@ -215,7 +205,7 @@ class RLKDevice():
 
 	## monitor thread will monitor when device should write, when should delete
 	def monitor(self,dev_sn, path):
-		print("monitor func on device:"+self.dev_sn)
+		#print("monitor func on device:"+self.dev_sn)
 		df = self.query_storage()
 		if float(df.strip('%')) > self.stop_wr*100:
 			if self.has_wring:
@@ -229,8 +219,8 @@ class RLKDevice():
 				
 			if not self.has_wring:
 				self.start_wrthreads()	
-		print(threading.enumerate())
-		print("storage into db.....")
+		#print(threading.enumerate())
+		#print("storage into db.....")
 		self.store_deviceinfo()
 		return
 
@@ -248,40 +238,28 @@ class RLKDevice():
 		if len(ret) == 1:
 			return None
 
-		#index = ret[0].strip()
 		info = ret[1:]
 		l = len(info)
-		#print(l)
 
-		#x=[]
-		#y=[]
 		z=[]
 		cnt_0 = 0
 		cnt_512 = 0
 		for i in range(l):
-			#x.append(int(i))
-			#y.append(int(index))
-			#print(info[i])
 			if int(info[i]) == 0:
 				cnt_0 += 1
 			if int(info[i]) == 512:
 				cnt_512 += 1
-			#k = self.adjust_value(int(info[i]))
 			k = int(info[i])
 			z.append(k)
 
-		#print(z)
 		return {"0":cnt_0, "512":cnt_512, "z":z}
 
 	def calc_fragment_ratio(self):
-		#segment= {"0":0, "512":0, "z":[]}
-		self.segment["z"] = []
-		self.segment["0"] = 0
-		self.segment["512"] = 0
+		self.segment= {"0":0, "512":0, "z":[]}
 		
 		path = "/proc/fs/f2fs/dm-"+self.dminx+"/segment_info"
 		cmd = ["adb", "-s", self.dev_sn, "shell", "cat", path]
-		print("calc_fragment_ratio:"+" ".join(cmd))
+		print("["+self.dev_sn+"]: calc_fragment_ratio....")
 		try:
 			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		except OSError as e:
@@ -294,64 +272,128 @@ class RLKDevice():
 				break
 			try:
 				line = str(line, encoding = "utf-8")
-				#print(line)
 			except UnicodeDecodeError as e:
 				print(e)
 				continue
 
 			info = self.parse_info(line)
-			#print(info)
 			if info is not None:
 				self.segment["0"] += info["0"]
 				self.segment["512"] += info["512"]
 				self.segment["z"] += info["z"]
-				#segment += info
-		#print(segment)
 		self.ratio = (len(self.segment["z"])-self.segment["0"]-self.segment["512"])/len(self.segment["z"])
+		self.update_segment()
 		return self.ratio
 
-	def draw_fragment_heatmap(self):
-		aa = []
-		cnt = 0
-		for line in self.segment["z"]:
-			x = int(line)
-			if(x>0) and (x<512):
-				x=256
-			aa.append(x)
-			cnt=cnt+1
-		
+	def update_segment(self):
+		cnt = len(self.segment["z"])
 		dy1 = 100
-		dx1 = int(cnt/dy1) + 1
-		i=0
-		dcnt=dx1*dy1
-		if(dcnt>cnt):
-			for i in range(cnt,dcnt):
-				aa.append(int(999))
+		dx1 = int(cnt / dy1) + 1
+		i = 0
+		dcnt = dx1 * dy1
+		if (dcnt > cnt):
+			for i in range(cnt, dcnt):
+				self.segment["z"].append(999)
+
+	def draw_fragment_heatmap_byplotly(self):  ##use plotly
+#		aa = []
+#		cnt = 0
+#		for line in self.segment["z"]:
+#			x = int(line)
+#			if (x > 0) and (x < 512):
+#				x = 256
+#			aa.append(x)
+#			cnt = cnt + 1
+
+#		dy1 = 100
+#		dx1 = int(cnt / dy1) + 1
+#		i = 0
+#		dcnt = dx1 * dy1
+#		if (dcnt > cnt):
+#			for i in range(cnt, dcnt):
+#				aa.append(int(999))
+		dy1 = 100
+		dx1 = int(len(self.segment["z"]) / dy1)
 
 		bb = []
-		bb = np.array(aa).reshape(dx1,dy1)
+		bb = np.array(self.segment["z"]).reshape(dx1, dy1)
 
 		xa = np.array(range(dx1))
 		ya = np.array(range(dy1))
 		trace = go.Heatmap(
-					x=xa,
-					y=ya[::-1],
-					z=bb,
-					#colorscale='Viridis',
-					colorscale='Jet',
-					)
-		data=[trace]
+			x=xa,
+			y=ya[::-1],
+			z=bb,
+			# colorscale='Viridis',
+			colorscale='Jet',
+		)
+		data = [trace]
 
 		layout = go.Layout(
-			title="["+self.dev_sn+"] frag info: ["+self.storage+"] "+str(float('%.2f' % self.ratio)),
-			#height = (len(segment["z"])//10)*8,
-			xaxis = dict(title = "segment row"),
-			yaxis = dict(title = "segment col"),
+			title="[" + self.dev_sn + "] frag info: [" + self.storage + "] " + str(float('%.2f' % self.ratio)),
+			xaxis=dict(title="segment row"),
+			yaxis=dict(title="segment col"),
 		)
 
 		fig = go.Figure(data=data, layout=layout)
-		output_filename="f2fs_fragment_v2_"+self.dev_sn+".html"
-		py.plot(fig,filename=output_filename)
+		output_filename = "f2fs_fragment_v2_" + self.dev_sn + ".html"
+		py.plot(fig, filename=output_filename)
+
+	def draw_fragment_heatmap_animation(self):
+		sel_cmd = "select seginfo from deviceinfo"
+		buf = self.db.fetch(sel_cmd)
+		cnt = len(buf)
+		dy1 = 100
+		fig2 = plt.figure()
+		ims = []
+
+		for i in range(cnt):
+			bb = buf[i]
+			cc = json.loads(bb[0].replace("'", "\""))["z"]
+			dx1 = int(len(cc) / dy1)
+			dd = np.array(cc).reshape(dx1,dy1)
+			ims.append((plt.pcolor(np.arange(0, dy1 + 1, 1), np.arange(dx1, -1, -1), dd, norm=plt.Normalize(0, 30)),))
+
+		im_ani = animation.ArtistAnimation(fig2, ims, interval=500, repeat_delay=1000,blit=True)
+		plt.show()
+		return
+
+	def draw_fragment_heatmap_bymatplot(self):##use matplotlib
+#		aa = []
+#		cnt = 0
+#		for line in self.segment["z"]:
+#			x = int(line)
+#			if(x>0) and (x<512):
+#				x=256
+#			aa.append(x)
+#			cnt=cnt+1
+		
+#		dy1 = 100
+#		dx1 = int(cnt/dy1) + 1
+#		i=0
+#		dcnt=dx1*dy1
+#		if(dcnt>cnt):
+#			for i in range(cnt,dcnt):
+#				aa.append(int(999))
+
+		#print(type(self.segment["z"]))
+		dy1 = 100
+		dx1 = int(len(self.segment["z"])/dy1)
+
+		bb = []
+		bb = np.array(self.segment["z"]).reshape(dx1,dy1)
+		#print(np.arange(dx1,0,-1))
+		#print(np.arange(0,dy1,1))
+		#print(type(bb))
+
+		fig, ax = plt.subplots()
+		#cmap='PuBu_r',cmap='RdBu'
+		#im = ax.pcolormesh(np.arange(0,dy1+1,1), np.arange(dx1,-1,-1), bb)
+		im = ax.pcolor(np.arange(0, dy1 + 1, 1), np.arange(dx1, -1, -1), bb)
+		fig.colorbar(im)
+
+		ax.axis('tight')
+		plt.show()
 		
 def testDevices():
 	db = RLKDB.RLKDB("./test1.db")

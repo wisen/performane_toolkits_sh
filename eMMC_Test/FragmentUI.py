@@ -10,8 +10,12 @@ import RLKThread
 import subprocess
 import RLKDB
 import RLKDevice
+import DeviceConfig as de
+import GlobalConfig as glo
 
 from tkinter import messagebox as mBox
+from tkinter import filedialog as fd
+from os import path
 import numpy as np
 import pandas as pd
 import plotly.offline as py
@@ -44,7 +48,7 @@ class FragmentUI:
 			self.scr.insert(END,status_str)
 		else:
 			return
-		
+
 	def show_status_inmonitorlist(self, event):
 		if len(self.lb_monitors.curselection()) != 0:
 			dev_sn=self.lb_monitors.get(self.lb_monitors.curselection())
@@ -57,6 +61,7 @@ class FragmentUI:
 			self.scr.insert(END,status_str)
 		else:
 			return
+
 	def _quit(self):
 		self.window_close()
 		
@@ -67,8 +72,23 @@ class FragmentUI:
 		print("window_close")
 
 	def about(self):
-		self.about = about.About("about")
-		self.about.initUI()
+		about.About("about").initUI()
+
+	def config_global(self):
+		glo.GlobalConfig("Global Config").initUI()
+
+	def config_device(self):
+		de.DeviceConfig("Config Device").initUI()
+
+	def newdb_dialog(self):
+		return
+
+	def opendb_dialog(self):
+		fDir = path.dirname(__file__)
+		fName = fd.askopenfilename(parent=self.root, initialdir=fDir)
+		print(fDir)
+		print(fName)
+		return
 
 	def initUI(self):
 		root = Tk()
@@ -85,15 +105,16 @@ class FragmentUI:
 		root.config(menu=menuBar)
 		fileMenu = Menu(menuBar, tearoff=0)
 		menuBar.add_cascade(label="File", menu=fileMenu)
-		fileMenu.add_command(label="New", font=("Monospace Regular",16))
+		fileMenu.add_command(label="New DB", font=("Monospace Regular",16), command=self.newdb_dialog)
+		fileMenu.add_command(label="Open DB", font=("Monospace Regular", 16), command=self.opendb_dialog)
 		#fileMenu.add_command(label="Exit")
 		fileMenu.add_separator()
 		fileMenu.add_command(label="Exit", command=self._quit, font=("Monospace Regular",16))
 		
 		configMenu = Menu(menuBar, tearoff=0)
 		menuBar.add_cascade(label="Config", menu=configMenu)
-		configMenu.add_command(label="Global", font=("Monospace Regular",16))
-		configMenu.add_command(label="Device", font=("Monospace Regular",16))
+		configMenu.add_command(label="Global", font=("Monospace Regular",16), command=self.config_global)
+		configMenu.add_command(label="Device", font=("Monospace Regular",16), command=self.config_device)
 		
 		helpMenu = Menu(menuBar, tearoff=0)
 		menuBar.add_cascade(label="Help", menu=helpMenu)
@@ -111,12 +132,8 @@ class FragmentUI:
 		lb_devices = Listbox(frm, font=("Monospace Regular",16), width=20, listvariable = var)
 		lb_devices.grid(column=0,row=1,rowspan=2,columnspan=2)
 		self.lb_devices = lb_devices
-		print(lb_devices)
 
 		lb_devices.bind('<ButtonRelease-1>', self.show_status_indevicelist)
-		#list_item = listitems
-		#for item in list_item:
-		#	lb_devices.insert(END, item)
 
 		## popmenuBar_devices start
 		self.create_popmenuBar_devices()
@@ -163,11 +180,14 @@ class FragmentUI:
 
 	def create_popmenuBar_devices(self):
 		popmenuBar_devices = Menu(self.root, font=("Monospace Regular",16), tearoff=0)
-		popmenuBar_devices.add_command(label="add device", command=self.add_device)
-		popmenuBar_devices.add_command(label="add all", command=self.add_all_devices)
+		popmenuBar_devices.add_command(label="Add Device", command=self.add_device)
+		popmenuBar_devices.add_command(label="Add All", command=self.add_all_devices)
 		popmenuBar_devices.add_separator()		
-		popmenuBar_devices.add_command(label="draw fragment", command=self.draw_fragment_on_devicelist)
-		popmenuBar_devices.add_command(label="draw animation", command=self.draw_animation)
+		popmenuBar_devices.add_command(label="Draw Fragment(plotly)", command=self.draw_fragment_byplotly_on_devicelist)
+		popmenuBar_devices.add_command(label="Draw Fragment(matplot)", command=self.draw_fragment_bymatplot_on_devicelist)
+		popmenuBar_devices.add_command(label="Draw Animation", command=self.draw_animation_on_devicelist)
+		popmenuBar_devices.add_separator()
+		popmenuBar_devices.add_command(label="Config Device", command=self.config_device)
 		self.popmenuBar_devices = popmenuBar_devices		
 
 	def pop_on_deviceslist(self,event):
@@ -176,11 +196,12 @@ class FragmentUI:
 
 	def create_popmenuBar_monitor(self):
 		popmenuBar_monitor = Menu(self.root, font=("Monospace Regular",16), tearoff=0)
-		popmenuBar_monitor.add_command(label="delete device", command=self.delete_device)
-		popmenuBar_monitor.add_command(label="delete all", command=self.delete_all_devices)
+		popmenuBar_monitor.add_command(label="Delete Device", command=self.delete_device)
+		popmenuBar_monitor.add_command(label="Delete All", command=self.delete_all_devices)
 		popmenuBar_monitor.add_separator()
-		popmenuBar_monitor.add_command(label="draw fragment", command=self.draw_fragment_on_monitorlist)
-		popmenuBar_monitor.add_command(label="draw animation", command=self.draw_animation)
+		popmenuBar_monitor.add_command(label="Draw Fragment(plotly)", command=self.draw_fragment_byplotly_on_monitorlist)
+		popmenuBar_monitor.add_command(label="Draw Fragment(matplot)", command=self.draw_fragment_bymatplot_on_monitorlist)
+		popmenuBar_monitor.add_command(label="Draw Animation", command=self.draw_animation_on_monitorlist)
 		self.popmenuBar_monitor = popmenuBar_monitor		
 		
 	def pop_on_monitorlist(self,event):
@@ -190,26 +211,59 @@ class FragmentUI:
 	def No_Select(self):
 		mBox.showinfo('Alert', "Please select a device!!!")
 		return
-		
-	def draw_fragment_on_devicelist(self):
+
+	def draw_fragment_byplotly_on_devicelist(self):
 		if len(self.lb_devices.curselection()) == 0:
 			self.No_Select()
 			return
 		else:
 			dev_sn=self.lb_devices.get(self.lb_devices.curselection())
-			self.devices[dev_sn].draw_fragment_heatmap()
+			self.devices[dev_sn].draw_fragment_heatmap_byplotly()
 		return
 
-	def draw_fragment_on_monitorlist(self):	
+	def draw_fragment_byplotly_on_monitorlist(self):
 		if len(self.lb_monitors.curselection()) == 0:
 			self.No_Select()
 			return
 		else:
 			dev_sn=self.lb_monitors.get(self.lb_monitors.curselection())
-			self.devices[dev_sn].draw_fragment_heatmap()
+			self.devices[dev_sn].draw_fragment_heatmap_byplotly()
 		return
-		
-	def draw_animation(self):
+
+	def draw_fragment_bymatplot_on_devicelist(self):
+		if len(self.lb_devices.curselection()) == 0:
+			self.No_Select()
+			return
+		else:
+			dev_sn=self.lb_devices.get(self.lb_devices.curselection())
+			self.devices[dev_sn].draw_fragment_heatmap_bymatplot()
+		return
+
+	def draw_fragment_bymatplot_on_monitorlist(self):
+		if len(self.lb_monitors.curselection()) == 0:
+			self.No_Select()
+			return
+		else:
+			dev_sn=self.lb_monitors.get(self.lb_monitors.curselection())
+			self.devices[dev_sn].draw_fragment_heatmap_bymatplot()
+		return
+
+	def draw_animation_on_devicelist(self):
+		if len(self.lb_devices.curselection()) == 0:
+			self.No_Select()
+			return
+		else:
+			dev_sn=self.lb_devices.get(self.lb_devices.curselection())
+			self.devices[dev_sn].draw_fragment_heatmap_animation()
+		return
+
+	def draw_animation_on_monitorlist(self):
+		if len(self.lb_monitors.curselection()) == 0:
+			self.No_Select()
+			return
+		else:
+			dev_sn=self.lb_monitors.get(self.lb_monitors.curselection())
+			self.devices[dev_sn].draw_fragment_heatmap_animation()
 		return
 	
 	def stop_all_devices(self):
@@ -261,11 +315,11 @@ class FragmentUI:
 	def start_monitorthread(self):
 		print("start_monitorthread.....")
 		self.monitor_stopevt = threading.Event()
-		t=RLKThread.RLKThread(stopevt=self.monitor_stopevt, name="FUI-mon-devices-0", target=self.monitor_devices, args="", kwargs={}, delay=3)
+		t=RLKThread.RLKThread(stopevt=self.monitor_stopevt, name="FUI-mon-devices-0", target=self.monitor_devices, args="", kwargs={}, delay=1)
 		t.start()
 	
 	def monitor_devices(self, args, kwargs):
-		print("monitor_devices.....")
+		#print("monitor_devices.....")
 		cmd = ["adb", "devices"]
 		try:
 			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -291,9 +345,7 @@ class FragmentUI:
 			else:
 				break
 
-		#for dev_sn in self.devices.keys():
 		for dev_sn in list(self.devices):
-			#print(dev_sn+":"+self.devices[dev_sn].status+" inx: "+ str(self.lb_devices.get(0, "end").index(dev_sn)))
 			if self.devices[dev_sn].status == "offline":
 				if dev_sn in self.lb_monitors.get(0, "end"):
 					self.lb_monitors.delete(self.lb_monitors.get(0, "end").index(dev_sn))
@@ -305,7 +357,7 @@ class FragmentUI:
 					self.lb_devices.delete(self.lb_devices.get(0, "end").index(dev_sn))
 					self.devices[dev_sn].stop_detectthread()
 					self.devices.pop(dev_sn)
-		print(self.devices)
+		#print(self.devices)
 	
 	def init_devices(self):
 		cmd = ["adb", "devices"]
