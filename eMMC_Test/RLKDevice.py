@@ -6,6 +6,7 @@ import threading
 import time
 import datetime
 import re
+import random
 
 import numpy as np
 import pandas as pd
@@ -173,12 +174,12 @@ class RLKDevice():
 		self.del_stopevt = threading.Event()
 		self.has_deling = True
 		for i in range(self.delthreads):
-			i = random.randint(1,self.wrthreads)
-			t=RLKThread.RLKThread(stopevt=self.del_stopevt, name=self.dev_sn+"-del-"+str(i), target=self.delete, args=self.dev_sn, kwargs={"path":self.path+self.dir+str(i)}, delay=self.deldelay)
+			j = random.randint(1,self.wrthreads)
+			t=RLKThread.RLKThread(stopevt=self.del_stopevt, name=self.dev_sn+"-del-"+str(i), target=self.delete, args=self.dev_sn, kwargs={"path":self.path+self.dir+str(j)}, delay=self.deldelay)
 			t.start()	
 
 	def delete(self,dev_sn,path):
-		cmd_str="rm -rf "+self.path["path"]+self.dir+"$(($RANDOM%99+1))/*_$(($RANDOM%99+1))k.dat;sync"
+		cmd_str="rm -rf "+path["path"]+"/*_$(($RANDOM%99+1))k.dat;sync"
 		cmd = ["adb", "-s", dev_sn, "shell", cmd_str]
 		try:
 			proc = subprocess.call(cmd, shell=False)
@@ -198,6 +199,7 @@ class RLKDevice():
 		return
 	
 	def start_monthread(self):
+		print("[" + self.dev_sn + "]: starting monthread.....")
 		self.mon_stopevt = threading.Event()
 		self.has_moning = True
 		t=RLKThread.RLKThread(stopevt=self.mon_stopevt, name=self.dev_sn+"-mon-0", target=self.monitor, args=self.dev_sn, kwargs={}, delay=self.mondelay)
@@ -218,7 +220,11 @@ class RLKDevice():
 				self.stop_delthreads()
 				
 			if not self.has_wring:
-				self.start_wrthreads()	
+				self.start_wrthreads()
+
+		if float(df.strip('%')) < self.stop_wr*100 and float(df.strip('%')) > self.stop_del*100:
+			if not self.has_wring:
+				self.start_wrthreads()
 		#print(threading.enumerate())
 		#print("storage into db.....")
 		self.store_deviceinfo()
@@ -296,22 +302,6 @@ class RLKDevice():
 				self.segment["z"].append(999)
 
 	def draw_fragment_heatmap_byplotly(self):  ##use plotly
-#		aa = []
-#		cnt = 0
-#		for line in self.segment["z"]:
-#			x = int(line)
-#			if (x > 0) and (x < 512):
-#				x = 256
-#			aa.append(x)
-#			cnt = cnt + 1
-
-#		dy1 = 100
-#		dx1 = int(cnt / dy1) + 1
-#		i = 0
-#		dcnt = dx1 * dy1
-#		if (dcnt > cnt):
-#			for i in range(cnt, dcnt):
-#				aa.append(int(999))
 		dy1 = 100
 		dx1 = int(len(self.segment["z"]) / dy1)
 
@@ -339,12 +329,21 @@ class RLKDevice():
 		output_filename = "f2fs_fragment_v2_" + self.dev_sn + ".html"
 		py.plot(fig, filename=output_filename)
 
+	def draw_fragment_ratio_bytime(self):
+		sel_cmd = "select ratio from deviceinfo"
+		buf = self.db.fetch(sel_cmd)
+		fig = plt.figure()
+		line = plt.plot(buf)[0]
+		line.set_color('r')
+		plt.show()
+
 	def draw_fragment_heatmap_animation(self):
 		sel_cmd = "select seginfo from deviceinfo"
 		buf = self.db.fetch(sel_cmd)
 		cnt = len(buf)
 		dy1 = 100
-		fig2 = plt.figure()
+		fig = plt.figure()
+		#fig, ax = plt.subplots()
 		ims = []
 
 		for i in range(cnt):
@@ -352,47 +351,25 @@ class RLKDevice():
 			cc = json.loads(bb[0].replace("'", "\""))["z"]
 			dx1 = int(len(cc) / dy1)
 			dd = np.array(cc).reshape(dx1,dy1)
-			ims.append((plt.pcolor(np.arange(0, dy1 + 1, 1), np.arange(dx1, -1, -1), dd, norm=plt.Normalize(0, 30)),))
+			ims.append((plt.pcolor(np.arange(0, dy1 + 1, 1), np.arange(dx1, -1, -1), dd, norm=plt.Normalize(0, 999)),))
 
-		im_ani = animation.ArtistAnimation(fig2, ims, interval=500, repeat_delay=1000,blit=True)
+		#fig.colorbar(ims)
+		im_ani = animation.ArtistAnimation(fig, ims, interval=500, repeat_delay=1000,blit=True)
 		plt.show()
 		return
 
 	def draw_fragment_heatmap_bymatplot(self):##use matplotlib
-#		aa = []
-#		cnt = 0
-#		for line in self.segment["z"]:
-#			x = int(line)
-#			if(x>0) and (x<512):
-#				x=256
-#			aa.append(x)
-#			cnt=cnt+1
-		
-#		dy1 = 100
-#		dx1 = int(cnt/dy1) + 1
-#		i=0
-#		dcnt=dx1*dy1
-#		if(dcnt>cnt):
-#			for i in range(cnt,dcnt):
-#				aa.append(int(999))
 
-		#print(type(self.segment["z"]))
 		dy1 = 100
 		dx1 = int(len(self.segment["z"])/dy1)
 
 		bb = []
 		bb = np.array(self.segment["z"]).reshape(dx1,dy1)
-		#print(np.arange(dx1,0,-1))
-		#print(np.arange(0,dy1,1))
-		#print(type(bb))
 
 		fig, ax = plt.subplots()
-		#cmap='PuBu_r',cmap='RdBu'
-		#im = ax.pcolormesh(np.arange(0,dy1+1,1), np.arange(dx1,-1,-1), bb)
-		im = ax.pcolor(np.arange(0, dy1 + 1, 1), np.arange(dx1, -1, -1), bb)
+		im = ax.pcolor(np.arange(0, dy1 + 1, 1), np.arange(dx1, -1, -1), bb, norm=plt.Normalize(0, 999))
 		fig.colorbar(im)
 
-		ax.axis('tight')
 		plt.show()
 		
 def testDevices():

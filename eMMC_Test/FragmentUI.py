@@ -186,6 +186,7 @@ class FragmentUI:
 		popmenuBar_devices.add_command(label="Draw Fragment(plotly)", command=self.draw_fragment_byplotly_on_devicelist)
 		popmenuBar_devices.add_command(label="Draw Fragment(matplot)", command=self.draw_fragment_bymatplot_on_devicelist)
 		popmenuBar_devices.add_command(label="Draw Animation", command=self.draw_animation_on_devicelist)
+		popmenuBar_devices.add_command(label="Draw Plot", command=self.draw_fragment_plot_on_devicelist)
 		popmenuBar_devices.add_separator()
 		popmenuBar_devices.add_command(label="Config Device", command=self.config_device)
 		self.popmenuBar_devices = popmenuBar_devices		
@@ -202,6 +203,7 @@ class FragmentUI:
 		popmenuBar_monitor.add_command(label="Draw Fragment(plotly)", command=self.draw_fragment_byplotly_on_monitorlist)
 		popmenuBar_monitor.add_command(label="Draw Fragment(matplot)", command=self.draw_fragment_bymatplot_on_monitorlist)
 		popmenuBar_monitor.add_command(label="Draw Animation", command=self.draw_animation_on_monitorlist)
+		popmenuBar_monitor.add_command(label="Draw Plot", command=self.draw_fragment_plot_on_monitorlist)
 		self.popmenuBar_monitor = popmenuBar_monitor		
 		
 	def pop_on_monitorlist(self,event):
@@ -264,6 +266,24 @@ class FragmentUI:
 		else:
 			dev_sn=self.lb_monitors.get(self.lb_monitors.curselection())
 			self.devices[dev_sn].draw_fragment_heatmap_animation()
+		return
+
+	def draw_fragment_plot_on_devicelist(self):
+		if len(self.lb_devices.curselection()) == 0:
+			self.No_Select()
+			return
+		else:
+			dev_sn=self.lb_devices.get(self.lb_devices.curselection())
+			self.devices[dev_sn].draw_fragment_ratio_bytime()
+		return
+
+	def draw_fragment_plot_on_monitorlist(self):
+		if len(self.lb_monitors.curselection()) == 0:
+			self.No_Select()
+			return
+		else:
+			dev_sn=self.lb_monitors.get(self.lb_monitors.curselection())
+			self.devices[dev_sn].draw_fragment_ratio_bytime()
 		return
 	
 	def stop_all_devices(self):
