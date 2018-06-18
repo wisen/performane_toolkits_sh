@@ -38,7 +38,7 @@ class RLKDevice():
 		self.db.connect()
 		self.db.create_table('''
 			create table IF NOT EXISTS deviceinfo
-			(sn text, df text, ratio float, stime datetime, seginfo text)
+			(sn text, df float, ratio float, stime datetime, seginfo text)
 			''')
 		self.cmd = "insert into deviceinfo(sn, df, ratio, stime, seginfo) values(?,?,?,?,?)"
 
@@ -120,7 +120,7 @@ class RLKDevice():
 			return None
 		
 		cmd_out = bytes.decode(proc.stdout.read().split()[4])
-		self.storage = cmd_out
+		self.storage = float(cmd_out.strip('%'))/100
 		return self.storage
 
 	def query_fragment(self):
@@ -209,24 +209,19 @@ class RLKDevice():
 	def monitor(self,dev_sn, path):
 		#print("monitor func on device:"+self.dev_sn)
 		df = self.query_storage()
-		if float(df.strip('%')) > self.stop_wr*100:
+		if df > self.stop_wr:
 			if self.has_wring:
 				self.stop_wrthreads()
 				
 			if not self.has_deling:
 				self.start_delthreads()		
-		if float(df.strip('%')) < self.stop_del*100:
+		if df < self.stop_del:
 			if self.has_deling:
 				self.stop_delthreads()
 				
 			if not self.has_wring:
 				self.start_wrthreads()
 
-		if float(df.strip('%')) < self.stop_wr*100 and float(df.strip('%')) > self.stop_del*100:
-			if not self.has_wring:
-				self.start_wrthreads()
-		#print(threading.enumerate())
-		#print("storage into db.....")
 		self.store_deviceinfo()
 		return
 

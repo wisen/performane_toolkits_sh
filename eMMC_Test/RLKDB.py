@@ -60,14 +60,22 @@ def testsqlite():
 	# im_ani = animation.ArtistAnimation(fig2, ims, interval=200, repeat_delay=500,blit=True)
 	# plt.show()
 
-	sel_cmd = "select ratio from deviceinfo"
+	sel_cmd = "select df,ratio from deviceinfo"
 	buf = db.fetch(sel_cmd)
 	cnt = len(buf)
 	print(cnt)
 	print(type(buf))
+	print(buf)
 	fig = plt.figure()
-	line = plt.plot(buf)[0]
-	line.set_color('r')
+	a = []
+	b = []
+	for i in range(cnt):
+		a.append(buf[i][0])
+		b.append(buf[i][1])
+	line1 = plt.plot(a)
+	#line1.set_color('r')
+	line2 = plt.plot(b)
+	#line2.set_color('g')
 	plt.show()
 
 	db.commit()

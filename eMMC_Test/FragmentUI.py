@@ -92,11 +92,12 @@ class FragmentUI:
 
 	def initUI(self):
 		root = Tk()
-		root.title("Fragment tools V2.0")
+		root.title("eMMC Test V2.0")
 		root.geometry("720x400+300+200")
 		root.resizable(width=False, height=False)
+		#root.iconbitmap(r"/home/wisen/performane_toolkits_sh/eMMC_Test/emmc.ico")
 		self.root = root
-		
+
 		s = ttk.Style()
 		s.theme_use('classic')
 
@@ -122,14 +123,27 @@ class FragmentUI:
 		helpMenu.add_separator()
 		helpMenu.add_command(label="Help", font=("Monospace Regular",16))
 		### menu end ###
-		
-		frm = ttk.LabelFrame(root,text="Fragment tool V1.0").grid(column=0,row=0)
 
+		#######################Tab control##############################
+		tabControl = ttk.Notebook(root)
+		tab_fragtest = ttk.Frame(tabControl)
+		tab_throughputtest = ttk.Frame(tabControl)
+		tab_iopstest = ttk.Frame(tabControl)
+		tab_iolantencytest = ttk.Frame(tabControl)
+
+		tabControl.add(tab_fragtest, text="Fragment Test")
+		tabControl.add(tab_throughputtest, text="Throughput Test")
+		tabControl.add(tab_iopstest, text="IOPS Test")
+		tabControl.add(tab_iolantencytest, text="IO Lantency Test")
+		tabControl.grid(column=0,row=0)
+		#frm = ttk.LabelFrame(root,text="Fragment tool V1.0").grid(column=0,row=0)
+
+		#######################Fragment Test Start######################
 		## frm_devices start
-		ttk.Label(text="Pending List", font=("Monospace Regular",16)).grid(column=0,row=0,columnspan=2, sticky=W)
+		ttk.Label(tab_fragtest, text="Pending List", font=("Monospace Regular",16)).grid(column=0,row=0,columnspan=2, sticky=W)
 
 		var = StringVar()
-		lb_devices = Listbox(frm, font=("Monospace Regular",16), width=20, listvariable = var)
+		lb_devices = Listbox(tab_fragtest, font=("Monospace Regular",16), width=20, listvariable = var)
 		lb_devices.grid(column=0,row=1,rowspan=2,columnspan=2)
 		self.lb_devices = lb_devices
 
@@ -140,14 +154,14 @@ class FragmentUI:
 		lb_devices.bind("<ButtonRelease-3>", self.pop_on_deviceslist)
 		## popmenuBar_devices end
 
-		start_btn = ttk.Button(frm, text=">>>", command=self.add_device)
+		start_btn = ttk.Button(tab_fragtest, text=">>>", command=self.add_device)
 		start_btn.grid(column=2,row=1,sticky=S)
-		stop_btn = ttk.Button(frm, text="<<<", command=self.delete_device)
+		stop_btn = ttk.Button(tab_fragtest, text="<<<", command=self.delete_device)
 		stop_btn.grid(column=2,row=2,sticky=N)
-			
-		ttk.Label(text="Monitor devices", font=("Monospace Regular",16)).grid(column=3,row=0, sticky=W)
+
+		ttk.Label(tab_fragtest, text="Monitor devices", font=("Monospace Regular",16)).grid(column=3,row=0, sticky=W)
 		var = StringVar()
-		lb_monitors = Listbox(frm, font=("Monospace Regular",16), width=20, listvariable = var)
+		lb_monitors = Listbox(tab_fragtest, font=("Monospace Regular",16), width=20, listvariable = var)
 		lb_monitors.grid(column=3,row=1,rowspan=2)
 		self.lb_monitors = lb_monitors
 		
@@ -158,17 +172,17 @@ class FragmentUI:
 		lb_monitors.bind('<ButtonRelease-1>', self.show_status_inmonitorlist)
 
 		## frm_status start
-		ttk.Label(text="Device status", font=("Monospace Regular",16)).grid(column=4,row=0, sticky=W)
+		ttk.Label(tab_fragtest, text="Device status", font=("Monospace Regular",16)).grid(column=4,row=0, sticky=W)
 		scrolW = 29 # 设置文本框的长度
 		scrolH = 13 # 设置文本框的高度
-		scr = scrolledtext.ScrolledText(frm, width=scrolW, height=scrolH, wrap=WORD, font=("Monospace Regular",12)) 
+		scr = scrolledtext.ScrolledText(tab_fragtest, width=scrolW, height=scrolH, wrap=WORD, font=("Monospace Regular",12))
 		scr.grid(column=4, row=1, rowspan=2)
 		self.scr = scr	
-		
+
 		self.start_monitorthread()
-		
-		## UI loop start
 		self.root.bind('<ButtonRelease-1>', self.destroy_popmenu)
+		#######################Fragment Test Start######################
+
 		root.protocol("WM_DELETE_WINDOW", self.window_close)
 		root.mainloop()
 
@@ -320,6 +334,8 @@ class FragmentUI:
 			dev_sn=self.lb_devices.get(self.lb_devices.curselection())
 			self.lb_devices.delete(self.lb_devices.curselection())
 			self.lb_monitors.insert(END, dev_sn)
+			if not self.devices[dev_sn].has_wring:
+				self.devices[dev_sn].start_wrthreads()
 			if not self.devices[dev_sn].has_moning:
 				self.devices[dev_sn].start_monthread()
 		return
