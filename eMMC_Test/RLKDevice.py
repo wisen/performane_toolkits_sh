@@ -324,6 +324,20 @@ class RLKDevice():
 		output_filename = "f2fs_fragment_v2_" + self.dev_sn + ".html"
 		py.plot(fig, filename=output_filename)
 
+	def draw_both_bytime(self):
+		sel_cmd = "select df,ratio from deviceinfo"
+		buf = self.db.fetch(sel_cmd)
+		cnt = len(buf)
+		fig = plt.figure()
+		a = []
+		b = []
+		for i in range(cnt):
+			a.append(buf[i][0])
+			b.append(buf[i][1])
+		line1 = plt.plot(a)
+		line2 = plt.plot(b)
+		plt.show()
+
 	def draw_fragment_ratio_bytime(self):
 		sel_cmd = "select ratio from deviceinfo"
 		buf = self.db.fetch(sel_cmd)
