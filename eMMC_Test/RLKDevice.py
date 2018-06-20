@@ -9,30 +9,35 @@ import re
 import random
 
 import numpy as np
-import pandas as pd
 import plotly.offline as py
 import plotly.graph_objs as go
 import matplotlib.pyplot as plt
 from matplotlib import animation
 import json
+import configparser as cp
+import Util as u
 
 class RLKDevice():
 
 	def __init__(self, dev_sn, db):
 		self.dev_sn = dev_sn
+
+		self.ini_file = "conf/" + self.dev_sn + ".ini"
+		self.load_config()
+
 		##colnums:  sn,status,df,frag,stime,stoptime,seginfo
 		self.db = db
-		self.wrthreads = 10
-		self.wrdelay = 0 ## should set to 0 in final release
-		self.delthreads = 5
-		self.deldelay = 0 ## should set to 0 in final release
-		self.mondelay = 30 ## we should monitor the device's storage and fragment status per 5 seconds
-		self.detdelay = 0
-		self.path = "/sdcard/tmp/"
-		self.dir = "dir"
-		self.stop_wr = 0.95
-		self.stop_del = 0.90
-		self.sleeptime = 10
+		#self.wrthreads = 10
+		#self.wrdelay = 0 ## should set to 0 in final release
+		#self.delthreads = 5
+		#self.deldelay = 0 ## should set to 0 in final release
+		#self.mondelay = 30 ## we should monitor the device's storage and fragment status per 5 seconds
+		#self.detdelay = 0
+		#self.path = "/sdcard/tmp/"
+		#self.dir = "dir"
+		#self.stop_wr = 0.95
+		#self.stop_del = 0.90
+		#self.sleeptime = 10
 		self.monthread = "on"
 		self.dminx = "0"
 		self.db.connect()
@@ -50,7 +55,30 @@ class RLKDevice():
 		self.ratio = 0.0
 		self.segment = {"0":0, "512":0, "z":[]}
 		self.query_dminx()
-	
+
+	def load_config(self):
+		if not os.path.exists(self.ini_file):
+			u.copyfile("conf/global.ini", self.ini_file)
+		self.parse_ini_file(self.ini_file)
+
+	def parse_ini_file(self, ini_file):
+		self.active_ini = cp.ConfigParser()
+		self.active_ini.read(ini_file)
+		self.active_ini_filename = ini_file
+		#for key in self.active_ini["SETTING"]:
+		#	print(key+" "+self.active_ini["SETTING"][key])
+		self.wrthreads = int(self.active_ini["SETTING"]["wrthreads"])
+		self.wrdelay = int(self.active_ini["SETTING"]["wrdelay"])
+		self.delthreads = int(self.active_ini["SETTING"]["delthreads"])
+		self.deldelay = int(self.active_ini["SETTING"]["deldelay"])
+		self.mondelay = int(self.active_ini["SETTING"]["mondelay"])
+		self.detdelay = int(self.active_ini["SETTING"]["detdelay"])
+		self.path = self.active_ini["SETTING"]["path"]
+		self.dir = self.active_ini["SETTING"]["dir"]
+		self.stop_wr = float(self.active_ini["SETTING"]["stop_wr"])
+		self.stop_del = float(self.active_ini["SETTING"]["stop_del"])
+		self.sleeptime = int(self.active_ini["SETTING"]["sleeptime"])
+
 	def destroy(self):
 		self.db.commit()
 		self.db.close()

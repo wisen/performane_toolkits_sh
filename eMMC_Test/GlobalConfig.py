@@ -1,82 +1,59 @@
-import os
-import math
-import subprocess
-import datetime
-import time
-import re
-import random
-import threading
-
 from tkinter import *
 from tkinter import ttk
-from tkinter import scrolledtext
+import tkinter as tk
 
-import numpy as np
-import pandas as pd
-import plotly.offline as py
-import plotly.graph_objs as go
+import tkinter.messagebox as msg
+import configparser as cp
 
 class GlobalConfig():
 
 	def __init__(self, name):
-		self.delthreads = 5
-		self.wrthreads = 10
-		self.sleeptime = 10
-		self.stop_wr = False
-		self.stop_del = True
+		self.name = name
+		self.ini_file = "conf/global.ini"
+		self.ini_elements = {}
 
-	def update_config(self):
-		print("update_config...")
+	def parse_ini_file(self, ini_file):
+		self.active_ini = cp.ConfigParser()
+		self.active_ini.read(ini_file)
+		self.active_ini_filename = ini_file
+		self.display_section_contents()
+
+	def save_config(self, event=None):
+		for key in self.active_ini["SETTING"]:
+			self.active_ini["SETTING"][key] = self.ini_elements[key].get()
+		with open(self.active_ini_filename, "w") as ini_file:
+			self.active_ini.write(ini_file)
+		msg.showinfo("Saved", "File Saved Successfully")
+
+	def clear_right_frame(self):
+		for child in self.right_frame.winfo_children():
+			child.destroy()
+
+	def display_section_contents(self, event=None):
+
+		i = 0
+		for key in self.active_ini["SETTING"]:
+			new_label = ttk.Label(self.root, text=key, font=(None, 12)).grid(column=0, row=i, sticky=W)
+			#print(key+" "+self.active_ini["SETTING"][key])
+			value = self.active_ini["SETTING"][key]
+			ini_element = ttk.Entry(self.root)
+			ini_element.grid(column=1, row=i)
+			ini_element.insert(0, value)
+			self.ini_elements[key] = ini_element
+			i = i+1
+
+		save_button = tk.Button(self.root, text="Save Config", command=self.save_config)
+		save_button.grid(column=1, row=i, sticky=E)
+		return
 
 	def initUI(self):
 		root = Tk()
-		root.title("Global Config")
-		root.geometry("300x200+300+200")
+		root.title(self.name)
+		root.geometry("300x400+300+200")
 		root.resizable(width=False, height=False)
 		self.root = root
+		self.parse_ini_file(self.ini_file)
 
-		# s = ttk.Style()
-		# s.theme_use('classic')
-
-		# frm = ttk.LabelFrame(root,text="Global Fragment").grid(column=0,row=0)
-
-		ttk.Label(root, text="WR threads:", font=("Monospace Regular", 16)).grid(column=0, row=0, sticky=W)
-		self.wrname = StringVar()
-		wrnameEntered = ttk.Entry(root, width=10, textvariable=self.wrname)
-		wrnameEntered.grid(column=1, row=0)
-		wrnameEntered.insert(10, self.wrthreads)
-		wrnameEntered.focus()
-
-		ttk.Label(root, text="DEL threads:", font=("Monospace Regular", 16)).grid(column=0, row=1, sticky=W)
-		self.delname = StringVar()
-		delnameEntered = ttk.Entry(root, width=10, textvariable=self.delname)
-		delnameEntered.insert(10, self.delthreads)
-		delnameEntered.grid(column=1, row=1)
-
-		ttk.Label(root, text="Sleep time:", font=("Monospace Regular", 16)).grid(column=0, row=2, sticky=W)
-		self.sleepname = StringVar()
-		sleepnameEntered = ttk.Entry(root, width=10, textvariable=self.sleepname)
-		sleepnameEntered.insert(10, self.sleeptime)
-		sleepnameEntered.grid(column=1, row=2)
-
-		ttk.Label(root, text="Max percent:", font=("Monospace Regular", 16)).grid(column=0, row=3, sticky=W)
-		self.maxname = StringVar()
-		maxnameEntered = ttk.Entry(root, width=10, textvariable=self.maxname)
-		maxnameEntered.insert(10, self.stop_wr)
-		maxnameEntered.grid(column=1, row=3)
-
-		ttk.Label(root, text="Min percent:", font=("Monospace Regular", 16)).grid(column=0, row=4, sticky=W)
-		self.minname = StringVar()
-		minnameEntered = ttk.Entry(root, width=10, textvariable=self.minname)
-		minnameEntered.insert(10, self.stop_del)
-		minnameEntered.grid(column=1, row=4)
-
-		update_config_btn = ttk.Button(root, text="Update", command=self.update_config)
-		update_config_btn.grid(column=1, row=5)
-
-		## UI loop start
-		# self.ui = root
-		# root.protocol("WM_DELETE_WINDOW", self.window_cloe)
 		root.mainloop()
 
 

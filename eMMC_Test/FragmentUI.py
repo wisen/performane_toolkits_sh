@@ -16,10 +16,7 @@ import GlobalConfig as glo
 from tkinter import messagebox as mBox
 from tkinter import filedialog as fd
 from os import path
-import numpy as np
-import pandas as pd
-import plotly.offline as py
-import plotly.graph_objs as go
+import Version as v
 
 class FragmentUI:
 
@@ -41,10 +38,23 @@ class FragmentUI:
 			dev_sn=self.lb_devices.get(self.lb_devices.curselection())
 			self.devices[dev_sn].query_storage()
 			self.devices[dev_sn].query_fragment()
+			self.devices[dev_sn].load_config()
 			self.scr.delete(0.0,len(self.scr.get(0.0,END))-1.0)
 			status_str="device["+dev_sn+"]: \n"
-			status_str=status_str+"df: "+str(self.devices[dev_sn].storage)+"\n"
-			status_str=status_str+"frag: "+str(self.devices[dev_sn].frag)+"\n"
+			status_str = status_str + "df: " + str(self.devices[dev_sn].storage)+"\n"
+			status_str = status_str + "frag: " + str(self.devices[dev_sn].frag)+"\n"
+			status_str = status_str + "wrthreads: " + str(self.devices[dev_sn].wrthreads) + "\n\n"
+			status_str = status_str + "wrdelay: " + str(self.devices[dev_sn].wrdelay) + "\n"
+			status_str = status_str + "delthreads: " + str(self.devices[dev_sn].delthreads) + "\n"
+			status_str = status_str + "deldelay: " + str(self.devices[dev_sn].deldelay) + "\n"
+			status_str = status_str + "mondelay: " + str(self.devices[dev_sn].mondelay) + "\n"
+			status_str = status_str + "detdelay: " + str(self.devices[dev_sn].detdelay) + "\n"
+			status_str = status_str + "path: " + str(self.devices[dev_sn].path) + "\n"
+			status_str = status_str + "dir: " + str(self.devices[dev_sn].dir) + "\n"
+			status_str = status_str + "stop_wr: " + str(self.devices[dev_sn].stop_wr) + "\n"
+			status_str = status_str + "stop_del: " + str(self.devices[dev_sn].stop_del) + "\n"
+			status_str = status_str + "sleeptime: " + str(self.devices[dev_sn].sleeptime) + "\n"
+			status_str = status_str + "dminx: " + str(self.devices[dev_sn].dminx) + "\n"
 			self.scr.insert(END,status_str)
 		else:
 			return
@@ -54,10 +64,23 @@ class FragmentUI:
 			dev_sn=self.lb_monitors.get(self.lb_monitors.curselection())
 			self.devices[dev_sn].query_storage()
 			self.devices[dev_sn].query_fragment()
+			self.devices[dev_sn].load_config()
 			self.scr.delete(0.0,len(self.scr.get(0.0,END))-1.0)
 			status_str="device["+dev_sn+"]: \n"
 			status_str=status_str+"df: "+str(self.devices[dev_sn].storage)+"\n"
 			status_str=status_str+"frag: "+str(self.devices[dev_sn].frag)+"\n"
+			status_str = status_str + "wrthreads: " + str(self.devices[dev_sn].wrthreads) + "\n\n"
+			status_str = status_str + "wrdelay: " + str(self.devices[dev_sn].wrdelay) + "\n"
+			status_str = status_str + "delthreads: " + str(self.devices[dev_sn].delthreads) + "\n"
+			status_str = status_str + "deldelay: " + str(self.devices[dev_sn].deldelay) + "\n"
+			status_str = status_str + "mondelay: " + str(self.devices[dev_sn].mondelay) + "\n"
+			status_str = status_str + "detdelay: " + str(self.devices[dev_sn].detdelay) + "\n"
+			status_str = status_str + "path: " + str(self.devices[dev_sn].path) + "\n"
+			status_str = status_str + "dir: " + str(self.devices[dev_sn].dir) + "\n"
+			status_str = status_str + "stop_wr: " + str(self.devices[dev_sn].stop_wr) + "\n"
+			status_str = status_str + "stop_del: " + str(self.devices[dev_sn].stop_del) + "\n"
+			status_str = status_str + "sleeptime: " + str(self.devices[dev_sn].sleeptime) + "\n"
+			status_str = status_str + "dminx: " + str(self.devices[dev_sn].dminx) + "\n"
 			self.scr.insert(END,status_str)
 		else:
 			return
@@ -69,7 +92,6 @@ class FragmentUI:
 		self.stop_monitorthread()
 		self.stop_all_devices()
 		self.root.destroy()
-		print("window_close")
 
 	def about(self):
 		about.About("about").initUI()
@@ -78,7 +100,13 @@ class FragmentUI:
 		glo.GlobalConfig("Global Config").initUI()
 
 	def config_device(self):
-		de.DeviceConfig("Config Device").initUI()
+		if len(self.lb_devices.curselection()) == 0:
+			self.No_Select()
+			return
+		else:
+			dev_sn=self.lb_devices.get(self.lb_devices.curselection())
+			de.DeviceConfig("Config Device " + dev_sn, self.devices[dev_sn]).initUI()
+		return
 
 	def newdb_dialog(self):
 		return
@@ -92,7 +120,7 @@ class FragmentUI:
 
 	def initUI(self):
 		root = Tk()
-		root.title("eMMC Test V2.0")
+		root.title(self.name)
 		root.geometry("720x400+300+200")
 		root.resizable(width=False, height=False)
 		#root.iconbitmap(r"/home/wisen/performane_toolkits_sh/eMMC_Test/emmc.ico")
@@ -143,7 +171,7 @@ class FragmentUI:
 		ttk.Label(tab_fragtest, text="Pending List", font=("Monospace Regular",16)).grid(column=0,row=0,columnspan=2, sticky=W)
 
 		var = StringVar()
-		lb_devices = Listbox(tab_fragtest, font=("Monospace Regular",16), width=20, listvariable = var)
+		lb_devices = Listbox(tab_fragtest, font=("Monospace Regular",16), width=20, height=13, listvariable = var)
 		lb_devices.grid(column=0,row=1,rowspan=2,columnspan=2)
 		self.lb_devices = lb_devices
 
@@ -161,7 +189,7 @@ class FragmentUI:
 
 		ttk.Label(tab_fragtest, text="Monitor devices", font=("Monospace Regular",16)).grid(column=3,row=0, sticky=W)
 		var = StringVar()
-		lb_monitors = Listbox(tab_fragtest, font=("Monospace Regular",16), width=20, listvariable = var)
+		lb_monitors = Listbox(tab_fragtest, font=("Monospace Regular",16), width=20, height=13, listvariable = var)
 		lb_monitors.grid(column=3,row=1,rowspan=2)
 		self.lb_monitors = lb_monitors
 		
@@ -174,7 +202,7 @@ class FragmentUI:
 		## frm_status start
 		ttk.Label(tab_fragtest, text="Device status", font=("Monospace Regular",16)).grid(column=4,row=0, sticky=W)
 		scrolW = 29 # 设置文本框的长度
-		scrolH = 13 # 设置文本框的高度
+		scrolH = 17 # 设置文本框的高度
 		scr = scrolledtext.ScrolledText(tab_fragtest, width=scrolW, height=scrolH, wrap=WORD, font=("Monospace Regular",12))
 		scr.grid(column=4, row=1, rowspan=2)
 		self.scr = scr	
@@ -344,6 +372,17 @@ class FragmentUI:
 		return
 		
 	def delete_all_devices(self):
+		if self.lb_monitors.size() == 0:
+			mBox.showinfo('Alert', "There are no devices be monitored!")
+			return
+		else:
+			for i in range(self.lb_monitors.size()):
+				dev_sn = self.lb_monitors.get(i)
+				self.lb_monitors.delete(i)
+				self.lb_devices.insert(END, dev_sn)
+
+				if self.devices[dev_sn].has_moning:
+					self.devices[dev_sn].stop_monthread()
 		return
 		
 	def add_device(self):
@@ -361,15 +400,28 @@ class FragmentUI:
 		return
 		
 	def add_all_devices(self):
+		if self.lb_devices.size() == 0:
+			mBox.showinfo('Alert', "There are no devices connected!")
+			return
+		else:
+			cnt = self.lb_devices.size()
+			for i in range(cnt):
+				dev_sn = self.lb_devices.get(0)
+				self.lb_devices.delete(0)
+				self.lb_monitors.insert(END, dev_sn)
+				if not self.devices[dev_sn].has_wring:
+					self.devices[dev_sn].start_wrthreads()
+				if not self.devices[dev_sn].has_moning:
+					self.devices[dev_sn].start_monthread()
 		return
 		
 	def stop_monitorthread(self):
-		print("stop_monitorthread.....")
+		print("[MAIN] stop_monitorthread.....")
 		self.monitor_stopevt.set()
 		return
 	
 	def start_monitorthread(self):
-		print("start_monitorthread.....")
+		print("[MAIN] start_monitorthread.....")
 		self.monitor_stopevt = threading.Event()
 		t=RLKThread.RLKThread(stopevt=self.monitor_stopevt, name="FUI-mon-devices-0", target=self.monitor_devices, args="", kwargs={}, delay=1)
 		t.start()
@@ -435,5 +487,5 @@ class FragmentUI:
 					self.devices.append({tmp_devsn:device})
 		
 if __name__ == '__main__':
-	obj = FragmentUI("Fragment tool V2.0")
+	obj = FragmentUI(v.name+" "+v.version)
 	obj.initUI()

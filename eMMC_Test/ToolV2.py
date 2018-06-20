@@ -1,7 +1,6 @@
-import RLKDB
-import RLKThread
-import RLKDevice
-import RLKUI
+import FragmentUI
+import Version as v
 
 if __name__ == "__main__":
-	print("hello")
+	obj = FragmentUI.FragmentUI(v.name + " " + v.version)
+	obj.initUI()

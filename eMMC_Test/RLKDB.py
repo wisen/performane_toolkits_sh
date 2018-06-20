@@ -1,8 +1,5 @@
 import sqlite3
-import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import animation
-import json
 
 class RLKDB:
 
