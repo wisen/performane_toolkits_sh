@@ -24,11 +24,24 @@ class OfflineParser:
     def opendb_dialog(self):
         fDir = path.dirname(__file__)
         dbfilename = fd.askopenfilename(parent=self.root, initialdir=fDir)
-        #d.d(dbfilename)
+        d.d(fDir)
+        d.d(dbfilename)
         if dbfilename:
             (filepath, tempfilename) = os.path.split(dbfilename)
             (dev_sn, extension) = os.path.splitext(tempfilename)
             self.add_dbdevice_to_parserlist(dbfilename, dev_sn)
+        return
+
+    def opendbs_dialog(self):
+        fDir = path.dirname(__file__)
+        dbfilenames = fd.askopenfilenames(parent=self.root, initialdir=fDir)
+        d.d(fDir)
+        d.d(dbfilenames)
+        if dbfilenames:
+            for dbfilename in dbfilenames:
+                (filepath, tempfilename) = os.path.split(dbfilename)
+                (dev_sn, extension) = os.path.splitext(tempfilename)
+                self.add_dbdevice_to_parserlist(dbfilename, dev_sn)
         return
 
     def destroy_popmenu(self, event):
@@ -48,6 +61,7 @@ class OfflineParser:
         fileMenu = Menu(menuBar, tearoff=0)
         menuBar.add_cascade(label="File", menu=fileMenu)
         fileMenu.add_command(label="Open DB", font=("Monospace Regular", 16), command=self.opendb_dialog)
+        fileMenu.add_command(label="Open DBs", font=("Monospace Regular", 16), command=self.opendbs_dialog)
 
         ttk.Label(root, text="Parse List", font=("Monospace Regular", 16)).grid(column=0, row=0)
         var = StringVar()
