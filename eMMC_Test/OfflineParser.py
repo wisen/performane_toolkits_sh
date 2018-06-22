@@ -11,19 +11,24 @@ import os
 from os import path
 import Version as v
 
+import Debug as d
+
 class OfflineParser:
 
     def __init__(self, name):
         self.name = name
         self.devices = {}
+        d.init()
         return
 
     def opendb_dialog(self):
         fDir = path.dirname(__file__)
         dbfilename = fd.askopenfilename(parent=self.root, initialdir=fDir)
-        (filepath, tempfilename) = os.path.split(dbfilename)
-        (dev_sn, extension) = os.path.splitext(tempfilename)
-        self.add_dbdevice_to_parserlist(dbfilename, dev_sn)
+        #d.d(dbfilename)
+        if dbfilename:
+            (filepath, tempfilename) = os.path.split(dbfilename)
+            (dev_sn, extension) = os.path.splitext(tempfilename)
+            self.add_dbdevice_to_parserlist(dbfilename, dev_sn)
         return
 
     def destroy_popmenu(self, event):
@@ -75,6 +80,8 @@ class OfflineParser:
         popmenuBar_devices.add_command(label="Draw Fragment(matplot)",
                                        command=self.draw_fragment_bymatplot_on_devicelist)
         popmenuBar_devices.add_command(label="Draw Animation", command=self.draw_animation_on_devicelist)
+        popmenuBar_devices.add_command(label="Save Animation(mp4)", command=self.save_animation_tomp4_on_devicelist)
+        popmenuBar_devices.add_command(label="Save Animation(gif)", command=self.save_animation_togif_on_devicelist)
         popmenuBar_devices.add_command(label="Draw Plot(frag)", command=self.draw_fragment_plot_on_devicelist)
         popmenuBar_devices.add_command(label="Draw Plot(both)", command=self.draw_both_plot_on_devicelist)
         self.popmenuBar_devices = popmenuBar_devices
@@ -112,6 +119,24 @@ class OfflineParser:
         else:
             dev_sn = self.lb_devices.get(self.lb_devices.curselection())
             self.devices[dev_sn].draw_fragment_heatmap_animation()
+        return
+
+    def save_animation_tomp4_on_devicelist(self):
+        if len(self.lb_devices.curselection()) == 0:
+            self.No_Select()
+            return
+        else:
+            dev_sn = self.lb_devices.get(self.lb_devices.curselection())
+            self.devices[dev_sn].draw_fragment_heatmap_animation(True, "mp4")
+        return
+
+    def save_animation_togif_on_devicelist(self):
+        if len(self.lb_devices.curselection()) == 0:
+            self.No_Select()
+            return
+        else:
+            dev_sn = self.lb_devices.get(self.lb_devices.curselection())
+            self.devices[dev_sn].draw_fragment_heatmap_animation(True, "gif")
         return
 
     def draw_both_plot_on_devicelist(self):

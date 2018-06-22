@@ -226,6 +226,8 @@ class FragmentUI:
 		popmenuBar_devices.add_command(label="Draw Fragment(plotly)", command=self.draw_fragment_byplotly_on_devicelist)
 		popmenuBar_devices.add_command(label="Draw Fragment(matplot)", command=self.draw_fragment_bymatplot_on_devicelist)
 		popmenuBar_devices.add_command(label="Draw Animation", command=self.draw_animation_on_devicelist)
+		popmenuBar_devices.add_command(label="Save Animation(mp4)", command=self.save_animation_tomp4_on_devicelist)
+		popmenuBar_devices.add_command(label="Save Animation(gif)", command=self.save_animation_togif_on_devicelist)
 		popmenuBar_devices.add_command(label="Draw Plot(frag)", command=self.draw_fragment_plot_on_devicelist)
 		popmenuBar_devices.add_command(label="Draw Plot(both)", command=self.draw_both_plot_on_devicelist)
 		popmenuBar_devices.add_separator()
@@ -244,6 +246,8 @@ class FragmentUI:
 		popmenuBar_monitor.add_command(label="Draw Fragment(plotly)", command=self.draw_fragment_byplotly_on_monitorlist)
 		popmenuBar_monitor.add_command(label="Draw Fragment(matplot)", command=self.draw_fragment_bymatplot_on_monitorlist)
 		popmenuBar_monitor.add_command(label="Draw Animation", command=self.draw_animation_on_monitorlist)
+		popmenuBar_monitor.add_command(label="Save Animation(mp4)", command=self.save_animation_tomp4_on_monitorlist)
+		popmenuBar_monitor.add_command(label="Save Animation(gif)", command=self.save_animation_togif_on_monitorlist)
 		popmenuBar_monitor.add_command(label="Draw Plot(frag)", command=self.draw_fragment_plot_on_monitorlist)
 		popmenuBar_monitor.add_command(label="Draw Plot(both)", command=self.draw_both_plot_on_monitorlist)
 		self.popmenuBar_monitor = popmenuBar_monitor		
@@ -301,6 +305,24 @@ class FragmentUI:
 			self.devices[dev_sn].draw_fragment_heatmap_animation()
 		return
 
+	def save_animation_tomp4_on_devicelist(self):
+		if len(self.lb_devices.curselection()) == 0:
+			self.No_Select()
+			return
+		else:
+			dev_sn = self.lb_devices.get(self.lb_devices.curselection())
+			self.devices[dev_sn].draw_fragment_heatmap_animation(True, "mp4")
+		return
+
+	def save_animation_togif_on_devicelist(self):
+		if len(self.lb_devices.curselection()) == 0:
+			self.No_Select()
+			return
+		else:
+			dev_sn = self.lb_devices.get(self.lb_devices.curselection())
+			self.devices[dev_sn].draw_fragment_heatmap_animation(True, "gif")
+		return
+
 	def draw_animation_on_monitorlist(self):
 		if len(self.lb_monitors.curselection()) == 0:
 			self.No_Select()
@@ -308,6 +330,24 @@ class FragmentUI:
 		else:
 			dev_sn=self.lb_monitors.get(self.lb_monitors.curselection())
 			self.devices[dev_sn].draw_fragment_heatmap_animation()
+		return
+
+	def save_animation_tomp4_on_monitorlist(self):
+		if len(self.lb_monitors.curselection()) == 0:
+			self.No_Select()
+			return
+		else:
+			dev_sn = self.lb_monitors.get(self.lb_monitors.curselection())
+			self.devices[dev_sn].draw_fragment_heatmap_animation(True, "mp4")
+		return
+
+	def save_animation_togif_on_monitorlist(self):
+		if len(self.lb_monitors.curselection()) == 0:
+			self.No_Select()
+			return
+		else:
+			dev_sn = self.lb_monitors.get(self.lb_monitors.curselection())
+			self.devices[dev_sn].draw_fragment_heatmap_animation(True, "gif")
 		return
 
 	def draw_both_plot_on_devicelist(self):

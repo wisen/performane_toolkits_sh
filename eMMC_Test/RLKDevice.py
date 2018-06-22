@@ -346,7 +346,8 @@ class RLKDevice():
 		data = [trace]
 
 		layout = go.Layout(
-			title="["+self.dev_sn+"]: "+str(self.storage)+" "+str(float('%.2f' % self.ratio)),
+			title=self.dev_sn + ": df[" + str(float('%.2f' % self.storage)) + "] ratio[" + str(
+				float('%.2f' % self.ratio)) + "]",
 			xaxis=dict(title="segment row"),
 			yaxis=dict(title="segment col"),
 		)
@@ -365,9 +366,12 @@ class RLKDevice():
 		for i in range(cnt):
 			a.append(buf[i][0])
 			b.append(buf[i][1])
-		line1 = plt.plot(a)
-		line2 = plt.plot(b)
-		title = "["+self.dev_sn+"]: "+str(self.storage)+" "+str(float('%.2f' % self.ratio))
+		plt.plot(a, 'r', label="df")
+		plt.plot(b, 'g', label="ratio")
+		title = self.dev_sn + ": df[" + str(float('%.2f' % self.storage)) + "] ratio[" + str(
+			float('%.2f' % self.ratio)) + "]"
+		plt.xlabel("times")
+		plt.ylabel("percent")
 		plt.title(title)
 		plt.show()
 
@@ -377,16 +381,24 @@ class RLKDevice():
 		fig = plt.figure()
 		line = plt.plot(buf)[0]
 		line.set_color('r')
-		title = "["+self.dev_sn+"]: "+str(self.storage)+" "+str(float('%.2f' % self.ratio))
+		title = self.dev_sn + ": df[" + str(float('%.2f' % self.storage)) + "] ratio[" + str(
+			float('%.2f' % self.ratio)) + "]"
+		plt.xlabel("times")
+		plt.ylabel("percent")
 		plt.title(title)
 		plt.show()
 
-	def draw_fragment_heatmap_animation(self):
+	# type:"mp4","gif"
+	def draw_fragment_heatmap_animation(self, save=False, type=None):
+		if save and type == "mp4":
+			Writer = animation.writers['ffmpeg']
+			writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
+
 		sel_cmd = "select seginfo from deviceinfo"
 		buf = self.db.fetch(sel_cmd)
 		cnt = len(buf)
 		dy1 = 100
-		fig = plt.figure()
+		fig = plt.figure(figsize=(16,8),dpi=100)
 		#fig, ax = plt.subplots()
 		ims = []
 
@@ -407,8 +419,21 @@ class RLKDevice():
 				ims.append((plt.pcolor(np.arange(0, dy1 + 1, 1), np.arange(dx1, -1, -1), dd, norm=plt.Normalize(0, 999)),))
 
 		#fig.colorbar(ims)
+		plt.colorbar()
 		im_ani = animation.ArtistAnimation(fig, ims, interval=500, repeat_delay=1000,blit=True)
-		plt.show()
+		title = self.dev_sn + ": df[" + str(float('%.2f' % self.storage)) + "] ratio[" + str(float('%.2f' % self.ratio)) + "]"
+		plt.title(title)
+		if save:
+			if type == "mp4":
+				im_ani.save(self.dev_sn+".mp4", writer=writer)
+				d.d("save mp4 success!")
+			elif type == "gif":
+				im_ani.save(self.dev_sn+".gif", writer='imagemagick', fps=15)
+				d.d("save gif success!")
+			else:##no type define, show it replace
+				plt.show()
+		else:
+			plt.show()
 		return
 
 	def draw_fragment_heatmap_bymatplot(self):##use matplotlib
@@ -422,7 +447,8 @@ class RLKDevice():
 		fig, ax = plt.subplots()
 		im = ax.pcolor(np.arange(0, dy1 + 1, 1), np.arange(dx1, -1, -1), bb, norm=plt.Normalize(0, 999))
 		fig.colorbar(im)
-		title = "["+self.dev_sn+"]: "+str(self.storage)+" "+str(float('%.2f' % self.ratio))
+		title = self.dev_sn + ": df[" + str(float('%.2f' % self.storage)) + "] ratio[" + str(
+			float('%.2f' % self.ratio)) + "]"
 		plt.title(title)
 
 		plt.show()
