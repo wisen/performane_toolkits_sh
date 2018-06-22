@@ -12,6 +12,7 @@ import RLKDB
 import RLKDevice
 import DeviceConfig as de
 import GlobalConfig as glo
+import OfflineParser as op
 
 from tkinter import messagebox as mBox
 from tkinter import filedialog as fd
@@ -96,6 +97,9 @@ class FragmentUI:
 	def about(self):
 		about.About("about").initUI()
 
+	def help(self):
+		return
+
 	def config_global(self):
 		glo.GlobalConfig("Global Config").initUI()
 
@@ -108,14 +112,8 @@ class FragmentUI:
 			de.DeviceConfig("Config Device " + dev_sn, self.devices[dev_sn]).initUI()
 		return
 
-	def newdb_dialog(self):
-		return
-
-	def opendb_dialog(self):
-		fDir = path.dirname(__file__)
-		fName = fd.askopenfilename(parent=self.root, initialdir=fDir)
-		print(fDir)
-		print(fName)
+	def offline_parser(self):
+		op.OfflineParser("Offline Parser Tool "+v.version).initUI()
 		return
 
 	def initUI(self):
@@ -133,9 +131,8 @@ class FragmentUI:
 		menuBar = Menu(root, font=("Monospace Regular",16))
 		root.config(menu=menuBar)
 		fileMenu = Menu(menuBar, tearoff=0)
-		menuBar.add_cascade(label="File", menu=fileMenu)
-		fileMenu.add_command(label="New DB", font=("Monospace Regular",16), command=self.newdb_dialog)
-		fileMenu.add_command(label="Open DB", font=("Monospace Regular", 16), command=self.opendb_dialog)
+		menuBar.add_cascade(label="Tools", menu=fileMenu)
+		fileMenu.add_command(label="Offline Parser", font=("Monospace Regular", 16), command=self.offline_parser)
 		#fileMenu.add_command(label="Exit")
 		fileMenu.add_separator()
 		fileMenu.add_command(label="Exit", command=self._quit, font=("Monospace Regular",16))
@@ -149,7 +146,7 @@ class FragmentUI:
 		menuBar.add_cascade(label="Help", menu=helpMenu)
 		helpMenu.add_command(label="About", font=("Monospace Regular",16), command=self.about)
 		helpMenu.add_separator()
-		helpMenu.add_command(label="Help", font=("Monospace Regular",16))
+		helpMenu.add_command(label="Help", font=("Monospace Regular",16), command=self.help)
 		### menu end ###
 
 		#######################Tab control##############################

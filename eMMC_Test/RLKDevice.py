@@ -19,7 +19,7 @@ import Util as u
 
 class RLKDevice():
 
-	def __init__(self, dev_sn, db):
+	def __init__(self, dev_sn, db, offline=True):
 		self.dev_sn = dev_sn
 
 		self.ini_file = "conf/" + self.dev_sn + ".ini"
@@ -54,7 +54,10 @@ class RLKDevice():
 		self.status = "online"
 		self.ratio = 0.0
 		self.segment = {"0":0, "512":0, "z":[]}
-		self.query_dminx()
+		if offline:
+			self.dminx = 0
+		else:
+			self.query_dminx()
 
 	def load_config(self):
 		if not os.path.exists(self.ini_file):
@@ -137,6 +140,7 @@ class RLKDevice():
 		
 		cmd_out = bytes.decode(proc.stdout.read().split()[0])[-1]
 		self.dminx = cmd_out
+
 		return self.dminx
 
 	def query_storage(self):
@@ -383,12 +387,21 @@ class RLKDevice():
 		#fig, ax = plt.subplots()
 		ims = []
 
-		for i in range(cnt):
-			bb = buf[i]
-			cc = json.loads(bb[0].replace("'", "\""))["z"]
-			dx1 = int(len(cc) / dy1)
-			dd = np.array(cc).reshape(dx1,dy1)
-			ims.append((plt.pcolor(np.arange(0, dy1 + 1, 1), np.arange(dx1, -1, -1), dd, norm=plt.Normalize(0, 999)),))
+		if cnt > 100:
+			step=int(cnt/100)+1
+			for i in range(0, cnt, step):
+				bb = buf[i]
+				cc = json.loads(bb[0].replace("'", "\""))["z"]
+				dx1 = int(len(cc) / dy1)
+				dd = np.array(cc).reshape(dx1,dy1)
+				ims.append((plt.pcolor(np.arange(0, dy1 + 1, 1), np.arange(dx1, -1, -1), dd, norm=plt.Normalize(0, 999)),))
+		else:
+			for i in range(cnt):
+				bb = buf[i]
+				cc = json.loads(bb[0].replace("'", "\""))["z"]
+				dx1 = int(len(cc) / dy1)
+				dd = np.array(cc).reshape(dx1,dy1)
+				ims.append((plt.pcolor(np.arange(0, dy1 + 1, 1), np.arange(dx1, -1, -1), dd, norm=plt.Normalize(0, 999)),))
 
 		#fig.colorbar(ims)
 		im_ani = animation.ArtistAnimation(fig, ims, interval=500, repeat_delay=1000,blit=True)
