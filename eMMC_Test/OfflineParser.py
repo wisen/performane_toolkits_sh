@@ -26,6 +26,10 @@ class OfflineParser:
         self.add_dbdevice_to_parserlist(dbfilename, dev_sn)
         return
 
+    def destroy_popmenu(self, event):
+        if self.popmenuBar_devices:
+            self.popmenuBar_devices.destroy()
+
     def initUI(self):
         root = Tk()
         root.title(self.name)
@@ -37,7 +41,7 @@ class OfflineParser:
         menuBar = Menu(root, font=("Monospace Regular", 16))
         root.config(menu=menuBar)
         fileMenu = Menu(menuBar, tearoff=0)
-        menuBar.add_cascade(label="Tools", menu=fileMenu)
+        menuBar.add_cascade(label="File", menu=fileMenu)
         fileMenu.add_command(label="Open DB", font=("Monospace Regular", 16), command=self.opendb_dialog)
 
         ttk.Label(root, text="Parse List", font=("Monospace Regular", 16)).grid(column=0, row=0)
@@ -49,6 +53,8 @@ class OfflineParser:
         ## popmenuBar_devices start
         self.create_popmenuBar_devices()
         lb_devices.bind("<ButtonRelease-3>", self.pop_on_deviceslist)
+
+        self.root.bind('<ButtonRelease-1>', self.destroy_popmenu)
 
         root.protocol("WM_DELETE_WINDOW", self.window_close)
         root.mainloop()
@@ -76,7 +82,6 @@ class OfflineParser:
     def pop_on_deviceslist(self, event):
         self.create_popmenuBar_devices()
         self.popmenuBar_devices.post(event.x_root, event.y_root)
-
 
     def No_Select(self):
         mBox.showinfo('Alert', "Please select a device!!!")

@@ -15,9 +15,9 @@ import GlobalConfig as glo
 import OfflineParser as op
 
 from tkinter import messagebox as mBox
-from tkinter import filedialog as fd
-from os import path
 import Version as v
+
+import Debug as d
 
 class FragmentUI:
 
@@ -33,6 +33,7 @@ class FragmentUI:
 		self.gl_sleeptime = 10
 		self.gl_monthread = "on"
 		self.gl_dminx = "0"
+		d.init()
 
 	def show_status_indevicelist(self, event):
 		if len(self.lb_devices.curselection()) != 0:
@@ -43,8 +44,8 @@ class FragmentUI:
 			self.scr.delete(0.0,len(self.scr.get(0.0,END))-1.0)
 			status_str="device["+dev_sn+"]: \n"
 			status_str = status_str + "df: " + str(self.devices[dev_sn].storage)+"\n"
-			status_str = status_str + "frag: " + str(self.devices[dev_sn].frag)+"\n"
-			status_str = status_str + "wrthreads: " + str(self.devices[dev_sn].wrthreads) + "\n\n"
+			status_str = status_str + "frag: " + str(self.devices[dev_sn].frag)+"\n\n"
+			status_str = status_str + "wrthreads: " + str(self.devices[dev_sn].wrthreads) + "\n"
 			status_str = status_str + "wrdelay: " + str(self.devices[dev_sn].wrdelay) + "\n"
 			status_str = status_str + "delthreads: " + str(self.devices[dev_sn].delthreads) + "\n"
 			status_str = status_str + "deldelay: " + str(self.devices[dev_sn].deldelay) + "\n"
@@ -69,8 +70,8 @@ class FragmentUI:
 			self.scr.delete(0.0,len(self.scr.get(0.0,END))-1.0)
 			status_str="device["+dev_sn+"]: \n"
 			status_str=status_str+"df: "+str(self.devices[dev_sn].storage)+"\n"
-			status_str=status_str+"frag: "+str(self.devices[dev_sn].frag)+"\n"
-			status_str = status_str + "wrthreads: " + str(self.devices[dev_sn].wrthreads) + "\n\n"
+			status_str=status_str+"frag: "+str(self.devices[dev_sn].frag)+"\n\n"
+			status_str = status_str + "wrthreads: " + str(self.devices[dev_sn].wrthreads) + "\n"
 			status_str = status_str + "wrdelay: " + str(self.devices[dev_sn].wrdelay) + "\n"
 			status_str = status_str + "delthreads: " + str(self.devices[dev_sn].delthreads) + "\n"
 			status_str = status_str + "deldelay: " + str(self.devices[dev_sn].deldelay) + "\n"
@@ -362,7 +363,7 @@ class FragmentUI:
 				self.devices[dev_sn].stop_monthread()
 			#self.devices[dev_sn].stop_detectthread()
 			#self.scr.delete(0.0,len(self.scr.get(0.0,END))-1.0)
-			print(self.devices)
+			d.d(self.devices)
 		#print(threading.enumerate())
 		else:
 			self.No_Select()
@@ -413,12 +414,12 @@ class FragmentUI:
 		return
 		
 	def stop_monitorthread(self):
-		print("[MAIN] stop_monitorthread.....")
+		d.d("stop_monitorthread.....")
 		self.monitor_stopevt.set()
 		return
 	
 	def start_monitorthread(self):
-		print("[MAIN] start_monitorthread.....")
+		d.d("start_monitorthread.....")
 		self.monitor_stopevt = threading.Event()
 		t=RLKThread.RLKThread(stopevt=self.monitor_stopevt, name="FUI-mon-devices-0", target=self.monitor_devices, args="", kwargs={}, delay=1)
 		t.start()

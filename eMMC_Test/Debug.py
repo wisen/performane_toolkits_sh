@@ -1,14 +1,25 @@
 import inspect
+import logging
 
-class Debug:
+LOG_FORMAT = "%(asctime)s - %(threadName)s %(message)s"
+DATE_FORMAT = "%m-%d-%Y %H:%M:%S"
 
-	def get_current_function_name(self):  
-		return inspect.stack()[1][3]
-	
-	def func(self):
-		print("%s.%s ******", self.__class__.__name__, self.get_current_function_name())	
-		
-if __name__ == "__main__":
-	d = Debug()
-	d.func()
-	
+def init():
+	logging.basicConfig(level=logging.NOTSET,format=LOG_FORMAT, datefmt=DATE_FORMAT)
+	logging.Formatter
+
+def d(str):
+	logging.debug(str)
+
+def i(str):
+	logging.info(str)
+
+def w(str):
+	logging.warning(str)
+
+def e(str):
+	logging.error(str)
+
+def c(str):
+	logging.critical(str)
+

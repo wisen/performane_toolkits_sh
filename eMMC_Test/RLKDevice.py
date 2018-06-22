@@ -17,46 +17,45 @@ import json
 import configparser as cp
 import Util as u
 
+import Debug as d
+
 class RLKDevice():
 
-	def __init__(self, dev_sn, db, offline=True):
+	def __init__(self, dev_sn, db, offline=False):
 		self.dev_sn = dev_sn
+		d.init()
 
-		self.ini_file = "conf/" + self.dev_sn + ".ini"
-		self.load_config()
-
-		##colnums:  sn,status,df,frag,stime,stoptime,seginfo
-		self.db = db
-		#self.wrthreads = 10
-		#self.wrdelay = 0 ## should set to 0 in final release
-		#self.delthreads = 5
-		#self.deldelay = 0 ## should set to 0 in final release
-		#self.mondelay = 30 ## we should monitor the device's storage and fragment status per 5 seconds
-		#self.detdelay = 0
-		#self.path = "/sdcard/tmp/"
-		#self.dir = "dir"
-		#self.stop_wr = 0.95
-		#self.stop_del = 0.90
-		#self.sleeptime = 10
-		self.monthread = "on"
-		self.dminx = "0"
-		self.db.connect()
-		self.db.create_table('''
-			create table IF NOT EXISTS deviceinfo
-			(sn text, df float, ratio float, stime datetime, seginfo text)
-			''')
-		self.cmd = "insert into deviceinfo(sn, df, ratio, stime, seginfo) values(?,?,?,?,?)"
-
-		self.db.commit()
-		self.has_wring = False
-		self.has_deling = False
-		self.has_moning = False
-		self.status = "online"
-		self.ratio = 0.0
-		self.segment = {"0":0, "512":0, "z":[]}
 		if offline:
-			self.dminx = 0
+			self.dminx = "0"
+			self.db = db
+			self.db.connect()
+			self.cmd = "select * from deviceinfo order by stime desc limit 1"
+			buf = self.db.fetch(self.cmd)
+			self.storage = buf[0][1]
+			self.ratio = buf[0][2]
+			self.segment = json.loads(buf[0][4].replace("'", "\""))
+			self.db.commit()
 		else:
+			self.ini_file = "conf/" + self.dev_sn + ".ini"
+			self.load_config()
+
+			self.db = db
+			self.monthread = "on"
+
+			self.db.connect()
+			self.db.create_table('''
+				create table IF NOT EXISTS deviceinfo
+				(sn text, df float, ratio float, stime datetime, seginfo text)
+				''')
+			self.cmd = "insert into deviceinfo(sn, df, ratio, stime, seginfo) values(?,?,?,?,?)"
+			self.db.commit()
+			self.has_wring = False
+			self.has_deling = False
+			self.has_moning = False
+			self.status = "online"
+			self.ratio = 0.0
+			self.segment = {"0":0, "512":0, "z":[]}
+			self.dminx = "0"
 			self.query_dminx()
 
 	def load_config(self):
@@ -120,12 +119,12 @@ class RLKDevice():
 		return
 
 	def stop_detectthread(self):
-		print("["+self.dev_sn+"]: stopping "+self.dev_sn+"-detect-0")
+		d.d("stopping "+self.dev_sn+"-detect-0")
 		self.detect_stopevt.set()
 		return
 					
 	def start_detectthread(self):
-		print("["+self.dev_sn+"]: starting "+self.dev_sn+"-detect-0")
+		d.d("starting "+self.dev_sn+"-detect-0")
 		self.detect_stopevt = threading.Event()
 		t=RLKThread.RLKThread(stopevt=self.detect_stopevt, name=self.dev_sn+"-detect-0", target=self.detect, args=self.dev_sn, kwargs={}, delay=self.detdelay)
 		t.start()
@@ -172,13 +171,13 @@ class RLKDevice():
 		self.status = status
 
 	def stop_wrthreads(self):
-		print("["+self.dev_sn+"]: stopping wrthreads.....")
+		d.d("stopping wrthreads.....")
 		self.has_wring = False
 		self.wr_stopevt.set()
 		return
 	
 	def start_wrthreads(self):
-		print("["+self.dev_sn+"]: starting wrthreads.....")
+		d.d("starting wrthreads.....")
 		self.wr_stopevt = threading.Event()
 		self.has_wring = True
 		for i in range(self.wrthreads):
@@ -196,13 +195,13 @@ class RLKDevice():
 		return
 
 	def stop_delthreads(self):
-		print("["+self.dev_sn+"]: stopping delthreads.....")
+		d.d("stopping delthreads.....")
 		self.has_deling = False
 		self.del_stopevt.set()
 		return
 	
 	def start_delthreads(self):
-		print("["+self.dev_sn+"]: starting delthreads.....")
+		d.d("starting delthreads.....")
 		self.del_stopevt = threading.Event()
 		self.has_deling = True
 		for i in range(self.delthreads):
@@ -231,7 +230,7 @@ class RLKDevice():
 		return
 	
 	def start_monthread(self):
-		print("[" + self.dev_sn + "]: starting monthread.....")
+		d.d("starting monthread.....")
 		self.mon_stopevt = threading.Event()
 		self.has_moning = True
 		t=RLKThread.RLKThread(stopevt=self.mon_stopevt, name=self.dev_sn+"-mon-0", target=self.monitor, args=self.dev_sn, kwargs={}, delay=self.mondelay)
@@ -292,7 +291,7 @@ class RLKDevice():
 		
 		path = "/proc/fs/f2fs/dm-"+self.dminx+"/segment_info"
 		cmd = ["adb", "-s", self.dev_sn, "shell", "cat", path]
-		print("["+self.dev_sn+"]: calc_fragment_ratio....")
+		d.d("["+self.dev_sn+"]: calc_fragment_ratio....")
 		try:
 			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		except OSError as e:
@@ -347,7 +346,7 @@ class RLKDevice():
 		data = [trace]
 
 		layout = go.Layout(
-			title="[" + self.dev_sn + "] frag info: [" + self.storage + "] " + str(float('%.2f' % self.ratio)),
+			title="["+self.dev_sn+"]: "+str(self.storage)+" "+str(float('%.2f' % self.ratio)),
 			xaxis=dict(title="segment row"),
 			yaxis=dict(title="segment col"),
 		)
@@ -368,6 +367,8 @@ class RLKDevice():
 			b.append(buf[i][1])
 		line1 = plt.plot(a)
 		line2 = plt.plot(b)
+		title = "["+self.dev_sn+"]: "+str(self.storage)+" "+str(float('%.2f' % self.ratio))
+		plt.title(title)
 		plt.show()
 
 	def draw_fragment_ratio_bytime(self):
@@ -376,6 +377,8 @@ class RLKDevice():
 		fig = plt.figure()
 		line = plt.plot(buf)[0]
 		line.set_color('r')
+		title = "["+self.dev_sn+"]: "+str(self.storage)+" "+str(float('%.2f' % self.ratio))
+		plt.title(title)
 		plt.show()
 
 	def draw_fragment_heatmap_animation(self):
@@ -419,6 +422,8 @@ class RLKDevice():
 		fig, ax = plt.subplots()
 		im = ax.pcolor(np.arange(0, dy1 + 1, 1), np.arange(dx1, -1, -1), bb, norm=plt.Normalize(0, 999))
 		fig.colorbar(im)
+		title = "["+self.dev_sn+"]: "+str(self.storage)+" "+str(float('%.2f' % self.ratio))
+		plt.title(title)
 
 		plt.show()
 		

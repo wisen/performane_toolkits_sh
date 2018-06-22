@@ -1,5 +1,6 @@
 import threading
 import time
+import Debug as d
 
 class RLKThread(threading.Thread):
 	def __init__(self, name, target, args, kwargs, stopevt, delay=0):
@@ -10,13 +11,14 @@ class RLKThread(threading.Thread):
 		self.args = args
 		self.kwargs = kwargs
 		self.delay = delay
+		d.init()
 
 	def Eventrun(self):
 		while not self.stopevt.isSet():
 			self.target(self.args, self.kwargs)
 			if self.delay:
 				time.sleep(self.delay)
-		print(self.name +' stoped\n')
+		d.d('stoped')
 
 	def run(self):
 		self.Eventrun()
