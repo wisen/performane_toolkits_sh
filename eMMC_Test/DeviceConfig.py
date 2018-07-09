@@ -21,16 +21,16 @@ class DeviceConfig():
 		self.active_ini_filename = ini_file
 		self.display_section_contents()
 
+	def reset_config(self):
+		u.copyfile("conf/global.ini", self.ini_file)
+		return
+
 	def save_config(self, event=None):
 		for key in self.active_ini["SETTING"]:
 			self.active_ini["SETTING"][key] = self.ini_elements[key].get()
 		with open(self.active_ini_filename, "w") as ini_file:
 			self.active_ini.write(ini_file)
 		msg.showinfo("Saved", "File Saved Successfully")
-
-	def clear_right_frame(self):
-		for child in self.right_frame.winfo_children():
-			child.destroy()
 
 	def display_section_contents(self, event=None):
 
@@ -44,6 +44,9 @@ class DeviceConfig():
 			ini_element.insert(0, value)
 			self.ini_elements[key] = ini_element
 			i = i+1
+
+		reset_button = tk.Button(self.root, text="Reset Config", command=self.reset_config)
+		reset_button.grid(column=0, row=i, sticky=E)
 
 		save_button = tk.Button(self.root, text="Save Config", command=self.save_config)
 		save_button.grid(column=1, row=i, sticky=E)

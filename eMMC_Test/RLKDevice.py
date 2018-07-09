@@ -205,13 +205,14 @@ class RLKDevice():
 		self.del_stopevt = threading.Event()
 		self.has_deling = True
 		for i in range(self.delthreads):
-			j = random.randint(1,self.wrthreads)
-			t=RLKThread.RLKThread(stopevt=self.del_stopevt, name=self.dev_sn+"-del-"+str(i), target=self.delete, args=self.dev_sn, kwargs={"path":self.path+self.dir+str(j)}, delay=self.deldelay)
-			t.start()	
+			#j = random.randint(1,self.wrthreads)
+			t=RLKThread.RLKThread(stopevt=self.del_stopevt, name=self.dev_sn+"-del-"+str(i), target=self.delete, args=self.dev_sn, kwargs={"path":self.path+self.dir}, delay=self.deldelay)
+			t.start()
 
 	def delete(self,dev_sn,path):
-		cmd_str="rm -rf "+path["path"]+"/*_$(($RANDOM%99+1))k.dat;sync"
+		cmd_str="rm -rf "+path["path"]+"$(($RANDOM%10+1))/*_$(($RANDOM%99+1))k.dat;sync"
 		cmd = ["adb", "-s", dev_sn, "shell", cmd_str]
+		d.d(cmd_str)
 		try:
 			proc = subprocess.call(cmd, shell=False)
 		except OSError as e:
@@ -390,9 +391,6 @@ class RLKDevice():
 
 	# type:"mp4","gif"
 	def draw_fragment_heatmap_animation(self, save=False, type=None):
-		if save and type == "mp4":
-			Writer = animation.writers['ffmpeg']
-			writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
 
 		sel_cmd = "select seginfo from deviceinfo"
 		buf = self.db.fetch(sel_cmd)
@@ -423,6 +421,11 @@ class RLKDevice():
 		im_ani = animation.ArtistAnimation(fig, ims, interval=500, repeat_delay=1000,blit=True)
 		title = self.dev_sn + ": df[" + str(float('%.2f' % self.storage)) + "] ratio[" + str(float('%.2f' % self.ratio)) + "]"
 		plt.title(title)
+
+		if save and type == "mp4":
+			Writer = animation.writers['ffmpeg']
+			writer = Writer(fps=15, metadata=dict(artist=title), bitrate=1800)
+
 		if save:
 			if type == "mp4":
 				im_ani.save(self.dev_sn+".mp4", writer=writer)

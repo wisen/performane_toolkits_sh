@@ -5,11 +5,15 @@ import tkinter as tk
 import tkinter.messagebox as msg
 import configparser as cp
 
+import os
+import Util as u
+
 class GlobalConfig():
 
 	def __init__(self, name):
 		self.name = name
 		self.ini_file = "conf/global.ini"
+		self.config_dir = "./conf"
 		self.ini_elements = {}
 
 	def parse_ini_file(self, ini_file):
@@ -25,12 +29,14 @@ class GlobalConfig():
 			self.active_ini.write(ini_file)
 		msg.showinfo("Saved", "File Saved Successfully")
 
-	def clear_right_frame(self):
-		for child in self.right_frame.winfo_children():
-			child.destroy()
+	def apply_config(self):
+		for files in os.walk(self.config_dir):
+			for file in files[2]:
+				if os.path.splitext(file)[1] == '.ini' and os.path.splitext(file)[0] != 'global':
+					u.copyfile(self.ini_file, 'conf/'+os.path.splitext(file)[0]+'.ini')
+		return
 
 	def display_section_contents(self, event=None):
-
 		i = 0
 		for key in self.active_ini["SETTING"]:
 			new_label = ttk.Label(self.root, text=key, font=(None, 12)).grid(column=0, row=i, sticky=W)
@@ -43,7 +49,10 @@ class GlobalConfig():
 			i = i+1
 
 		save_button = tk.Button(self.root, text="Save Config", command=self.save_config)
-		save_button.grid(column=1, row=i, sticky=E)
+		save_button.grid(column=0, row=i, sticky=W)
+		apply_button = tk.Button(self.root, text="Apply Config", command=self.apply_config)
+		apply_button.grid(column=1, row=i, sticky=E)
+
 		return
 
 	def initUI(self):
