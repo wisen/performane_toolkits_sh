@@ -31,9 +31,9 @@ class RLKDevice():
 			self.db.connect()
 			self.cmd = "select * from deviceinfo order by stime desc limit 1"
 			buf = self.db.fetch(self.cmd)
-			self.storage = buf[0][1]
-			self.ratio = buf[0][2]
-			self.segment = json.loads(buf[0][4].replace("'", "\""))
+			self.storage = buf[0][2]
+			self.ratio = buf[0][3]
+			self.segment = json.loads(buf[0][5].replace("'", "\""))
 			self.db.commit()
 		else:
 			self.ini_file = "conf/" + self.dev_sn + ".ini"
@@ -45,9 +45,9 @@ class RLKDevice():
 			self.db.connect()
 			self.db.create_table('''
 				create table IF NOT EXISTS deviceinfo
-				(sn text, df float, ratio float, stime datetime, seginfo text)
+				(sn text, fs text, df float, ratio float, stime datetime, seginfo text)
 				''')
-			self.cmd = "insert into deviceinfo(sn, df, ratio, stime, seginfo) values(?,?,?,?,?)"
+			self.cmd = "insert into deviceinfo(sn, fs, df, ratio, stime, seginfo) values(?,?,?,?,?,?)"
 			self.db.commit()
 			self.has_wring = False
 			self.has_deling = False
@@ -56,7 +56,9 @@ class RLKDevice():
 			self.ratio = 0.0
 			self.segment = {"0":0, "512":0, "z":[]}
 			self.dminx = "0"
+			self.fs = "f2fs"
 			self.query_dminx()
+			self.query_filesystem()
 
 	def load_config(self):
 		if not os.path.exists(self.ini_file):
@@ -128,8 +130,23 @@ class RLKDevice():
 		self.detect_stopevt = threading.Event()
 		t=RLKThread.RLKThread(stopevt=self.detect_stopevt, name=self.dev_sn+"-detect-0", target=self.detect, args=self.dev_sn, kwargs={}, delay=self.detdelay)
 		t.start()
-					
+
+	def query_filesystem(self):
+		#adb shell mount|grep "\/data "|cut -d " " -f 5
+		cmd = ["adb", "-s", self.dev_sn, "shell", "mount", "|", "grep", "\/data\ ", "|", "cut", "-d", "\ ", "-f", "5"]
+		try:
+			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		except OSError as e:
+			print(e)
+			return None
+
+		cmd_out = bytes.decode(proc.stdout.read().split()[0])
+		self.fs = cmd_out
+
+		return self.fs
+
 	def query_dminx(self):
+		#adb shell mount|grep "\/data "|awk '{print $1}'
 		cmd = ["adb", "-s", self.dev_sn, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
 		try:
 			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -155,15 +172,19 @@ class RLKDevice():
 		return self.storage
 
 	def query_fragment(self):
-		ratio = self.calc_fragment_ratio()
-		self.frag = float('%.2f' % ratio)
+		if "f2fs" == self.fs:
+			ratio = self.calc_fragment_ratio()
+			self.frag = float('%.2f' % ratio)
+		else:
+			self.frag = 0
+
 		return
 
 	## storage the info each one minute
 	def store_deviceinfo(self):
 		self.query_storage()
 		self.query_fragment()
-		self.db.execute(self.cmd, (self.dev_sn, self.storage, self.ratio, datetime.datetime.now(), str(self.segment)))
+		self.db.execute(self.cmd, (self.dev_sn, self.fs, self.storage, self.ratio, datetime.datetime.now(), str(self.segment)))
 		self.db.commit()
 		return
 		

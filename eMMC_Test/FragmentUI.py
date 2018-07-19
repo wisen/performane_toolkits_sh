@@ -44,6 +44,7 @@ class FragmentUI:
 			self.scr.delete(0.0,len(self.scr.get(0.0,END))-1.0)
 			status_str="device["+dev_sn+"]: \n"
 			status_str = status_str + "df: " + str(self.devices[dev_sn].storage)+"\n"
+			status_str = status_str + "fs: " + str(self.devices[dev_sn].fs) + "\n"
 			status_str = status_str + "frag: " + str(self.devices[dev_sn].frag)+"\n\n"
 			status_str = status_str + "wrthreads: " + str(self.devices[dev_sn].wrthreads) + "\n"
 			status_str = status_str + "wrdelay: " + str(self.devices[dev_sn].wrdelay) + "\n"
@@ -70,6 +71,7 @@ class FragmentUI:
 			self.scr.delete(0.0,len(self.scr.get(0.0,END))-1.0)
 			status_str="device["+dev_sn+"]: \n"
 			status_str=status_str+"df: "+str(self.devices[dev_sn].storage)+"\n"
+			status_str = status_str + "fs: " + str(self.devices[dev_sn].fs) + "\n"
 			status_str=status_str+"frag: "+str(self.devices[dev_sn].frag)+"\n\n"
 			status_str = status_str + "wrthreads: " + str(self.devices[dev_sn].wrthreads) + "\n"
 			status_str = status_str + "wrdelay: " + str(self.devices[dev_sn].wrdelay) + "\n"
