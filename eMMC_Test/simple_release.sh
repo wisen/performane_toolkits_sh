@@ -4,6 +4,11 @@ if [ ! -d release ];then
 	mkdir release
 fi
 
+for pyfile in $(ls *.py)
+do
+python simple_compile.py $PWD"/"$pyfile
+done
+
 for line in $(ls __pycache__)
 do
 	oldname=$line
