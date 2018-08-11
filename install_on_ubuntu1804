@@ -1,14 +1,25 @@
 #!/bin/bash
 
+if false;then
+sudo echo "#####wisen add for coredump start#########" >> /etc/sysctl.conf <<MMMMM
+56630873
+MMMMM
+sudo echo "kernel.core_pattern = /home/wisen/coredump/%e.core.%p.%s" >> /etc/sysctl.conf
+sudo echo "kernel.core_uses_pid = 1" >> /etc/sysctl.conf
+sudo echo "#####wisen add for coredump end###########" >> /etc/sysctl.conf
+fi
+
 . ./util/process.u
 . ./util/os.u
 
 basepath=$(cd `dirname .`; pwd)
 #echo $basepath
 
+sed -i '/Custom Configuration Start/,$d' ~/.bashrc
+
 (cat <<EOF
 
-## Custom Start ##
+## Custom Configuration Start ##
 scriptpath="$basepath:$basepath/applist/:$basepath/bin/:$basepath/case/:$basepath/config/:$basepath/logutil/:$basepath/mon/:$basepath/parser/:$basepath/prebuilt_tools/:$basepath/tools/:$basepath/test/:$basepath/util/:$basepath/eMMC_Test/bin/"
 PATH=\${scriptpath}:\${PATH}
 export SCRIPT_ROOT=${basepath}
@@ -50,6 +61,8 @@ alias lx="ls -l|awk '{if(NR>1) printf(\"%s\t0x%x\n\", \$0,\$5)}'"
 
 git config --global core.editor vi
 git config --global core.quotepath false
+git config --global user.email "wisen.wang.ah@gmail.com"
+git config --global user.name "Wisen Wang"
 
 stty echo
 #PYTHON2_PATH="/$(echo $PYTHON2|sed 's/\\/\//g'|sed 's/://g')"
@@ -72,9 +85,18 @@ export JRE_HOME=/home/wisen/data/java/jre-10.0.1
 #export JAVA_HOME=/home/wisen/data/java/jdk1.8.0_172
 #export JRE_HOME=/home/wisen/data/java/jre1.8.0_172
 
-export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib  
+export CLASSPATH=.:\${JAVA_HOME}/lib:\${JRE_HOME}/lib  
 export PATH=\${JAVA_HOME}/bin:\${PATH}
 ###set java env end###
+
+wlan_dev="wlp7s0"
+essidname="test-ppd"
+is_internalnet=false
+
+iwconfig \$wlan_dev | grep \$essidname > /dev/null
+if [ \$? -eq 0 ];then
+is_internalnet=true
+fi
 
 ###Mount sdb2 start###
 cat /proc/mounts | grep "\/dev\/sdb2" > /dev/null
@@ -92,6 +114,7 @@ else
 fi
 ###Mount sdb2 end###
 
+if \$is_internalnet;then
 ###Mount reallytek start###
 cat /proc/mounts | grep "//192.168.1.71/reallytek/" > /dev/null
 if [ \$? -ne 0 ];then
@@ -123,6 +146,7 @@ else
     echo -e "\033[31m Mount Transsionsharing fail..  \033[0m"
 fi
 ###Mount Transsionsharing end###
+fi
 
 ###set cuda path start###
 export CUDA_HOME=/usr/local/cuda-9.2/bin
