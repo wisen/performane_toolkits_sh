@@ -1,16 +1,25 @@
 #!/bin/bash
 
-if false;then
-sudo echo "#####wisen add for coredump start#########" >> /etc/sysctl.conf <<MMMMM
-56630873
-MMMMM
-sudo echo "kernel.core_pattern = /home/wisen/coredump/%e.core.%p.%s" >> /etc/sysctl.conf
-sudo echo "kernel.core_uses_pid = 1" >> /etc/sysctl.conf
-sudo echo "#####wisen add for coredump end###########" >> /etc/sysctl.conf
-fi
-
 . ./util/process.u
 . ./util/os.u
+
+if [ ! -n "$1" ];then
+	echo -e "\033[41;37m" Please Run this script with your sudo passwd "\033[0m"
+	echo
+	echo -e "\033[32m" $0 sudopasswd "\033[0m"
+	echo
+	exit
+fi
+
+passwd=$1
+
+if true;then
+echo $passwd |sudo -S sed -i '/Custom Configuration Start/,$d' /etc/sysctl.conf 
+echo $passwd |sudo -S sh -c "cat envconf/sysctl.conf >> /etc/sysctl.conf"
+
+echo $passwd |sudo -S sed -i '/Custom Configuration Start/,$d' /etc/apt/sources.list
+echo $passwd |sudo -S sh -c "cat envconf/sources.list >> /etc/apt/sources.list"
+fi
 
 basepath=$(cd `dirname .`; pwd)
 #echo $basepath
@@ -102,7 +111,7 @@ fi
 cat /proc/mounts | grep "\/dev\/sdb2" > /dev/null
 if [ \$? -ne 0 ];then
 sudo -S mount -t ntfs /dev/sdb2 /home/wisen/data <<MMM
-56630873
+$passwd
 MMM
 fi
 
@@ -119,7 +128,7 @@ if \$is_internalnet;then
 cat /proc/mounts | grep "//192.168.1.71/reallytek/" > /dev/null
 if [ \$? -ne 0 ];then
 sudo -S mount -t cifs -o username="wanbin.wang",pass="Bb123456" //192.168.1.71/reallytek/ /home/wisen/smb/71/reallytek/ <<AAA
-56630873
+$passwd
 AAA
 fi
 
@@ -135,7 +144,7 @@ fi
 cat /proc/mounts | grep ""//192.168.1.75/Transsionsharing/ > /dev/null
 if [ \$? -ne 0 ];then
 sudo -S mount -t cifs -o username="wanbin.wang",pass="Bb123456" //192.168.1.75/Transsionsharing/ /home/wisen/smb/75/Transsionsharing <<BBB
-56630873
+$passwd
 BBB
 fi
 
