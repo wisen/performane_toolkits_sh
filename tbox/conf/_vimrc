@@ -1,3 +1,4 @@
+"--vim common setting start--
 set backspace=indent,eol,start
 set fenc=utf-8 "设定默认解码 
 set fencs=utf-8,usc-bom,gb18030,gbk,gb2312,cp936,euc-jp
@@ -5,9 +6,7 @@ set nocp "或者 set nocompatible 用于关闭VI的兼容模式
 set number "显示行号 
 set ai "或者 set autoindent vim使用自动对齐，也就是把当前行的对齐格式应用到下一行 
 set si "或者 set smartindent 依据上面的对齐格式，智能的选择对齐方式
-set tabstop=4 "设置tab键为4个空格
 set sw=4 "或者 set shiftwidth 设置当行之间交错时使用4个空格
-set ruler "设置在编辑过程中,于右下角显示光标位置的状态行 
 set incsearch "设置增量搜索,这样的查询比较smart 
 set showmatch "高亮显示匹配的括号 
 set matchtime=5 "匹配括号高亮时间(单位为 1/10 s) set ignorecase "在搜索的时候忽略大小写 
@@ -15,80 +14,246 @@ syntax on "高亮语法
 "colorscheme desert
 "colorscheme murphy 
 set hls   "搜索高亮
-"let Tlist_Ctags_Cmd='/bin/ctags'
-"let Tlist_Show_One_File=1
-"let Tlist_Exit_OnlyWindow=1
-"let Tlist_Use_Right_Window=1
-"let Tlist_Auto_Open=1
-"let Tlist_WinWidth=50
-   "F7 NERDTree
-   "map <F7> :NERDTreeToggle<CR>
-   "imap <F7> <ESC>:NERDTreeToggle<CR>
-   "
-   ""F12 TlistToggle
-"map <F12> :TlistToggle<CR>
-"map <F2> :NERDTree<CR>
-"imap <F12> <ESC>:TlistToggle<CR>
-set cursorline "开启高亮光标列
-hi CursorLine   cterm=NONE ctermbg=blue ctermfg=white guibg=gray guifg=white
-set gcr=n-v-c:ver25-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-Cursor/lCursor
-hi cursor cterm=bold ctermfg=128 ctermbg=0 guifg=slategrey guibg=khaki
-"set mouse=a  "always use mouse
-" 显示中文帮助
-if version >= 603
-    set helplang=cn
-    set encoding=utf-8
-endif
+"set ignorecase " 搜索模式里忽略大小写
+"set smartcase " 如果搜索模式包含大写字符，不使用 'ignorecase' 选项。只有在输入搜索模式并且打开 'ignorecase' 选项时才会使用。
+set autowrite " 自动把内容写回文件: 如果文件被修改过，在每个 :next、:rewind、:last、:first、:previous、:stop、:suspend、:tag、:!、:make、CTRL-] 和 CTRL-^命令时进行；用 :buffer、CTRL-O、CTRL-I、'{A-Z0-9} 或 `{A-Z0-9} 命令转到别的文件时亦然。
+set tabstop=4 " 设置制表符(tab键)的宽度
+set softtabstop=4 " 设置软制表符的宽度
+set cindent " 使用 C/C++ 语言的自动缩进方式
+set cinoptions={0,1s,t0,n-2,p2s,(03s,=.5s,>1s,=1s,:1s "设置C/C++语言的具体缩进方式
+set linebreak " 整词换行
+"set whichwrap=b,s,<,>,[,] " 光标从行首和行末时可以跳到另一行去
+"set hidden " Hide buffers when they are abandoned
+set mouse=a " Enable mouse usage (all modes) "使用鼠标
+"set previewwindow " 标识预览窗口
+set history=50 " set command history to 50 "历史记录50条
 "--状态行设置--
-set laststatus=2
-"总显示最后一个窗口的状态行；设为1则窗口数多于一个的时候显示最后一个窗口的状态行；0不显示最后一个窗口的状态行
-set ruler "
-"标尺，用于显示光标位置的行号和列号，逗号分隔。每个窗口都有自己的标尺。如果窗口有状态行，标尺在那里显示。否则，它显示在屏幕的最后一行上。
-"
-""--命令行设置--
+set laststatus=2 " 总显示最后一个窗口的状态行；设为1则窗口数多于一个的时候显示最后一个窗口的状态行；0不显示最后一个窗口的状态行
+set ruler " 标尺，用于显示光标位置的行号和列号，逗号分隔。每个窗口都有自己的标尺。如果窗口有状态行，标尺在那里显示。否则，它显示在屏幕的最后一行上。
+"--命令行设置--
 set showcmd " 命令行显示输入的命令
 set showmode " 命令行显示vim当前模式
- 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
- 
-" 设置命令行和状态栏
- 
-set cmdheight=1             " 设定命令行的行数为 1
-set laststatus=2            " 显示状态栏 (默认值为 1, 无法显示状态栏)
-set statusline=%F%m%r\ \|\ %{&ff},%{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\ \"},%Y\ \|0x%B\ \|%=\ %l/%L,%c\ \|\ %f
-                            " 设置在状态行显示的信息如下：
-                            " %f    当前的文件名
-                            " %F    当前全路径文件名
-                            " %m    当前文件修改状态
-                            " %r    当前文件是否只读
-                            " %Y    当前文件类型
-                            " %{&fileformat}
-                            "       当前文件编码
-                            " %{&fileencoding}
-                            "       中文编码
-                            " %b    当前光标处字符的 ASCII 码值
-                            " %B    当前光标处字符的十六进制值
-                            " %l    当前光标行号
-                            " %c    当前光标列号
-                            " %V    当前光标虚拟列号 (根据字符所占字节数计算)
-                            " %p    当前行占总行数的百分比
-                            " %%    百分号
-                            " %L    当前文件总行数
- 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
- 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
- 
-" Alt+数字切换Table快捷键设置
-:nn <M-1> 1gt
-:nn <M-2> 2gt
-:nn <M-3> 3gt
-:nn <M-4> 4gt
-:nn <M-5> 5gt
-:nn <M-6> 6gt
-:nn <M-7> 7gt
-:nn <M-8> 8gt
-:nn <M-9> 9gt
-:nn <M-0> :tablast<CR>
- 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"inoremap <S-Insert><ESC>:setl paste<CR>gi<C-R>+<ESC>:setl nopaste<CR>gi
+set pastetoggle=<F10>
+"--vim common setting end--
+
+"--ctags setting start--
+" 按下F5重新生成tag文件，并更新taglist
+map <F5> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR><CR> :TlistUpdate<CR>
+imap <F5> <ESC>:!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR><CR> :TlistUpdate<CR>
+set tags=tags
+set tags+=./tags "add current directory's generated tags file
+"set tags+=~/arm/linux-2.6.24.7/tags "add new tags file(刚刚生成tags的路径，在ctags -R 生成tags文件后，不要将tags移动到别的目录，否则ctrl+］时，会提示找不到源码文件)
+
+"tag命令用法：
+"Ctrl＋］  跳到当前光标下单词的标签
+"Ctrl＋O  返回上一个标签
+"Ctrl＋T  返回上一个标签
+":tag TagName 跳到TagName标签
+"以上命令是在当前窗口显示标签，当前窗口的文件替代为包标签的文件，当前窗口光标跳到标签位置。如果不希望在当前窗口显示标签，可以使用以下命令：
+":stag TagName 新窗口显示TagName标签，光标跳到标签处
+"Ctrl＋W + ］  新窗口显示当前光标下单词的标签，光标跳到标签处
+"当一个标签有多个匹配项时（函数 (或类中的方法) 被多次定义），":tags" 命令会跳转到第一处。如果在当前文件中存在匹配，那它将会被首先使用。
+"可以用这些命令在各匹配的标签间移动：
+":tfirst    到第一个匹配
+":[count]tprevious 向前 [count] 个匹配
+":[count]tnext  向后 [count] 个匹配
+":tlast    到最后一个匹配
+"或者使用以下命令选择要跳转到哪一个
+":tselect TagName
+"输入以上命令后，vim会为你展示一个选择列表。然后你可以输入要跳转到的匹配代号 (在第一列)。其它列的信息可以让你知道标签在何处被定义过。
+"以下命令将在预览窗口显示标签
+":ptag TagName 预览窗口显示TagName标签，光标跳到标签处
+"Ctrl＋W + }  预览窗口显示当前光标下单词的标签，光标跳到标签处
+":pclose   关闭预览窗口
+":pedit file.h 在预览窗口中编辑文件file.h（在编辑头文件时很有用）
+":psearch atoi 查找当前文件和任何包含文件中的单词并在预览窗口中显示匹配，在使用没有标签文件的库函数时十分有用。
+"--ctags setting end--
+
+"-- omnicppcomplete setting start--
+" 按下F3自动补全代码，注意该映射语句后不能有其他字符，包括tab；否则按下F3会自动补全一些乱码
+imap <F3> <C-X><C-O>
+" 按下F2根据头文件内关键字补全
+imap <F2> <C-X><C-I>
+set completeopt=menu,menuone " 关掉智能补全时的预览窗口
+let OmniCpp_MayCompleteDot = 1 " autocomplete with .
+let OmniCpp_MayCompleteArrow = 1 " autocomplete with ->
+let OmniCpp_MayCompleteScope = 1 " autocomplete with ::
+let OmniCpp_SelectFirstItem = 2 " select first item (but don't insert)
+let OmniCpp_NamespaceSearch = 2 " search namespaces in this and included files
+let OmniCpp_ShowPrototypeInAbbr = 1 " show function prototype in popup window
+let OmniCpp_GlobalScopeSearch=1 " enable the global scope search
+let OmniCpp_DisplayMode=1 " Class scope completion mode: always show all members
+"let OmniCpp_DefaultNamespaces=["std"]
+let OmniCpp_ShowScopeInAbbr=1 " show scope in abbreviation and remove the last column
+let OmniCpp_ShowAccess=1
+"-- omnicppcomplete setting end--
+
+"-- Taglist setting start--
+let Tlist_Ctags_Cmd='ctags' "因为我们放在环境变量里，所以可以直接执行
+let Tlist_Use_Right_Window=1 "让窗口显示在右边，0的话就是显示在左边
+let Tlist_Show_One_File=0 "让taglist可以同时展示多个文件的函数列表
+let Tlist_File_Fold_Auto_Close=1 "非当前文件，函数列表折叠隐藏
+let Tlist_Exit_OnlyWindow=1 "当taglist是最后一个分割窗口时，自动推出vim
+"是否一直处理tags.1:处理;0:不处理
+let Tlist_Process_File_Always=1 "实时更新tags
+let Tlist_Inc_Winwidth=0
+let Tlist_Auto_Open=1 "自动打开taglist
+let Tlist_Sort_Type='name'  "按照name排序
+"缺省情况下，在双击一个tag时，才会跳到该tag定义的位置，如果你想单击tag就跳转，设置Tlist_Use_SingleClick为１
+nmap :tl :Tlist<cr> "用:tl 替代 :Tlist来打开关闭Taglist
+
+":Tlist 打开/关闭taglist窗口
+"在taglist窗口中，可以使用下面的快捷键：
+"<CR>          跳到光标下tag所定义的位置，用鼠标双击此tag功能也一样
+"o             在一个新打开的窗口中显示光标下tag
+"<Space>       显示光标下tag的原型定义
+"u             更新taglist窗口中的tag
+"s             更改排序方式，在按名字排序和按出现顺序排序间切换
+"x             taglist窗口放大和缩小，方便查看较长的tag
+"+             打开一个折叠，同zo
+"-             将tag折叠起来，同zc
+"*             打开所有的折叠，同zR
+"=             将所有tag折叠起来，同zM
+"[[            跳到前一个文件
+"]]            跳到后一个文件
+"q             关闭taglist窗口
+"<F1>          显示帮助
+"-- Taglist setting end--
+
+"-- WinManager setting start--
+let g:winManagerWindowLayout='FileExplorer' " 设置我们要管理的插件
+let g:winManagerWidth=30  " 设置winManager的宽度
+"let g:persistentBehaviour=0 " 如果所有编辑文件都关闭了，退出vim
+
+"-- WinManager auto start--
+let g:AutoOpenWinManager = 1 "在进入vim时自动打开winmanager,并将下面4行加入到~/.vim/plugin/winmanager.vim文件中
+"set auto open Winmanager 
+"if g:AutoOpenWinManager 
+"    autocmd VimEnter * call s:StartWindowsManager()
+"endif
+"-- WinManager auto end--
+
+nmap :wm<cr> :WMToggle<cr> " 用:wm 替代:WMToggle来打开关闭WinManage
+"文件浏览器命令（在文件浏览器窗口中使用）
+"<enter>或双击  如果光标下是目录, 则进入该目录; 如果光标下文件, 则打开该文件
+"<tab>   如果光标下是目录, 则进入该目录; 如果光标下文件, 则在新窗口打开该文件
+"<F5> 刷新列表
+"-  返回上一层目录
+"c  使浏览目录成为vim当前工作目录
+"d  创建目录
+"D  删除当前光标下的目录或文件
+"i  切换显示方式
+"R  文件或目录重命名
+"s  选择排序方式
+"r  反向排序列表
+"x  定制浏览方式, 使用你指定的程序打开该文件
+"winmanager帮助文档
+":help winmanager
+"netrw帮助文档
+":help netrw
+"-- WinManager setting end--
+
+"-- Cscope setting start--
+if has("cscope")
+set csprg=/usr/bin/cscope " 指定用来执行cscope的命令
+set csto=0 " 设置cstag命令查找次序：0先找cscope数据库再找标签文件；1先找标签文件再找cscope数据库
+set cst " 同时搜索cscope数据库和标签文件
+set cscopequickfix=s-,c-,d-,i-,t-,e- " 使用QuickFix窗口来显示cscope查找结果
+set nocsverb
+if filereadable("cscope.out") " 若当前目录下存在cscope数据库，添加该数据库到vim
+cs add cscope.out
+elseif $CSCOPE_DB != "" " 否则只要环境变量CSCOPE_DB不为空，则添加其指定的数据库到vim
+cs add $CSCOPE_DB
+endif
+set csverb
+endif
+map <F4> :cs add ./cscope.out .<CR><CR><CR> :cs reset<CR>
+imap <F4> <ESC>:cs add ./cscope.out .<CR><CR><CR> :cs reset<CR>
+" 将:cs find c等Cscope查找命令映射为<C-_>c等快捷键（按法是先按Ctrl+Shift+-, 然后很快再按下c）
+nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR> :copen<CR><CR>
+nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR> :copen<CR><CR>
+nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR> :copen<CR><CR>
+nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR> :copen<CR><CR>
+nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR> :copen<CR><CR>
+nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <C-_>i :cs find i <C-R>=expand("<cfile>")<CR><CR> :copen<CR><CR>
+
+"cscope -Rbq 为源码建立一个cscope数据库
+"-- Cscope setting end--
+
+"-- QuickFix setting start --
+" 按下F6，执行make clean
+map <F6> :make clean<CR><CR><CR>
+" 按下F7，执行make编译程序，并打开quickfix窗口，显示编译信息
+map <F7> :make<CR><CR><CR> :copen<CR><CR>
+" 按下F8，光标移到上一个错误所在的行
+map <F8> :cp<CR>
+" 按下F9，光标移到下一个错误所在的行
+map <F9> :cn<CR>
+" 以上的映射是使上面的快捷键在插入模式下也能用
+imap <F6> <ESC>:make clean<CR><CR><CR>
+imap <F7> <ESC>:make<CR><CR><CR> :copen<CR><CR>
+imap <F8> <ESC>:cp<CR>
+imap <F9> <ESC>:cn<CR>
+
+":botright copen
+:botright cwindow
+
+"帮助文档
+":help usr_30
+":help quickfix
+"下面的命令运行 "make" (包括你所给出的参数) 程序并捕捉其运行结果: >
+" :make {arguments}
+"如果编译时出现错误，按 <Enter>，回到vim界面，看不到出错信息了！这时，可以运行以下命令
+":cw[indow]
+"打开quickfix窗口来查看出错信息，它会自动跳到第一处出错的地方。然后，你可以双击出错某一条出错信息，vim就会自动跳转到相应的出错位置
+":cn[ext]  光标移到下一个错误所在的行
+":cp[revious] 光标移到上一个错误所在的行
+":cfirst  到第一处错误
+":clast  到最后一处错误
+":cc   空间不够时，Vim 会缩短出错信息。如果你想查看详细信息，可以使用此命令
+":cl[ist] 列出所有出错信息的概览（只有那些含有文件名或行数的错误信息会被显示，需要查看那些并不含文件名或行数的信息可用“:cl[ist]!”命令）
+"-- QuickFix setting end --
+
+"-- MiniBufferExplorer setting start --
+let g:miniBufExplMapWindowNavVim = 1 " 按下Ctrl+h/j/k/l，可以切换到当前窗口的上下左右窗口
+let g:miniBufExplMapWindowNavArrows = 1 " 按下Ctrl+箭头，可以切换到当前窗口的上下左右窗口
+let g:miniBufExplMapCTabSwitchBufs = 1 " 启用以下两个功能：Ctrl+tab移到下一个buffer并在当前窗口打开；Ctrl+Shift+tab移到上一个buffer并在当前窗口打开；ubuntu好像不支持
+"let g:miniBufExplMapCTabSwitchWindows = 1 " 启用以下两个功能：Ctrl+tab移到下一个窗口；Ctrl+Shift+tab移到上一个窗口；ubuntu好像不支持
+let g:miniBufExplModSelTarget = 1 " 不要在不可编辑内容的窗口（如TagList窗口）中打开选中的buffer
+
+"常用命令
+"<Tab>  移到上一个buffer
+"<Shift-Tab> 移到下一个buffer
+"<Enter>  打开光标所在的buffer
+"d   删除光标所在的buffer
+"-- MiniBufferExplorer setting end --
+
+"-- colorscheme setting start --
+":colorscheme spring
+":colorscheme evening
+:colorscheme blue
+":colorscheme summerfruit256
+":colorscheme 输入colorscheme命令后，按tab键可以选择不同的配色
+"--colorscheme setting end --
+
+"-- Note start --
+"set fileencoding  查看文件当前编码
+"set fileencoding=gb18030  设置文件编码位中文编码gb18030
+"vim-addons status 查看vim当前安装的插件
+"vim-addons supertab 自动补全
+"ctags -R
+"cscope -Rbq
+"<C-]>跳转到光标函数的定义处
+"<C-O 返回刚才跳转的地方
+"<C-T>跳回到被调用的地方,按两下"可以再回去
+":cw直接打开quickfix窗口
+":qa退出所有窗口
+":make 在command编译
+":qall                         退出所有窗口
+":wall                         保存所有窗口
+":wqall或者:xall                保存并退出所有窗口
+"Ctrl + 四个箭头可以在窗口间移动光标
+"-- Note end --

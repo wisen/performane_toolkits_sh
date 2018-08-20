@@ -1,0 +1,35 @@
+#### Custom Configuration Start####
+
+define print_thread_by_tid
+    set $tid = $arg0
+    set $pThread = g_thread_list
+
+    while $pThread != 0 
+         if $pThread->tid == $tid
+             p $pThread
+             p *$pThread
+             loop_break
+         end 
+         set $pThread = $pThread->next
+    end
+end
+
+define print_thread_by_sp
+    set $cursp = $arg0
+    set $pThread = g_thread_list
+    
+    while $pThread != 0
+       if $pThread->attr.stack_base <= $cursp && $pThread->attr.stack_base + $pThread->attr.stack_size >= $cursp
+           p $pThread
+           p *$pThread
+           loop_break
+       end 
+       set $pThread = $pThread->next
+    end
+end
+
+define print_current_thread
+    print_thread_by_sp $sp
+end
+
+#### Custom Configuration End #######

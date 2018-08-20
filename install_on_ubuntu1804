@@ -16,19 +16,53 @@ passwd=$1
 if true;then
 echo $passwd |sudo -S sed -i '/Custom Configuration Start/,$d' /etc/sysctl.conf 
 echo $passwd |sudo -S sh -c "cat envconf/sysctl.conf >> /etc/sysctl.conf"
+echo $passwd |sudo -S sysctl -p > /dev/null
+# user should run `ulimit -c unlimited` to ulimit the coredump 
 
 echo $passwd |sudo -S sed -i '/Custom Configuration Start/,$d' /etc/apt/sources.list
 echo $passwd |sudo -S sh -c "cat envconf/sources.list >> /etc/apt/sources.list"
 fi
+
+sed -i '/Custom Configuration Start/,$d' ~/.gdbinit
+cat envconf/gdbinit >> ~/.gdbinit
 
 basepath=$(cd `dirname .`; pwd)
 #echo $basepath
 
 sed -i '/Custom Configuration Start/,$d' ~/.bashrc
 
+############
+coredumpfolder=~/coredump
+sdbmountpoint=~/data
+
+if [ ! -d $coredumpfolder ];then
+mkdir $coredumpfolder
+fi
+
+if [ ! -d $sdbmountpoint ];then
+mkdir $sdbmountpoint
+fi
+############
+
 (cat <<EOF
 
 ## Custom Configuration Start ##
+###Mount sdb2 start###
+cat /proc/mounts | grep "\/dev\/sdb2" > /dev/null
+if [ \$? -ne 0 ];then
+sudo -S mount -t ntfs /dev/sdb2 /home/wisen/data <<MMM
+$passwd
+MMM
+fi
+
+if [ \$? -eq 0 ] 
+then
+    echo "Mount \/dev\/sdb2 sucess" > /dev/null
+else
+    echo -e "\033[31m Mount \/dev\/sdb2 fail..  \033[0m"
+fi
+###Mount sdb2 end###
+
 scriptpath="$basepath:$basepath/applist/:$basepath/bin/:$basepath/case/:$basepath/config/:$basepath/logutil/:$basepath/mon/:$basepath/parser/:$basepath/prebuilt_tools/:$basepath/tools/:$basepath/test/:$basepath/util/:$basepath/eMMC_Test/bin/"
 PATH=\${scriptpath}:\${PATH}
 export SCRIPT_ROOT=${basepath}
@@ -73,6 +107,8 @@ git config --global core.quotepath false
 git config --global user.email "wisen.wang.ah@gmail.com"
 git config --global user.name "Wisen Wang"
 
+ulimit -c unlimited
+
 stty echo
 #PYTHON2_PATH="/$(echo $PYTHON2|sed 's/\\/\//g'|sed 's/://g')"
 #PYTHON3_PATH="/$(echo $PYTHON3|sed 's/\\/\//g'|sed 's/://g')"
@@ -88,11 +124,11 @@ done
 
 ###set java env start###                                                                                                                          
 ##java 10.0.1
-export JAVA_HOME=/home/wisen/data/java/jdk-10.0.1
-export JRE_HOME=/home/wisen/data/java/jre-10.0.1
+#export JAVA_HOME=/home/wisen/data/java/jdk-10.0.1
+#export JRE_HOME=/home/wisen/data/java/jre-10.0.1
 ##java 1.8.0_172
-#export JAVA_HOME=/home/wisen/data/java/jdk1.8.0_172
-#export JRE_HOME=/home/wisen/data/java/jre1.8.0_172
+export JAVA_HOME=/home/wisen/data/java/jdk1.8.0_172
+export JRE_HOME=/home/wisen/data/java/jre1.8.0_172
 
 export CLASSPATH=.:\${JAVA_HOME}/lib:\${JRE_HOME}/lib  
 export PATH=\${JAVA_HOME}/bin:\${PATH}
@@ -101,33 +137,20 @@ export PATH=\${JAVA_HOME}/bin:\${PATH}
 wlan_dev="wlp7s0"
 essidname="test-ppd"
 is_internalnet=false
+inter_user="wanbin.wang"
+inter_passwd="Bb123456"
+inter_domain="transsion"
 
 iwconfig \$wlan_dev | grep \$essidname > /dev/null
 if [ \$? -eq 0 ];then
 is_internalnet=true
 fi
 
-###Mount sdb2 start###
-cat /proc/mounts | grep "\/dev\/sdb2" > /dev/null
-if [ \$? -ne 0 ];then
-sudo -S mount -t ntfs /dev/sdb2 /home/wisen/data <<MMM
-$passwd
-MMM
-fi
-
-if [ \$? -eq 0 ] 
-then
-    echo "Mount \/dev\/sdb2 sucess" > /dev/null
-else
-    echo -e "\033[31m Mount \/dev\/sdb2 fail..  \033[0m"
-fi
-###Mount sdb2 end###
-
 if \$is_internalnet;then
 ###Mount reallytek start###
 cat /proc/mounts | grep "//192.168.1.71/reallytek/" > /dev/null
 if [ \$? -ne 0 ];then
-sudo -S mount -t cifs -o username="wanbin.wang",pass="Bb123456" //192.168.1.71/reallytek/ /home/wisen/smb/71/reallytek/ <<AAA
+sudo -S mount -t cifs -o username=\$inter_user,pass=\$inter_passwd,domain=\$inter_domain //192.168.1.71/reallytek/ /home/wisen/smb/71/reallytek/ <<AAA
 $passwd
 AAA
 fi
@@ -143,7 +166,7 @@ fi
 ###Mount Transsionsharing start###
 cat /proc/mounts | grep ""//192.168.1.75/Transsionsharing/ > /dev/null
 if [ \$? -ne 0 ];then
-sudo -S mount -t cifs -o username="wanbin.wang",pass="Bb123456" //192.168.1.75/Transsionsharing/ /home/wisen/smb/75/Transsionsharing <<BBB
+sudo -S mount -t cifs -o username=\$inter_user,pass=\$inter_passwd,domain=\$inter_domain //192.168.1.75/Transsionsharing/ /home/wisen/smb/75/Transsionsharing <<BBB
 $passwd
 BBB
 fi
@@ -167,7 +190,6 @@ PS1='\[\033[01;33m\]\u\[\033[00m\]\[\033[01;31m\][\[\033[00m\]\[\033[04;32m\]\t\
 
 #export HOME=\$ASHELL_ROOT/home/
 #cd \$HOME
-cd ~/test
 
 # added by Anaconda3 installer
 export PATH="/home/wisen/anaconda3/bin:\$PATH"
@@ -175,9 +197,6 @@ export PATH="/home/wisen/anaconda3/bin:\$PATH"
 EOF
 ) >> ~/.bashrc
 
-echo -e "\033[41;37m" Please restart your terminal and Work in your New environment "\033[0m"
-
-#$terminal_execfile -t "MY Shell" -h always -w max kill_others &
-
-# prepare some python environment
-# python lib repo: http://www.lfd.uci.edu/~gohlke/pythonlibs
+echo
+echo -e "\033[44;5m" Please restart your terminal and Work in your New environment "\033[0m"
+echo

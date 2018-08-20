@@ -1,3 +1,17 @@
 #!/bin/bash
 
-explorer .
+. os.u
+
+if [ $myscript_os == "cygwin" ];then
+	explorer .
+fi
+
+if [ $linux_os == "Linux" ];then
+	terminal_execfile="/usr/bin/gnome-terminal"
+	nautilus . > /dev/null
+fi
+
+if [ $myscript_os == "msys" ];then
+	nautilus . > /dev/null
+fi
+
