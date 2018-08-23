@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ ! -n "$1" -o "$1" == "c" -o "$1" = "c++" ];then
+ctags -R;cscope -Rbq
+fi
+
+if [ "$1" == "java" ];then
+find . -name "*.java" > cscope.files;ctags -R;cscope -Rbq
+fi
+
+
+if [ "$1" == "python" -o "$1" == "py" ];then
+find . -name "*.py" > cscope.files;ctags -R;cscope -Rbq
+fi

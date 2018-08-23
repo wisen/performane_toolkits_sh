@@ -43,6 +43,7 @@ map <F5> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR><CR> :TlistUpda
 imap <F5> <ESC>:!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR><CR> :TlistUpdate<CR>
 set tags=tags
 set tags+=./tags "add current directory's generated tags file
+set tags+=~/.vim/c++_v5.tag
 "set tags+=~/arm/linux-2.6.24.7/tags "add new tags file(刚刚生成tags的路径，在ctags -R 生成tags文件后，不要将tags移动到别的目录，否则ctrl+］时，会提示找不到源码文件)
 
 "tag命令用法：
@@ -87,6 +88,28 @@ let OmniCpp_DisplayMode=1 " Class scope completion mode: always show all members
 "let OmniCpp_DefaultNamespaces=["std"]
 let OmniCpp_ShowScopeInAbbr=1 " show scope in abbreviation and remove the last column
 let OmniCpp_ShowAccess=1
+
+"前几行就是提供了C++中的./->/::等操作符的提示和自动完成）。
+"OmniCppComplete 是基于ctags数据库即tags文件实现的(基于ctags生成的索引信息来实现自动补全的)，所以在ctags -R生成tags时还需要一些额外的选项，这样生成的tags文件才能与OmniCppComplete配合运作。
+"使用下列命令生成tags文件，就可以 与OmniCppComplete配合运作：
+"ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
+"--c++-kinds=+p  : 为C++文件增加函数原型的标签
+"--fields=+iaS   : 在标签文件中加入继承信息(i)、类成员的访问控制信息(a)、以及函数的指纹(S)
+"--extra=+q      : 为标签增加类修饰符。注意，如果没有此选项，将不能对类成员补全
+"# vim自动补全功能的测试
+"# 为了测试自动补全功能，我们先下载C++一份C++标准库的源代码。
+"wisen@ubuntu:~$ sudo apt-get install build-essential
+"# 然后在/usr/include/c++下就可以找到标准库的头文件了。
+"wisen@ubuntu:~$ cd /usr/include/c++
+"wisen@ubuntu:/usr/include/c++$ ls
+"4.4  4.4.3
+"# 在此文件夹下生成能与OmniCppComplete配合运作的tags文件
+"wisen@ubuntu:/usr/include/c++$ ctags -f ~/.vim/c++_v5.tag -R --c++-kinds=+p --fields=+iaS --extra=+q .
+"wisen@ubuntu:/usr/include/c++$ ls
+"4.4  4.4.3  tags
+"# 在vim的配置文件中如下内容，然后在编程的时候就可以使用自动补全功能了。
+"wisen@ubuntu:/usr/include/c++$ vi ~/.vimrc
+"set tags+=~/.vim/c++_v5.tag
 "-- omnicppcomplete setting end--
 
 "-- Taglist setting start--
@@ -246,6 +269,8 @@ let g:miniBufExplModSelTarget = 1 " 不要在不可编辑内容的窗口（如Ta
 "vim-addons supertab 自动补全
 "ctags -R
 "cscope -Rbq
+"cscope默认会查找.c,.h,.l,.y代码文件，对于java，python等文件，要先建立cscope.files,然后再执行cscope -Rbq
+"find . -name "*.py" > cscope.files
 "<C-]>跳转到光标函数的定义处
 "<C-O 返回刚才跳转的地方
 "<C-T>跳回到被调用的地方,按两下"可以再回去

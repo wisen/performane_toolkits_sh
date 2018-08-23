@@ -133,7 +133,7 @@ class RLKDevice():
 
 	def query_filesystem(self):
 		#adb shell mount|grep "\/data "|cut -d " " -f 5
-		cmd = ["adb", "-s", self.dev_sn, "shell", "mount", "|", "grep", "\/data\ ", "|", "cut", "-d", "\ ", "-f", "5"]
+		cmd = ["adb", "-s", self.dev_sn, "shell", "mount", "|", "grep", "\/data\ ", "|", "cut", "-d", " ", "-f", "5"]
 		try:
 			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		except OSError as e:

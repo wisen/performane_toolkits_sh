@@ -101,6 +101,7 @@ alias cls='printf "\033c"'
 alias pelf='python \${SCRIPT_ROOT}/py/parser/elf.parser'
 
 alias lx="ls -l|awk '{if(NR>1) printf(\"%s\t0x%x\n\", \$0,\$5)}'"
+alias ccc="ctags -R;cscope -Rbq"
 
 git config --global core.editor vi
 git config --global core.quotepath false
