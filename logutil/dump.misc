@@ -13,22 +13,28 @@ function dump_misc {
 
 	echo
 	blue "#################Production INFO##################"
-	yellow "Platform:"
+	yellow "SW Info:"
 	echo -e "PlatForm:\c";space 21;green "$arm_platform"
 	echo -e "BITS:\c";space 25;green "$arm_cpu_bits"
-	echo -e "Android Version:\c";space 14;green `adb shell getprop ro.os.version.release`
-	echo -e "Android OS Build ID:\c";space 10;green "${os_build_id}"
-	echo -e "Android OS Build Version:\c";space 5;green "${os_build_vesion}(${root_str})"
-	echo -e "Android OS Build Production:\c";space 2;green "$os_build_product"
-	echo -e "Android OS Build Display ID:\c";space 2;green "$os_build_displayid"
+	echo -e "Machine:\c";space 22;green `adb shell uname -m`
+	echo -e "Android Version:\c";space 14;green "Android"`adb shell getprop ro.build.version.release`
+	echo -e "Kernel Release:\c";space 15;green "Kernel "`adb shell uname -r`
+	echo -e "Kernel Version:\c";space 15;green `adb shell uname -v`
 	echo
+
 	yellow "Production:"
+	echo -e "Build ID:\c";space 21;green "${os_build_id}"
+	echo -e "Build Type:\c";space 19;green "${os_build_vesion}(${root_str})"
+	echo -e "Build Production:\c";space 13;green "$os_build_product"
+	echo -e "Build number:\c";space 17;green "$os_build_displayid"
+	echo -e "Name:\c";space 25;green `adb shell getprop ro.vendor.product.name`
 	echo -e "Brand:\c";space 24;green `adb shell getprop ro.vendor.product.brand`
+	echo -e "Model:\c";space 24;green `adb shell getprop ro.product.model`
 	echo -e "Device:\c";space 23;green `adb shell getprop ro.vendor.product.device`
 	echo -e "Manufacturer:\c";space 17;green `adb shell getprop ro.vendor.product.manufacturer`
-	echo -e "Name:\c";space 25;green `adb shell getprop ro.vendor.product.name`
-	echo -e "OS:\c";space 27;green `adb shell getprop ro.os_product.version`
-
+	echo -e "Custom OS:\c";space 20;green `adb shell getprop ro.os_product.version`"("`adb shell getprop ro.os.version.release`")"
+	echo -e "SerialNo:\c";space 21;green `adb shell getprop ro.serialno`
+	echo
 
 	blue "#################DDR INFO##################"
 	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
@@ -39,7 +45,7 @@ function dump_misc {
 		adb shell cat ///sys/devices/platform/10012000.dvfsrc/helio-dvfsrc/dvfsrc_opp_table
 		echo 
 	else
-		red "User Release and non-root, no io related info."
+		red "User Release and non-root, no DDR related info."
 	fi
 	blue "#################eMMC INFO##################"
 		if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
@@ -59,7 +65,7 @@ function dump_misc {
 		echo "$(adb shell cat //sys/kernel/debug/mmc0/ios)"
 		echo 
 	else
-		red "User Release and non-root, no io related info."
+		red "User Release and non-root, no eMMC related info."
 	fi
 
 	blue "#################Feature INFO##################"

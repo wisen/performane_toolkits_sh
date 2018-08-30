@@ -198,6 +198,59 @@ export PATH="/home/wisen/anaconda3/bin:\$PATH"
 EOF
 ) >> ~/.bashrc
 
+############
+which terminator
+if [ $? -ne 0 ];then
+	echo -e "\033[44;5m" You haven\'t install terminator, use bellow commmand to install it: "\033[0m"
+	echo -e "\033[32m" sudo apt-get install terminator "\033[0m"
+	echo
+else
+	terminatorfolder=~/.config/terminator
+	terminatorfile=$terminatorfolder/config
+	if [ ! -d $terminatorfolder ];then
+		mkdir -p $terminatorfolder
+	fi
+	
+	if [ ! -f $terminatorfile ];then
+		touch $terminatorfile
+	fi
+	
+(cat <<EOF
+[global_config]
+  geometry_hinting = False
+  handle_size = 1
+  inactive_color_offset = 1.0
+  title_font = mry_KacstQurn Bold 11
+  title_hide_sizetext = True
+[keybindings]
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      profile = default
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
+[profiles]
+  [[default]]
+    background_darkness = 0.76
+    background_image = None
+    background_type = transparent
+    cursor_color = "#f1f1fa"
+	cursor_shape = underline
+    custom_command = tmux
+    font = Ubuntu Mono 16
+    foreground_color = "#ffffff"
+    login_shell = True
+    show_titlebar = False
+    use_system_font = False
+EOF
+) > $terminatorfile
+fi
+############
+
 echo
 echo -e "\033[44;5m" Please restart your terminal and Work in your New environment "\033[0m"
 echo
