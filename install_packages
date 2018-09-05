@@ -1,0 +1,59 @@
+#!/bin/bash
+
+function showstr_fred {
+	echo -e "\033[31m"$*"\033[0m"
+}
+
+function showstr_fyellow {
+	echo -e "\033[33m"$*"\033[0m"
+}
+
+function showstr_fblue {
+	echo -e "\033[34m"$*"\033[0m"
+}
+
+function showstr_fgreen {
+	echo -e "\033[32m"$*"\033[0m"
+}
+
+function red {
+	showstr_fred $*
+}
+
+function blue {
+	showstr_fblue $*
+}
+
+function yellow {
+	showstr_fyellow $*
+}
+
+function green {
+	showstr_fgreen $*
+}
+
+if [ ! -n "$1" ];then
+	red "Please Run this script with your sudo passwd"
+	echo
+	green "$0 sudopasswd"
+	echo
+	exit
+fi
+
+passwd=$1
+
+sudo apt-get install -y git vim terminator uget vlc fcitx fcitx-bin fcitx-config-common fcitx-config-gtk fcitx-data fcitx-frontend-all fcitx-frontend-gtk2 fcitx-frontend-gtk3 fcitx-frontend-qt4 fcitx-frontend-qt5 fcitx-libs fcitx-module-dbus fcitx-module-kimpanel fcitx-module-lua fcitx-module-x11 fcitx-modules fcitx-ui-classic fonts-wqy-microhei i965-va-driver liba52-0.7.4 libaacs0 libass5 libavcodec-ffmpeg56 libavformat-ffmpeg56 libavutil-ffmpeg54 libbasicusageenvironment1 libbdplus0 libbluray1 libcddb2 libchromaprint0 libcrystalhd3 libdc1394-22 libdca0 libdirectfb-1.2-9 libdvbpsi10 libdvdnav4 libdvdread4 libebml4v5 libfaad2 libfcitx-core0 libfcitx-qt0 libfcitx-qt5-1 libgme0 libgroupsock8 libgsm1 libiso9660-8 libkate1 liblept5 liblivemedia50 libmad0 libmatroska6v5 libmodplug1 libmp3lame0 libmpcdec6 libmpeg2-4 libopencc1 libopenjp2-7 libopenjpeg5 libpostproc-ffmpeg53 libpresage-data libpresage1v5 libproxy-tools libqgsttools-p1 libqt4-opengl libqt5clucene5 libqt5designer5 libqt5help5 libqt5multimedia5-plugins libqt5multimediawidgets5 libqt5quickwidgets5 libqtwebkit4 libresid-builder0c2a libschroedinger-1.0-0 libsdl1.2debian libshine3 libsidplay2v5 libsnappy1v5 libsoxr0 libssh-gcrypt-4 libssh2-1 libswresample-ffmpeg1 libswscale-ffmpeg3 libtesseract3 libtinyxml2.6.2v5 libtwolame0 libupnp6 libusageenvironment3 libva1 libvcdinfo0 libvdpau1 libvlc5 libvlccore8 libx264-148 libx265-79 libxvidcore4 libzvbi-common libzvbi0 mesa-vdpau-drivers presage python3-pyqt5 python3-pyqt5.qtmultimedia python3-pyqt5.qtquick python3-pyqt5.qtwebkit python3-sip python3-xlib qml-module-qtquick-controls qtdeclarative5-controls-plugin tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-chi-tra tesseract-ocr-eng tesseract-ocr-equ tesseract-ocr-osd ttf-wqy-microhei va-driver-all vdpau-driver-all vdpau-va-driver vlc-data vlc-nox lib32ncurses5 lib32z1 rdesktop shutter gnome-bluetooth
+
+for package in git vim terminator fcitx;
+do
+which $package
+if [ $? -ne 0 ];then
+	echo $passwd |sudo -S apt-get install -y $package	
+	if [ $? -ne 0 ];then
+		red "$package install fail"
+	else
+		green "$package install sucess"
+	fi
+fi
+done
+

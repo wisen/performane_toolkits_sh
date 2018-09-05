@@ -13,24 +13,6 @@ fi
 
 passwd=$1
 
-if true;then
-echo $passwd |sudo -S sed -i '/Custom Configuration Start/,$d' /etc/sysctl.conf 
-echo $passwd |sudo -S sh -c "cat envconf/sysctl.conf >> /etc/sysctl.conf"
-echo $passwd |sudo -S sysctl -p > /dev/null
-# user should run `ulimit -c unlimited` to ulimit the coredump 
-
-echo $passwd |sudo -S sed -i '/Custom Configuration Start/,$d' /etc/apt/sources.list
-echo $passwd |sudo -S sh -c "cat envconf/sources.list >> /etc/apt/sources.list"
-fi
-
-sed -i '/Custom Configuration Start/,$d' ~/.gdbinit
-cat envconf/gdbinit >> ~/.gdbinit
-
-basepath=$(cd `dirname .`; pwd)
-#echo $basepath
-
-sed -i '/Custom Configuration Start/,$d' ~/.bashrc
-
 ############
 coredumpfolder=~/coredump
 sdbmountpoint=~/data
@@ -43,6 +25,33 @@ if [ ! -d $sdbmountpoint ];then
 mkdir $sdbmountpoint
 fi
 ############
+
+if true;then
+echo $passwd |sudo -S sed -i '/Custom Configuration Start/,$d' /etc/sysctl.conf 
+echo $passwd |sudo -S sh -c "cat envconf/sysctl.conf >> /etc/sysctl.conf"
+echo $passwd |sudo -S sysctl -p > /dev/null
+# user should run `ulimit -c unlimited` to ulimit the coredump 
+
+echo $passwd |sudo -S sed -i '/Custom Configuration Start/,$d' /etc/apt/sources.list
+echo $passwd |sudo -S sh -c "cat envconf/sources.list >> /etc/apt/sources.list"
+
+echo $passwd |sudo -S sed -i '/Custom Configuration Start/,$d' /etc/fstab
+echo $passwd |sudo -S sh -c 'echo "#Custom Configuration Start">> /etc/fstab'
+echo $passwd |sudo -S sh -c 'echo "#/DATA was on /dev/sdb2 mount to /home/wisen/data">> /etc/fstab'
+echo $passwd |sudo -S sh -c 'echo "UUID=52640F35640F1B7D /home/wisen/data ntfs defaults 0 0" >> /etc/fstab'
+echo $passwd |sudo -S mount -a
+if [ $? -ne 0 ];then 
+echo $passwd |sudo -S sed -i '/Custom Configuration Start/,$d' /etc/fstab
+fi
+fi
+
+sed -i '/Custom Configuration Start/,$d' ~/.gdbinit
+cat envconf/gdbinit >> ~/.gdbinit
+
+basepath=$(cd `dirname .`; pwd)
+#echo $basepath
+
+sed -i '/Custom Configuration Start/,$d' ~/.bashrc
 
 (cat <<EOF
 
@@ -151,6 +160,9 @@ if \$is_internalnet;then
 ###Mount reallytek start###
 cat /proc/mounts | grep "//192.168.1.71/reallytek/" > /dev/null
 if [ \$? -ne 0 ];then
+if [ ! -f /home/wisen/smb/71/reallytek ];then
+mkdir -p /home/wisen/smb/71/reallytek
+fi
 sudo -S mount -t cifs -o username=\$inter_user,pass=\$inter_passwd,domain=\$inter_domain //192.168.1.71/reallytek/ /home/wisen/smb/71/reallytek/ <<AAA
 $passwd
 AAA
@@ -167,6 +179,9 @@ fi
 ###Mount Transsionsharing start###
 cat /proc/mounts | grep ""//192.168.1.75/Transsionsharing/ > /dev/null
 if [ \$? -ne 0 ];then
+if [ ! -f /home/wisen/smb/75/Transsionsharing ];then
+mkdir -p /home/wisen/smb/75/Transsionsharing
+fi
 sudo -S mount -t cifs -o username=\$inter_user,pass=\$inter_passwd,domain=\$inter_domain //192.168.1.75/Transsionsharing/ /home/wisen/smb/75/Transsionsharing <<BBB
 $passwd
 BBB
@@ -192,19 +207,12 @@ PS1='\[\033[01;33m\]\u\[\033[00m\]\[\033[01;31m\][\[\033[00m\]\[\033[04;32m\]\t\
 #export HOME=\$ASHELL_ROOT/home/
 #cd \$HOME
 
-# added by Anaconda3 installer
-export PATH="/home/wisen/anaconda3/bin:\$PATH"
 ## Custom END ##
 EOF
 ) >> ~/.bashrc
 
 ############
-which terminator
-if [ $? -ne 0 ];then
-	echo -e "\033[44;5m" You haven\'t install terminator, use bellow commmand to install it: "\033[0m"
-	echo -e "\033[32m" sudo apt-get install terminator "\033[0m"
-	echo
-else
+if true;then
 	terminatorfolder=~/.config/terminator
 	terminatorfile=$terminatorfolder/config
 	if [ ! -d $terminatorfolder ];then

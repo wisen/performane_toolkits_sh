@@ -1,0 +1,40 @@
+#!/bin/bash
+
+## $1 app's name
+## $2 proj1's name
+## $3 proj1's dir
+
+## $4 proj2's name
+## $5 proj2's dir
+
+secondprj=false
+parser_time=`date "+%Y%m%d%H%M%S"`
+
+appname=$1
+
+prj1=$2
+dir1=$3
+
+rwstr1=$(blkparse -i $dir1/mmcblk0 -d ${prj1}_mmcblk0.bin | grep "Reads Completed:"|awk 'END{print $4,$8}')
+iowatcher -w 1024 -h 768 -t ${prj1}_mmcblk0.bin -O io -o ${prj1}_io.svg
+btt -i ${prj1}_mmcblk0.bin -l ${prj1}_${parser_time}_la > /dev/null
+awk '{print $2}' ${prj1}_${parser_time}_la* > ${prj1}_${parser_time}.la
+btt -i ${prj1}_mmcblk0.bin -q ${prj1}_${parser_time}_q2c > /dev/null
+awk '{print $2}' ${prj1}_${parser_time}_q2c* > ${prj1}_${parser_time}.q2c
+
+if [ -n "$4" ];then
+prj2=$4
+dir2=$5
+
+rwstr2=$(blkparse -i $dir2/mmcblk0 -d ${prj2}_mmcblk0.bin | grep "Reads Completed:"|awk 'END{print $4,$8}')
+iowatcher -w 1024 -h 768 -t ${prj2}_mmcblk0.bin -O io -o ${prj2}_io.svg
+btt -i ${prj2}_mmcblk0.bin -l ${prj2}_${parser_time}_la > /dev/null
+awk '{print $2}' ${prj2}_${parser_time}_la* > ${prj2}_${parser_time}.la
+btt -i ${prj2}_mmcblk0.bin -q ${prj2}_${parser_time}_q2c > /dev/null
+awk '{print $2}' ${prj2}_${parser_time}_q2c* > ${prj2}_${parser_time}.q2c
+python ${SCRIPT_ROOT}/py/parser/iolatency2.py $appname ${prj1} ${prj1}_${parser_time} "$rwstr1" ${prj2} ${prj2}_${parser_time} "$rwstr2" 
+else
+python ${SCRIPT_ROOT}/py/parser/iolatency2.py $appname ${prj1} ${prj1}_${parser_time} "$rwstr1"
+fi
+#rm ${prj1}_${parser_time}*
+#rm ${prj2}_${parser_time}*
