@@ -201,8 +201,8 @@ class FragmentUI:
 
 		## frm_status start
 		ttk.Label(tab_fragtest, text="Device status", font=("Monospace Regular",16)).grid(column=4,row=0, sticky=W)
-		scrolW = 29 # 设置文本框的长度
-		scrolH = 17 # 设置文本框的高度
+		scrolW = 29
+		scrolH = 17
 		scr = scrolledtext.ScrolledText(tab_fragtest, width=scrolW, height=scrolH, wrap=WORD, font=("Monospace Regular",12))
 		scr.grid(column=4, row=1, rowspan=2)
 		self.scr = scr	

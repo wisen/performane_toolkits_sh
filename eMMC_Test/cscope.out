@@ -1,0 +1,22699 @@
+cscope 15 $HOME/data/repo/performane_toolkits_sh/eMMC_Test -q 0000000646 0000109072
+	@About.py
+
+1 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ *
+
+2 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+‰k
+
+
+3 
+impÜt
+ 
+V”siÚ
+ 
+as
+ 
+v
+
+
+5 
+şass
+ 
+	$About
+():
+
+7 
+def
+ 
+	$__š™__
+(
+£lf
+, 
+Çme
+):
+
+8 
+£lf
+.
+Çme
+ =‚ame
+
+9 
+£lf
+.
+d–th»ads
+ = 5
+
+10 
+£lf
+.
+w¹h»ads
+ = 10
+
+11 
+£lf
+.
+¦“±ime
+ = 10
+
+12 
+£lf
+.
+¡İ_wr
+ = 
+F®£
+
+
+13 
+£lf
+.
+¡İ_d–
+ = 
+True
+
+
+15 
+def
+ 
+	$š™UI
+(
+£lf
+):
+
+16 
+roÙ
+ = 
+	$Tk
+()
+
+17 
+roÙ
+.
+	$t™Ë
+(
+£lf
+.
+Çme
+)
+
+18 
+roÙ
+.
+	`geom‘ry
+("400x300+300+200")
+
+19 
+roÙ
+.
+	$»sizabË
+(
+width
+=
+F®£
+, 
+height
+=False)
+
+20 
+£lf
+.
+roÙ
+ =„oot
+
+22 
+¡r
+ = 
+v
+.
+Çme
+ + "\n\n"
+
+23 
+¡r
+ = sŒ + "V”siÚ: " + 
+v
+.
+v”siÚ
+ + "\n\n"
+
+24 
+¡r
+ = sŒ + "AuthÜ: " + 
+v
+.
+authÜ
+ + "\n\n"
+
+25 
+¡r
+ = sŒ + "Ema: " + 
+v
+.
+ema
+ + "\n\n"
+
+26 
+¡r
+ = sŒ + "G™hub: " + 
+v
+.
+g™hub
+ + "\n\n"
+
+27 
+‰k
+.
+	`Lab–
+(
+roÙ
+, 
+‹xt
+=
+¡r
+, 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=0, 
+¡icky
+=
+W
+)
+
+29 
+roÙ
+.
+	$mašloİ
+()
+
+31 
+__Çme__
+ == '__main__':
+
+32 
+obj
+ = 
+	`About
+("Abouˆ" + 
+v
+.
+Çme
+)
+
+33 
+obj
+.
+	`š™UI
+()
+
+	@Debug.py
+
+1 
+impÜt
+ 
+š¥eù
+
+
+2 
+impÜt
+ 
+loggšg
+
+
+4 
+	gLOG_FORMAT
+ = "%(asctime)s - %(threadName)s %(message)s"
+
+5 
+DATE_FORMAT
+ = "%m-%d-%Y %H:%M:%S"
+
+7 
+def
+ 
+	$š™
+():
+
+8 
+loggšg
+.
+	$basicCÚfig
+(
+Ëv–
+=
+loggšg
+.
+NOTSET
+,
+fÜm©
+=
+LOG_FORMAT
+, 
+d©efmt
+=
+DATE_FORMAT
+)
+
+9 
+loggšg
+.
+FÜm©‹r
+
+
+11 
+def
+ 
+	$d
+(
+¡r
+):
+
+12 
+loggšg
+.
+	$debug
+(
+¡r
+)
+
+14 
+def
+ 
+	$i
+(
+¡r
+):
+
+15 
+loggšg
+.
+	$šfo
+(
+¡r
+)
+
+17 
+def
+ 
+	$w
+(
+¡r
+):
+
+18 
+loggšg
+.
+	$w¬nšg
+(
+¡r
+)
+
+20 
+def
+ 
+	$e
+(
+¡r
+):
+
+21 
+loggšg
+.
+	$”rÜ
+(
+¡r
+)
+
+23 
+def
+ 
+	$c
+(
+¡r
+):
+
+24 
+loggšg
+.
+	`ü™iÿl
+(
+¡r
+)
+
+	@DeviceConfig.py
+
+1 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ *
+
+2 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+‰k
+
+
+3 
+impÜt
+ 
+tkš‹r
+ 
+as
+ 
+tk
+
+
+5 
+impÜt
+ 
+Ut
+ 
+as
+ 
+u
+
+
+6 
+impÜt
+ 
+	gtkš‹r
+.
+mes§gebox
+ 
+as
+ 
+msg
+
+
+7 
+impÜt
+ 
+cÚfig·r£r
+ 
+as
+ 
+ı
+
+
+9 
+şass
+ 
+	$DeviûCÚfig
+():
+
+11 
+def
+ 
+	$__š™__
+(
+£lf
+, 
+Çme
+, 
+deviû
+):
+
+12 
+£lf
+.
+Çme
+ =‚ame
+
+13 
+£lf
+.
+deviû
+ = device
+
+14 
+£lf
+.
+ši_fe
+ = "cÚf/"+£lf.
+deviû
+.
+dev_¢
++".ini"
+
+15 #£lf.
+ši_fe
+ = "conf/global.ini"
+
+16 
+£lf
+.
+ši_–em’ts
+ = {
+	}
+}
+
+18 
+def
+ 
+	$·r£_ši_fe
+(
+£lf
+, 
+ši_fe
+):
+
+19 
+£lf
+.
+aùive_ši
+ = 
+ı
+.
+	$CÚfigP¬£r
+()
+
+20 
+£lf
+.
+aùive_ši
+.
+	$»ad
+(
+ši_fe
+)
+
+21 
+£lf
+.
+aùive_ši_f’ame
+ = 
+ši_fe
+
+
+22 
+£lf
+.
+	$di¥Ïy_£ùiÚ_cÚ‹Ás
+()
+
+24 
+def
+ 
+	$»£t_cÚfig
+(
+£lf
+):
+
+25 
+u
+.
+	`cİyfe
+("cÚf/glob®.ši", 
+£lf
+.
+ši_fe
+)
+
+28 
+def
+ 
+	$§ve_cÚfig
+(
+£lf
+, 
+ev’t
+=
+NÚe
+):
+
+29 
+key
+ 
+š
+ 
+£lf
+.
+aùive_ši
+["SETTING"]:
+
+30 
+£lf
+.
+aùive_ši
+["SETTING"][
+key
+] = s–f.
+ši_–em’ts
+[key].
+	$g‘
+()
+
+31 
+w™h
+ 
+	`İ’
+(
+£lf
+.
+aùive_ši_f’ame
+, "w"è
+as
+ 
+ši_fe
+:
+
+32 
+£lf
+.
+aùive_ši
+.
+	$wr™e
+(
+ši_fe
+)
+
+33 
+msg
+.
+	`showšfo
+("Saved", "File Saved Successfully")
+
+35 
+def
+ 
+	$di¥Ïy_£ùiÚ_cÚ‹Ás
+(
+£lf
+, 
+ev’t
+=
+NÚe
+):
+
+37 
+i
+ = 0
+
+38 
+key
+ 
+š
+ 
+£lf
+.
+aùive_ši
+["SETTING"]:
+
+39 
+Ãw_Ïb–
+ = 
+‰k
+.
+	`Lab–
+(
+£lf
+.
+roÙ
+, 
+‹xt
+=
+key
+, 
+fÚt
+=(
+NÚe
+, 12)).
+	$grid
+(
+cŞumn
+=0, 
+row
+=
+i
+, 
+¡icky
+=
+W
+)
+
+40 #´št(
+key
++" "+
+£lf
+.
+aùive_ši
+["SETTING"][key])
+
+41 
+v®ue
+ = 
+£lf
+.
+aùive_ši
+["SETTING"][
+key
+]
+
+42 
+ši_–em’t
+ = 
+‰k
+.
+	$EÁry
+(
+£lf
+.
+roÙ
+)
+
+43 
+ši_–em’t
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=
+i
+)
+
+44 
+ši_–em’t
+.
+	$š£¹
+(0, 
+v®ue
+)
+
+45 
+£lf
+.
+ši_–em’ts
+[
+key
+] = 
+ši_–em’t
+
+
+46 
+i
+ = i+1
+
+48 
+»£t_bu‰Ú
+ = 
+tk
+.
+	`Bu‰Ú
+(
+£lf
+.
+roÙ
+, 
+‹xt
+="Re£ˆCÚfig", 
+commªd
+=£lf.
+»£t_cÚfig
+)
+
+49 
+»£t_bu‰Ú
+.
+	$grid
+(
+cŞumn
+=0, 
+row
+=
+i
+, 
+¡icky
+=
+E
+)
+
+51 
+§ve_bu‰Ú
+ = 
+tk
+.
+	`Bu‰Ú
+(
+£lf
+.
+roÙ
+, 
+‹xt
+="SavCÚfig", 
+commªd
+=£lf.
+§ve_cÚfig
+)
+
+52 
+§ve_bu‰Ú
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=
+i
+, 
+¡icky
+=
+E
+)
+
+55 
+def
+ 
+	$š™UI
+(
+£lf
+):
+
+56 
+roÙ
+ = 
+	$Tk
+()
+
+57 
+roÙ
+.
+	`t™Ë
+(
+£lf
+.
+Çme
+ + " " + s–f.
+deviû
+.
+dev_¢
+)
+
+58 
+roÙ
+.
+	`geom‘ry
+("300x400+300+200")
+
+59 
+roÙ
+.
+	$»sizabË
+(
+width
+=
+F®£
+, 
+height
+=False)
+
+60 
+£lf
+.
+roÙ
+ =„oot
+
+62 
+nÙ
+ 
+£lf
+.
+ši_fe
+:
+
+63 
+u
+.
+	`cİyfe
+("cÚf/glob®.ši", 
+£lf
+.
+ši_fe
+)
+
+64 
+£lf
+.
+	$·r£_ši_fe
+(
+£lf
+.
+ši_fe
+)
+
+66 
+roÙ
+.
+	$mašloİ
+()
+
+69 
+__Çme__
+ == '__main__':
+
+70 
+obj
+ = 
+	`DeviûCÚfig
+("Config Device")
+
+71 
+obj
+.
+	`š™UI
+()
+
+	@FragmentUI.py
+
+1 #!/
+u¤
+/
+bš
+/
+’v
+ 
+pythÚ
+
+
+3 
+impÜt
+ 
+About
+ 
+as
+ 
+about
+
+
+5 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ *
+
+6 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+‰k
+
+
+7 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+süŞËd‹xt
+
+
+8 
+impÜt
+ 
+th»adšg
+
+
+9 
+impÜt
+ 
+RLKTh»ad
+
+
+10 
+impÜt
+ 
+sub´oûss
+
+
+11 
+impÜt
+ 
+RLKDB
+
+
+12 
+impÜt
+ 
+RLKDeviû
+
+
+13 
+impÜt
+ 
+DeviûCÚfig
+ 
+as
+ 
+de
+
+
+14 
+impÜt
+ 
+Glob®CÚfig
+ 
+as
+ 
+glo
+
+
+15 
+impÜt
+ 
+OfæšeP¬£r
+ 
+as
+ 
+İ
+
+
+17 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+mes§gebox
+ 
+as
+ 
+mBox
+
+
+18 
+impÜt
+ 
+V”siÚ
+ 
+as
+ 
+v
+
+
+20 
+impÜt
+ 
+Debug
+ 
+as
+ 
+d
+
+
+22 
+şass
+ 
+	gF¿gm’tUI
+:
+
+24 
+def
+ 
+	$__š™__
+(
+£lf
+,
+Çme
+):
+
+25 
+£lf
+.
+Çme
+ =‚ame
+
+26 
+£lf
+.
+deviûs
+ = {
+	}
+}
+
+27 
+£lf
+.
+gl_w¹h»ads
+ = 10
+
+28 
+£lf
+.
+gl_d–th»ads
+ = 5
+
+29 
+£lf
+.
+gl_·th
+ = "/sdcard/tmp/"
+
+30 
+£lf
+.
+gl_dœ
+ = "dir"
+
+31 
+£lf
+.
+gl_¡İ_wr
+ = 0.95
+
+32 
+£lf
+.
+gl_¡İ_d–
+ = 0.90
+
+33 
+£lf
+.
+gl_¦“±ime
+ = 10
+
+34 
+£lf
+.
+gl_mÚth»ad
+ = "on"
+
+35 
+£lf
+.
+gl_dmšx
+ = "0"
+
+36 
+d
+.
+	$š™
+()
+
+38 
+def
+ 
+	$show_¡©us_šdeviûli¡
+(
+£lf
+, 
+ev’t
+):
+
+39 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) != 0:
+
+40 
+dev_¢
+=
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+41 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$qu”y_¡Üage
+()
+
+42 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$qu”y_äagm’t
+()
+
+43 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$lßd_cÚfig
+()
+
+44 
+£lf
+.
+sü
+.
+	`d–‘e
+(0.0,
+	`Ën
+(£lf.sü.
+	`g‘
+(0.0,
+END
+))-1.0)
+
+45 
+¡©us_¡r
+="deviû["+
+dev_¢
++"]: \n"
+
+46 
+¡©us_¡r
+ = stus_¡¸+ "df: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+¡Üage
+)+"\n"
+
+47 
+¡©us_¡r
+ = stus_¡¸+ "fs: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+fs
+) + "\n"
+
+48 
+¡©us_¡r
+ = stus_¡¸+ "äag: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+äag
+)+"\n\n"
+
+49 
+¡©us_¡r
+ = stus_¡¸+ "w¹h»ads: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+w¹h»ads
+) + "\n"
+
+50 
+¡©us_¡r
+ = stus_¡¸+ "wrd–ay: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+wrd–ay
+) + "\n"
+
+51 
+¡©us_¡r
+ = stus_¡¸+ "d–th»ads: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+d–th»ads
+) + "\n"
+
+52 
+¡©us_¡r
+ = stus_¡¸+ "d–d–ay: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+d–d–ay
+) + "\n"
+
+53 
+¡©us_¡r
+ = stus_¡¸+ "mÚd–ay: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+mÚd–ay
+) + "\n"
+
+54 
+¡©us_¡r
+ = stus_¡¸+ "d‘d–ay: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+d‘d–ay
+) + "\n"
+
+55 
+¡©us_¡r
+ = stus_¡¸+ "·th: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+·th
+) + "\n"
+
+56 
+¡©us_¡r
+ = stus_¡¸+ "dœ: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+dœ
+) + "\n"
+
+57 
+¡©us_¡r
+ = stus_¡¸+ "¡İ_wr: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+¡İ_wr
+) + "\n"
+
+58 
+¡©us_¡r
+ = stus_¡¸+ "¡İ_d–: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+¡İ_d–
+) + "\n"
+
+59 
+¡©us_¡r
+ = stus_¡¸+ "¦“±ime: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+¦“±ime
+) + "\n"
+
+60 
+¡©us_¡r
+ = stus_¡¸+ "dmšx: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+dmšx
+) + "\n"
+
+61 
+£lf
+.
+sü
+.
+	$š£¹
+(
+END
+,
+¡©us_¡r
+)
+
+65 
+def
+ 
+	$show_¡©us_šmÚ™Üli¡
+(
+£lf
+, 
+ev’t
+):
+
+66 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) != 0:
+
+67 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+68 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$qu”y_¡Üage
+()
+
+69 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$qu”y_äagm’t
+()
+
+70 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$lßd_cÚfig
+()
+
+71 
+£lf
+.
+sü
+.
+	`d–‘e
+(0.0,
+	`Ën
+(£lf.sü.
+	`g‘
+(0.0,
+END
+))-1.0)
+
+72 
+¡©us_¡r
+="deviû["+
+dev_¢
++"]: \n"
+
+73 
+¡©us_¡r
+=¡©us_¡r+"df: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+¡Üage
+)+"\n"
+
+74 
+¡©us_¡r
+ = stus_¡¸+ "fs: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+fs
+) + "\n"
+
+75 
+¡©us_¡r
+=¡©us_¡r+"äag: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+äag
+)+"\n\n"
+
+76 
+¡©us_¡r
+ = stus_¡¸+ "w¹h»ads: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+w¹h»ads
+) + "\n"
+
+77 
+¡©us_¡r
+ = stus_¡¸+ "wrd–ay: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+wrd–ay
+) + "\n"
+
+78 
+¡©us_¡r
+ = stus_¡¸+ "d–th»ads: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+d–th»ads
+) + "\n"
+
+79 
+¡©us_¡r
+ = stus_¡¸+ "d–d–ay: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+d–d–ay
+) + "\n"
+
+80 
+¡©us_¡r
+ = stus_¡¸+ "mÚd–ay: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+mÚd–ay
+) + "\n"
+
+81 
+¡©us_¡r
+ = stus_¡¸+ "d‘d–ay: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+d‘d–ay
+) + "\n"
+
+82 
+¡©us_¡r
+ = stus_¡¸+ "·th: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+·th
+) + "\n"
+
+83 
+¡©us_¡r
+ = stus_¡¸+ "dœ: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+dœ
+) + "\n"
+
+84 
+¡©us_¡r
+ = stus_¡¸+ "¡İ_wr: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+¡İ_wr
+) + "\n"
+
+85 
+¡©us_¡r
+ = stus_¡¸+ "¡İ_d–: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+¡İ_d–
+) + "\n"
+
+86 
+¡©us_¡r
+ = stus_¡¸+ "¦“±ime: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+¦“±ime
+) + "\n"
+
+87 
+¡©us_¡r
+ = stus_¡¸+ "dmšx: " + 
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+].
+dmšx
+) + "\n"
+
+88 
+£lf
+.
+sü
+.
+	$š£¹
+(
+END
+,
+¡©us_¡r
+)
+
+92 
+def
+ 
+	$_qu™
+(
+£lf
+):
+
+93 
+£lf
+.
+	$wšdow_şo£
+()
+
+95 
+def
+ 
+	$wšdow_şo£
+(
+£lf
+):
+
+96 
+£lf
+.
+	$¡İ_mÚ™Üth»ad
+()
+
+97 
+£lf
+.
+	$¡İ_®l_deviûs
+()
+
+98 
+£lf
+.
+roÙ
+.
+	$de¡roy
+()
+
+100 
+def
+ 
+	$about
+(
+£lf
+):
+
+101 
+about
+.
+	`About
+("about").
+	$š™UI
+()
+
+103 
+def
+ 
+	$h–p
+(
+£lf
+):
+
+106 
+def
+ 
+	$cÚfig_glob®
+(
+£lf
+):
+
+107 
+glo
+.
+	`Glob®CÚfig
+("Glob® CÚfig").
+	$š™UI
+()
+
+109 
+def
+ 
+	$cÚfig_deviû
+(
+£lf
+):
+
+110 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+111 
+£lf
+.
+	$No_S–eù
+()
+
+114 
+dev_¢
+=
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+115 
+de
+.
+	`DeviûCÚfig
+("CÚfig Deviû " + 
+dev_¢
+, 
+£lf
+.
+deviûs
+[dev_¢]).
+	$š™UI
+()
+
+118 
+def
+ 
+	$ofæše_·r£r
+(
+£lf
+):
+
+119 
+İ
+.
+	`OfæšeP¬£r
+("OfæšP¬£¸ToŞ "+
+v
+.
+v”siÚ
+).
+	$š™UI
+()
+
+122 
+def
+ 
+	$š™UI
+(
+£lf
+):
+
+123 
+roÙ
+ = 
+	$Tk
+()
+
+124 
+roÙ
+.
+	$t™Ë
+(
+£lf
+.
+Çme
+)
+
+125 
+roÙ
+.
+	`geom‘ry
+("720x400+300+200")
+
+126 
+roÙ
+.
+	$»sizabË
+(
+width
+=
+F®£
+, 
+height
+=False)
+
+127 #roÙ.
+	`icÚb™m­
+(
+r
+"/home/wisen/performane_toolkits_sh/eMMC_Test/emmc.ico")
+
+128 
+£lf
+.
+roÙ
+ =„oot
+
+130 
+s
+ = 
+‰k
+.
+	$StyË
+()
+
+131 
+s
+.
+	`theme_u£
+('classic')
+
+133 ###m’u 
+¡¬t
+ ###
+ = M’uÔoÙ, fÚt=("MÚo¥aû ReguÏr",16))
+
+135 
+roÙ
+.
+	$cÚfig
+(
+m’u
+=
+m’uB¬
+)
+
+136 
+feM’u
+ = 
+	$M’u
+(
+m’uB¬
+, 
+‹¬off
+=0)
+
+137 
+m’uB¬
+.
+	`add_ÿsÿde
+(
+Ïb–
+="ToŞs", 
+m’u
+=
+feM’u
+)
+
+138 
+feM’u
+.
+	`add_commªd
+(
+Ïb–
+="OfæšP¬£r", 
+fÚt
+=("MÚo¥aû ReguÏr", 16), 
+commªd
+=
+£lf
+.
+ofæše_·r£r
+)
+
+139 #feM’u.
+	`add_commªd
+(
+Ïb–
+="Exit")
+
+140 
+feM’u
+.
+	$add_£·¿tÜ
+()
+
+141 
+feM’u
+.
+	`add_commªd
+(
+Ïb–
+="Ex™", 
+commªd
+=
+£lf
+.
+_qu™
+, 
+fÚt
+=("Monospace Regular",16))
+
+143 
+cÚfigM’u
+ = 
+	$M’u
+(
+m’uB¬
+, 
+‹¬off
+=0)
+
+144 
+m’uB¬
+.
+	`add_ÿsÿde
+(
+Ïb–
+="CÚfig", 
+m’u
+=
+cÚfigM’u
+)
+
+145 
+cÚfigM’u
+.
+	`add_commªd
+(
+Ïb–
+="Glob®", 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+commªd
+=
+£lf
+.
+cÚfig_glob®
+)
+
+146 
+cÚfigM’u
+.
+	`add_commªd
+(
+Ïb–
+="Deviû", 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+commªd
+=
+£lf
+.
+cÚfig_deviû
+)
+
+148 
+h–pM’u
+ = 
+	$M’u
+(
+m’uB¬
+, 
+‹¬off
+=0)
+
+149 
+m’uB¬
+.
+	`add_ÿsÿde
+(
+Ïb–
+="H–p", 
+m’u
+=
+h–pM’u
+)
+
+150 
+h–pM’u
+.
+	`add_commªd
+(
+Ïb–
+="About", 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+commªd
+=
+£lf
+.
+about
+)
+
+151 
+h–pM’u
+.
+	$add_£·¿tÜ
+()
+
+152 
+h–pM’u
+.
+	`add_commªd
+(
+Ïb–
+="H–p", 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+commªd
+=
+£lf
+.
+h–p
+)
+
+153 ###m’u 
+’d
+ ###
+
+
+155 #######################Tab 
+cÚŒŞ
+##############################
+
+156 
+bCÚŒŞ
+ = 
+‰k
+.
+	$NÙebook
+(
+roÙ
+)
+
+157 
+b_äag‹¡
+ = 
+‰k
+.
+	$F¿me
+(
+bCÚŒŞ
+)
+
+158 
+b_throughpu‰e¡
+ = 
+‰k
+.
+	$F¿me
+(
+bCÚŒŞ
+)
+
+159 
+b_iİ¡e¡
+ = 
+‰k
+.
+	$F¿me
+(
+bCÚŒŞ
+)
+
+160 
+b_iŞª‹ncy‹¡
+ = 
+‰k
+.
+	$F¿me
+(
+bCÚŒŞ
+)
+
+162 
+bCÚŒŞ
+.
+	`add
+(
+b_äag‹¡
+, 
+‹xt
+="Fragment Test")
+
+163 
+bCÚŒŞ
+.
+	`add
+(
+b_throughpu‰e¡
+, 
+‹xt
+="Throughput Test")
+
+164 
+bCÚŒŞ
+.
+	`add
+(
+b_iİ¡e¡
+, 
+‹xt
+="IOPS Test")
+
+165 
+bCÚŒŞ
+.
+	`add
+(
+b_iŞª‹ncy‹¡
+, 
+‹xt
+="IO Lantency Test")
+
+166 
+bCÚŒŞ
+.
+	$grid
+(
+cŞumn
+=0,
+row
+=0)
+
+167 #äm = 
+‰k
+.
+	`Lab–F¿me
+(
+roÙ
+,
+‹xt
+="F¿gm’ˆtoŞ V1.0").
+	`grid
+(
+cŞumn
+=0,
+row
+=0)
+
+169 #######################F¿gm’ˆ
+Te¡
+ 
+S¹
+######################
+
+170 ## 
+äm_deviûs
+ 
+¡¬t
+
+
+171 
+‰k
+.
+	`Lab–
+(
+b_äag‹¡
+, 
+‹xt
+="P’dšg Li¡", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=0,
+cŞumn¥ª
+=2, 
+¡icky
+=
+W
+)
+
+173 
+v¬
+ = 
+	$SŒšgV¬
+()
+
+174 
+lb_deviûs
+ = 
+	`Li¡box
+(
+b_äag‹¡
+, 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+width
+=20, 
+height
+=13, 
+li¡v¬ŸbË
+ = 
+v¬
+)
+
+175 
+lb_deviûs
+.
+	$grid
+(
+cŞumn
+=0,
+row
+=1,
+row¥ª
+=2,
+cŞumn¥ª
+=2)
+
+176 
+£lf
+.
+lb_deviûs
+ =†b_devices
+
+178 
+lb_deviûs
+.
+	`bšd
+('<Bu‰ÚR–—£-1>', 
+£lf
+.
+show_¡©us_šdeviûli¡
+)
+
+180 ## 
+pİm’uB¬_deviûs
+ 
+¡¬t
+
+
+181 
+£lf
+.
+	$ü—‹_pİm’uB¬_deviûs
+()
+
+182 
+lb_deviûs
+.
+	`bšd
+("<Bu‰ÚR–—£-3>", 
+£lf
+.
+pİ_Ú_deviû¦i¡
+)
+
+183 ## 
+pİm’uB¬_deviûs
+ 
+’d
+
+
+185 
+¡¬t_bŠ
+ = 
+‰k
+.
+	`Bu‰Ú
+(
+b_äag‹¡
+, 
+‹xt
+=">>>", 
+commªd
+=
+£lf
+.
+add_deviû
+)
+
+186 
+¡¬t_bŠ
+.
+	$grid
+(
+cŞumn
+=2,
+row
+=1,
+¡icky
+=
+S
+)
+
+187 
+¡İ_bŠ
+ = 
+‰k
+.
+	`Bu‰Ú
+(
+b_äag‹¡
+, 
+‹xt
+="<<<", 
+commªd
+=
+£lf
+.
+d–‘e_deviû
+)
+
+188 
+¡İ_bŠ
+.
+	$grid
+(
+cŞumn
+=2,
+row
+=2,
+¡icky
+=
+N
+)
+
+190 
+‰k
+.
+	`Lab–
+(
+b_äag‹¡
+, 
+‹xt
+="MÚ™Ü deviûs", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=3,
+row
+=0, 
+¡icky
+=
+W
+)
+
+191 
+v¬
+ = 
+	$SŒšgV¬
+()
+
+192 
+lb_mÚ™Üs
+ = 
+	`Li¡box
+(
+b_äag‹¡
+, 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+width
+=20, 
+height
+=13, 
+li¡v¬ŸbË
+ = 
+v¬
+)
+
+193 
+lb_mÚ™Üs
+.
+	$grid
+(
+cŞumn
+=3,
+row
+=1,
+row¥ª
+=2)
+
+194 
+£lf
+.
+lb_mÚ™Üs
+ =†b_monitors
+
+196 ## 
+pİm’uB¬_mÚ™Ü
+ 
+¡¬t
+
+
+197 
+£lf
+.
+	$ü—‹_pİm’uB¬_mÚ™Ü
+()
+
+198 
+lb_mÚ™Üs
+.
+	`bšd
+("<Bu‰ÚR–—£-3>", 
+£lf
+.
+pİ_Ú_mÚ™Üli¡
+)
+
+199 ## 
+pİm’uB¬_mÚ™Ü
+ 
+’d
+
+
+200 
+lb_mÚ™Üs
+.
+	`bšd
+('<Bu‰ÚR–—£-1>', 
+£lf
+.
+show_¡©us_šmÚ™Üli¡
+)
+
+202 ## 
+äm_¡©us
+ 
+¡¬t
+
+
+203 
+‰k
+.
+	`Lab–
+(
+b_äag‹¡
+, 
+‹xt
+="Deviû stus", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=4,
+row
+=0, 
+¡icky
+=
+W
+)
+
+204 
+süŞW
+ = 29 #è®¾ç½®æ–‡æœ¬æ¡†çš„é•¿åº¦
+
+205 
+süŞH
+ = 17 #è®¾ç½®æ–‡æœ¬æ¡†çš„é«˜åº¦
+
+206 
+sü
+ = 
+süŞËd‹xt
+.
+	`SüŞËdText
+(
+b_äag‹¡
+, 
+width
+=
+süŞW
+, 
+height
+=
+süŞH
+, 
+w¿p
+=
+WORD
+, 
+fÚt
+=("Monospace Regular",12))
+
+207 
+sü
+.
+	$grid
+(
+cŞumn
+=4, 
+row
+=1, 
+row¥ª
+=2)
+
+208 
+£lf
+.
+sü
+ = scr
+
+210 
+£lf
+.
+	$¡¬t_mÚ™Üth»ad
+()
+
+211 
+£lf
+.
+roÙ
+.
+	`bšd
+('<Bu‰ÚR–—£-1>', s–f.
+de¡roy_pİm’u
+)
+
+212 #######################F¿gm’ˆ
+Te¡
+ 
+S¹
+######################
+
+214 
+roÙ
+.
+	`´ÙocŞ
+("WM_DELETE_WINDOW", 
+£lf
+.
+wšdow_şo£
+)
+
+215 
+roÙ
+.
+	$mašloİ
+()
+
+217 
+def
+ 
+	$de¡roy_pİm’u
+(
+£lf
+, 
+ev’t
+):
+
+218 
+£lf
+.
+pİm’uB¬_deviûs
+:
+
+219 
+£lf
+.
+pİm’uB¬_deviûs
+.
+	$de¡roy
+()
+
+220 
+£lf
+.
+pİm’uB¬_mÚ™Ü
+:
+
+221 
+£lf
+.
+pİm’uB¬_mÚ™Ü
+.
+	$de¡roy
+()
+
+223 
+def
+ 
+	$ü—‹_pİm’uB¬_deviûs
+(
+£lf
+):
+
+224 
+pİm’uB¬_deviûs
+ = 
+	`M’u
+(
+£lf
+.
+roÙ
+, 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+‹¬off
+=0)
+
+225 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="Add Deviû", 
+commªd
+=
+£lf
+.
+add_deviû
+)
+
+226 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="Add AÎ", 
+commªd
+=
+£lf
+.
+add_®l_deviûs
+)
+
+227 
+pİm’uB¬_deviûs
+.
+	$add_£·¿tÜ
+()
+
+228 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="D¿w F¿gm’tÕlÙly)", 
+commªd
+=
+£lf
+.
+d¿w_äagm’t_by¶Ùly_Ú_deviûli¡
+)
+
+229 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="D¿w F¿gm’t(m©¶Ù)", 
+commªd
+=
+£lf
+.
+d¿w_äagm’t_bym©¶Ù_Ú_deviûli¡
+)
+
+230 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="D¿w Anim©iÚ", 
+commªd
+=
+£lf
+.
+d¿w_ªim©iÚ_Ú_deviûli¡
+)
+
+231 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="SavAnim©iÚ(mp4)", 
+commªd
+=
+£lf
+.
+§ve_ªim©iÚ_tomp4_Ú_deviûli¡
+)
+
+232 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="SavAnim©iÚ(gif)", 
+commªd
+=
+£lf
+.
+§ve_ªim©iÚ_togif_Ú_deviûli¡
+)
+
+233 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="D¿w PlÙ(äag)", 
+commªd
+=
+£lf
+.
+d¿w_äagm’t_¶Ù_Ú_deviûli¡
+)
+
+234 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="D¿w PlÙ(bÙh)", 
+commªd
+=
+£lf
+.
+d¿w_bÙh_¶Ù_Ú_deviûli¡
+)
+
+235 
+pİm’uB¬_deviûs
+.
+	$add_£·¿tÜ
+()
+
+236 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="CÚfig Deviû", 
+commªd
+=
+£lf
+.
+cÚfig_deviû
+)
+
+237 
+£lf
+.
+pİm’uB¬_deviûs
+ =…opmenuBar_devices
+
+239 
+def
+ 
+	$pİ_Ú_deviû¦i¡
+(
+£lf
+,
+ev’t
+):
+
+240 
+£lf
+.
+	$ü—‹_pİm’uB¬_deviûs
+()
+
+241 
+£lf
+.
+pİm’uB¬_deviûs
+.
+	$po¡
+(
+ev’t
+.
+x_roÙ
+,ev’t.
+y_roÙ
+)
+
+243 
+def
+ 
+	$ü—‹_pİm’uB¬_mÚ™Ü
+(
+£lf
+):
+
+244 
+pİm’uB¬_mÚ™Ü
+ = 
+	`M’u
+(
+£lf
+.
+roÙ
+, 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+‹¬off
+=0)
+
+245 
+pİm’uB¬_mÚ™Ü
+.
+	`add_commªd
+(
+Ïb–
+="D–‘Deviû", 
+commªd
+=
+£lf
+.
+d–‘e_deviû
+)
+
+246 
+pİm’uB¬_mÚ™Ü
+.
+	`add_commªd
+(
+Ïb–
+="D–‘AÎ", 
+commªd
+=
+£lf
+.
+d–‘e_®l_deviûs
+)
+
+247 
+pİm’uB¬_mÚ™Ü
+.
+	$add_£·¿tÜ
+()
+
+248 
+pİm’uB¬_mÚ™Ü
+.
+	`add_commªd
+(
+Ïb–
+="D¿w F¿gm’tÕlÙly)", 
+commªd
+=
+£lf
+.
+d¿w_äagm’t_by¶Ùly_Ú_mÚ™Üli¡
+)
+
+249 
+pİm’uB¬_mÚ™Ü
+.
+	`add_commªd
+(
+Ïb–
+="D¿w F¿gm’t(m©¶Ù)", 
+commªd
+=
+£lf
+.
+d¿w_äagm’t_bym©¶Ù_Ú_mÚ™Üli¡
+)
+
+250 
+pİm’uB¬_mÚ™Ü
+.
+	`add_commªd
+(
+Ïb–
+="D¿w Anim©iÚ", 
+commªd
+=
+£lf
+.
+d¿w_ªim©iÚ_Ú_mÚ™Üli¡
+)
+
+251 
+pİm’uB¬_mÚ™Ü
+.
+	`add_commªd
+(
+Ïb–
+="SavAnim©iÚ(mp4)", 
+commªd
+=
+£lf
+.
+§ve_ªim©iÚ_tomp4_Ú_mÚ™Üli¡
+)
+
+252 
+pİm’uB¬_mÚ™Ü
+.
+	`add_commªd
+(
+Ïb–
+="SavAnim©iÚ(gif)", 
+commªd
+=
+£lf
+.
+§ve_ªim©iÚ_togif_Ú_mÚ™Üli¡
+)
+
+253 
+pİm’uB¬_mÚ™Ü
+.
+	`add_commªd
+(
+Ïb–
+="D¿w PlÙ(äag)", 
+commªd
+=
+£lf
+.
+d¿w_äagm’t_¶Ù_Ú_mÚ™Üli¡
+)
+
+254 
+pİm’uB¬_mÚ™Ü
+.
+	`add_commªd
+(
+Ïb–
+="D¿w PlÙ(bÙh)", 
+commªd
+=
+£lf
+.
+d¿w_bÙh_¶Ù_Ú_mÚ™Üli¡
+)
+
+255 
+£lf
+.
+pİm’uB¬_mÚ™Ü
+ =…opmenuBar_monitor
+
+257 
+def
+ 
+	$pİ_Ú_mÚ™Üli¡
+(
+£lf
+,
+ev’t
+):
+
+258 
+£lf
+.
+	$ü—‹_pİm’uB¬_mÚ™Ü
+()
+
+259 
+£lf
+.
+pİm’uB¬_mÚ™Ü
+.
+	$po¡
+(
+ev’t
+.
+x_roÙ
+,ev’t.
+y_roÙ
+)
+
+261 
+def
+ 
+	$No_S–eù
+(
+£lf
+):
+
+262 
+mBox
+.
+	`showšfo
+('Alert', "Please select‡ device!!!")
+
+265 
+def
+ 
+	$d¿w_äagm’t_by¶Ùly_Ú_deviûli¡
+(
+£lf
+):
+
+266 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+267 
+£lf
+.
+	$No_S–eù
+()
+
+270 
+dev_¢
+=
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+271 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_äagm’t_h—tm­_by¶Ùly
+()
+
+274 
+def
+ 
+	$d¿w_äagm’t_by¶Ùly_Ú_mÚ™Üli¡
+(
+£lf
+):
+
+275 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+276 
+£lf
+.
+	$No_S–eù
+()
+
+279 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+280 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_äagm’t_h—tm­_by¶Ùly
+()
+
+283 
+def
+ 
+	$d¿w_äagm’t_bym©¶Ù_Ú_deviûli¡
+(
+£lf
+):
+
+284 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+285 
+£lf
+.
+	$No_S–eù
+()
+
+288 
+dev_¢
+=
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+289 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_äagm’t_h—tm­_bym©¶Ù
+()
+
+292 
+def
+ 
+	$d¿w_äagm’t_bym©¶Ù_Ú_mÚ™Üli¡
+(
+£lf
+):
+
+293 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+294 
+£lf
+.
+	$No_S–eù
+()
+
+297 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+298 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_äagm’t_h—tm­_bym©¶Ù
+()
+
+301 
+def
+ 
+	$d¿w_ªim©iÚ_Ú_deviûli¡
+(
+£lf
+):
+
+302 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+303 
+£lf
+.
+	$No_S–eù
+()
+
+306 
+dev_¢
+=
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+307 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_äagm’t_h—tm­_ªim©iÚ
+()
+
+310 
+def
+ 
+	$§ve_ªim©iÚ_tomp4_Ú_deviûli¡
+(
+£lf
+):
+
+311 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+312 
+£lf
+.
+	$No_S–eù
+()
+
+315 
+dev_¢
+ = 
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+316 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	`d¿w_äagm’t_h—tm­_ªim©iÚ
+(
+True
+, "mp4")
+
+319 
+def
+ 
+	$§ve_ªim©iÚ_togif_Ú_deviûli¡
+(
+£lf
+):
+
+320 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+321 
+£lf
+.
+	$No_S–eù
+()
+
+324 
+dev_¢
+ = 
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+325 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	`d¿w_äagm’t_h—tm­_ªim©iÚ
+(
+True
+, "gif")
+
+328 
+def
+ 
+	$d¿w_ªim©iÚ_Ú_mÚ™Üli¡
+(
+£lf
+):
+
+329 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+330 
+£lf
+.
+	$No_S–eù
+()
+
+333 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+334 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_äagm’t_h—tm­_ªim©iÚ
+()
+
+337 
+def
+ 
+	$§ve_ªim©iÚ_tomp4_Ú_mÚ™Üli¡
+(
+£lf
+):
+
+338 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+339 
+£lf
+.
+	$No_S–eù
+()
+
+342 
+dev_¢
+ = 
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+343 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	`d¿w_äagm’t_h—tm­_ªim©iÚ
+(
+True
+, "mp4")
+
+346 
+def
+ 
+	$§ve_ªim©iÚ_togif_Ú_mÚ™Üli¡
+(
+£lf
+):
+
+347 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+348 
+£lf
+.
+	$No_S–eù
+()
+
+351 
+dev_¢
+ = 
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+352 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	`d¿w_äagm’t_h—tm­_ªim©iÚ
+(
+True
+, "gif")
+
+355 
+def
+ 
+	$d¿w_bÙh_¶Ù_Ú_deviûli¡
+(
+£lf
+):
+
+356 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+357 
+£lf
+.
+	$No_S–eù
+()
+
+360 
+dev_¢
+ = 
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+361 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_bÙh_bytime
+()
+
+364 
+def
+ 
+	$d¿w_bÙh_¶Ù_Ú_mÚ™Üli¡
+(
+£lf
+):
+
+365 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+366 
+£lf
+.
+	$No_S–eù
+()
+
+369 
+dev_¢
+ = 
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+370 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_bÙh_bytime
+()
+
+373 
+def
+ 
+	$d¿w_äagm’t_¶Ù_Ú_deviûli¡
+(
+£lf
+):
+
+374 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+375 
+£lf
+.
+	$No_S–eù
+()
+
+378 
+dev_¢
+=
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+379 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_äagm’t_¿tio_bytime
+()
+
+382 
+def
+ 
+	$d¿w_äagm’t_¶Ù_Ú_mÚ™Üli¡
+(
+£lf
+):
+
+383 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+384 
+£lf
+.
+	$No_S–eù
+()
+
+387 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+388 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_äagm’t_¿tio_bytime
+()
+
+391 
+def
+ 
+	$¡İ_®l_deviûs
+(
+£lf
+):
+
+392 
+dev_¢
+ 
+š
+ 
+£lf
+.
+deviûs
+.
+	$keys
+():
+
+393 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$¡İ_d‘eùth»ad
+()
+
+394 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+has_mÚšg
+:
+
+395 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$¡İ_mÚth»ad
+()
+
+398 
+def
+ 
+	$d–‘e_deviû
+(
+£lf
+):
+
+399 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) != 0:
+
+400 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+401 
+£lf
+.
+lb_mÚ™Üs
+.
+	`d–‘e
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+402 
+£lf
+.
+lb_deviûs
+.
+	$š£¹
+(
+END
+, 
+dev_¢
+)
+
+404 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+has_mÚšg
+:
+
+405 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$¡İ_mÚth»ad
+()
+
+406 #£lf.
+deviûs
+[
+dev_¢
+].
+	`¡İ_d‘eùth»ad
+()
+
+407 #£lf.
+sü
+.
+	`d–‘e
+(0.0,
+	`Ën
+(
+£lf
+.sü.
+	`g‘
+(0.0,
+END
+))-1.0)
+
+408 
+d
+.
+	$d
+(
+£lf
+.
+deviûs
+)
+
+409 #´št(
+th»adšg
+.
+	`’um”©e
+())
+
+411 
+£lf
+.
+	$No_S–eù
+()
+
+414 
+def
+ 
+	$d–‘e_®l_deviûs
+(
+£lf
+):
+
+415 
+£lf
+.
+lb_mÚ™Üs
+.
+	`size
+() == 0:
+
+416 
+mBox
+.
+	`showšfo
+('Alert', "There‡re‚o devices be monitored!")
+
+419 
+i
+ 
+š
+ 
+	`¿nge
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	$size
+()):
+
+420 
+dev_¢
+ = 
+£lf
+.
+lb_mÚ™Üs
+.
+	$g‘
+(
+i
+)
+
+421 
+£lf
+.
+lb_mÚ™Üs
+.
+	$d–‘e
+(
+i
+)
+
+422 
+£lf
+.
+lb_deviûs
+.
+	$š£¹
+(
+END
+, 
+dev_¢
+)
+
+424 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+has_mÚšg
+:
+
+425 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$¡İ_mÚth»ad
+()
+
+428 
+def
+ 
+	$add_deviû
+(
+£lf
+):
+
+429 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+430 
+£lf
+.
+	$No_S–eù
+()
+
+433 
+dev_¢
+=
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+434 
+£lf
+.
+lb_deviûs
+.
+	`d–‘e
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+435 
+£lf
+.
+lb_mÚ™Üs
+.
+	$š£¹
+(
+END
+, 
+dev_¢
+)
+
+436 
+nÙ
+ 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+has_wršg
+:
+
+437 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$¡¬t_w¹h»ads
+()
+
+438 
+nÙ
+ 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+has_mÚšg
+:
+
+439 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$¡¬t_mÚth»ad
+()
+
+442 
+def
+ 
+	$add_®l_deviûs
+(
+£lf
+):
+
+443 
+£lf
+.
+lb_deviûs
+.
+	`size
+() == 0:
+
+444 
+mBox
+.
+	`showšfo
+('Alert', "There‡re‚o devices connected!")
+
+447 
+út
+ = 
+£lf
+.
+lb_deviûs
+.
+	$size
+()
+
+448 
+i
+ 
+š
+ 
+	$¿nge
+(
+út
+):
+
+449 
+dev_¢
+ = 
+£lf
+.
+lb_deviûs
+.
+	$g‘
+(0)
+
+450 
+£lf
+.
+lb_deviûs
+.
+	$d–‘e
+(0)
+
+451 
+£lf
+.
+lb_mÚ™Üs
+.
+	$š£¹
+(
+END
+, 
+dev_¢
+)
+
+452 
+nÙ
+ 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+has_wršg
+:
+
+453 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$¡¬t_w¹h»ads
+()
+
+454 
+nÙ
+ 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+has_mÚšg
+:
+
+455 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$¡¬t_mÚth»ad
+()
+
+458 
+def
+ 
+	$¡İ_mÚ™Üth»ad
+(
+£lf
+):
+
+459 
+d
+.
+	`d
+("stop_monitorthread.....")
+
+460 
+£lf
+.
+mÚ™Ü_¡İevt
+.
+	$£t
+()
+
+463 
+def
+ 
+	$¡¬t_mÚ™Üth»ad
+(
+£lf
+):
+
+464 
+d
+.
+	`d
+("start_monitorthread.....")
+
+465 
+£lf
+.
+mÚ™Ü_¡İevt
+ = 
+th»adšg
+.
+	$Ev’t
+()
+
+466 
+t
+=
+RLKTh»ad
+.
+	`RLKTh»ad
+(
+¡İevt
+=
+£lf
+.
+mÚ™Ü_¡İevt
+, 
+Çme
+="FUI-mÚ-deviûs-0", 
+rg‘
+=£lf.
+mÚ™Ü_deviûs
+, 
+¬gs
+="", 
+kw¬gs
+={
+	}
+}, 
+	gd–ay
+=1)
+
+467 
+t
+.
+	$¡¬t
+()
+
+469 
+def
+ 
+	$mÚ™Ü_deviûs
+(
+£lf
+, 
+¬gs
+, 
+kw¬gs
+):
+
+471 
+cmd
+ = ["adb", "devices"]
+
+472 
+Œy
+:
+
+473 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+474 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+475 
+	$´št
+(
+e
+)
+
+476  
+NÚe
+
+
+477 
+i
+ = 0
+
+478 
+True
+:
+
+479 
+lše
+ = 
+´oc
+.
+¡dout
+.
+	`»adlše
+().
+	$¡r
+()
+
+480 
+	$Ën
+(
+lše
+è
+is
+ 
+nÙ
+ 0:
+
+481 
+lše
+[0:4] =ğ
+b
+'Li¡' 
+Ü
+†ine[0:1] == b'*':
+
+484 
+tmp_dev¢
+ = 
+by‹s
+.
+	`decode
+(
+lše
+.
+	`¥l™
+()[0])
+
+485 
+tmp_dev¢
+ 
+š
+ 
+£lf
+.
+deviûs
+.
+	$keys
+():
+
+488 
+db
+ = 
+RLKDB
+.
+	`RLKDB
+("dbs/"+
+tmp_dev¢
++".db")
+
+489 
+deviû
+ = 
+RLKDeviû
+.
+	$RLKDeviû
+(
+tmp_dev¢
+, 
+db
+)
+
+490 
+deviû
+.
+	$¡¬t_d‘eùth»ad
+()
+
+491 
+£lf
+.
+deviûs
+[
+tmp_dev¢
+]=
+deviû
+
+
+492 
+£lf
+.
+lb_deviûs
+.
+	$š£¹
+(
+END
+, 
+tmp_dev¢
+)
+
+496 
+dev_¢
+ 
+š
+ 
+	$li¡
+(
+£lf
+.
+deviûs
+):
+
+497 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+¡©us
+ == "offline":
+
+498 
+dev_¢
+ 
+š
+ 
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(0, "end"):
+
+499 
+£lf
+.
+lb_mÚ™Üs
+.
+	`d–‘e
+(£lf.lb_mÚ™Üs.
+	`g‘
+(0, "’d").
+	$šdex
+(
+dev_¢
+))
+
+500 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+has_mÚšg
+:
+
+501 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$¡İ_mÚth»ad
+()
+
+502 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$¡İ_d‘eùth»ad
+()
+
+503 
+£lf
+.
+deviûs
+.
+	$pİ
+(
+dev_¢
+)
+
+504 
+dev_¢
+ 
+š
+ 
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(0, "end"):
+
+505 
+£lf
+.
+lb_deviûs
+.
+	`d–‘e
+(£lf.lb_deviûs.
+	`g‘
+(0, "’d").
+	$šdex
+(
+dev_¢
+))
+
+506 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$¡İ_d‘eùth»ad
+()
+
+507 
+£lf
+.
+deviûs
+.
+	$pİ
+(
+dev_¢
+)
+
+508 #´št(
+£lf
+.
+deviûs
+)
+
+510 
+def
+ 
+	$š™_deviûs
+(
+£lf
+):
+
+511 
+cmd
+ = ["adb", "devices"]
+
+512 
+Œy
+:
+
+513 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+514 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+515 
+	$´št
+(
+e
+)
+
+516  
+NÚe
+
+
+517 
+i
+ = 0
+
+518 
+True
+:
+
+519 
+lše
+ = 
+´oc
+.
+¡dout
+.
+	`»adlše
+().
+	$¡r
+()
+
+520 
+	$Ën
+(
+lše
+è
+is
+ 
+nÙ
+ 0:
+
+521 
+lše
+[0:4] =ğ
+b
+'Li¡' 
+Ü
+†ine[0:1] == b'*':
+
+524 
+tmp_dev¢
+ = 
+by‹s
+.
+	`decode
+(
+lše
+.
+	`¥l™
+()[0])
+
+525 
+db
+ = 
+RLKDB
+.
+	`RLKDB
+("dbs/"+
+tmp_dev¢
++".db")
+
+526 
+deviû
+ = 
+RLKDeviû
+.
+	$RLKDeviû
+(
+tmp_dev¢
+, 
+db
+)
+
+527 
+£lf
+.
+deviûs
+.
+	`­³nd
+({
+tmp_dev¢
+:
+deviû
+})
+
+529 
+__Çme__
+ == '__main__':
+
+530 
+obj
+ = 
+F¿gm’tUI
+(
+v
+.
+Çme
++" "+v.
+v”siÚ
+)
+
+531 
+obj
+.
+š™UI
+()
+
+	@GlobalConfig.py
+
+1 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ *
+
+2 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+‰k
+
+
+3 
+impÜt
+ 
+tkš‹r
+ 
+as
+ 
+tk
+
+
+5 
+impÜt
+ 
+	gtkš‹r
+.
+mes§gebox
+ 
+as
+ 
+msg
+
+
+6 
+impÜt
+ 
+cÚfig·r£r
+ 
+as
+ 
+ı
+
+
+8 
+impÜt
+ 
+os
+
+
+9 
+impÜt
+ 
+Ut
+ 
+as
+ 
+u
+
+
+11 
+şass
+ 
+	$Glob®CÚfig
+():
+
+13 
+def
+ 
+	$__š™__
+(
+£lf
+, 
+Çme
+):
+
+14 
+£lf
+.
+Çme
+ =‚ame
+
+15 
+£lf
+.
+ši_fe
+ = "conf/global.ini"
+
+16 
+£lf
+.
+cÚfig_dœ
+ = "./conf"
+
+17 
+£lf
+.
+ši_–em’ts
+ = {
+	}
+}
+
+19 
+def
+ 
+	$·r£_ši_fe
+(
+£lf
+, 
+ši_fe
+):
+
+20 
+£lf
+.
+aùive_ši
+ = 
+ı
+.
+	$CÚfigP¬£r
+()
+
+21 
+£lf
+.
+aùive_ši
+.
+	$»ad
+(
+ši_fe
+)
+
+22 
+£lf
+.
+aùive_ši_f’ame
+ = 
+ši_fe
+
+
+23 
+£lf
+.
+	$di¥Ïy_£ùiÚ_cÚ‹Ás
+()
+
+25 
+def
+ 
+	$§ve_cÚfig
+(
+£lf
+, 
+ev’t
+=
+NÚe
+):
+
+26 
+key
+ 
+š
+ 
+£lf
+.
+aùive_ši
+["SETTING"]:
+
+27 
+£lf
+.
+aùive_ši
+["SETTING"][
+key
+] = s–f.
+ši_–em’ts
+[key].
+	$g‘
+()
+
+28 
+w™h
+ 
+	`İ’
+(
+£lf
+.
+aùive_ši_f’ame
+, "w"è
+as
+ 
+ši_fe
+:
+
+29 
+£lf
+.
+aùive_ši
+.
+	$wr™e
+(
+ši_fe
+)
+
+30 
+msg
+.
+	`showšfo
+("Saved", "File Saved Successfully")
+
+32 
+def
+ 
+	$­¶y_cÚfig
+(
+£lf
+):
+
+33 
+fes
+ 
+š
+ 
+os
+.
+	$w®k
+(
+£lf
+.
+cÚfig_dœ
+):
+
+34 
+fe
+ 
+š
+ 
+fes
+[2]:
+
+35 
+os
+.
+·th
+.
+	`¥l™ext
+(
+fe
+)[1] =ğ'.ši' 
+ªd
+ os.path.splitext(file)[0] != 'global':
+
+36 
+u
+.
+	`cİyfe
+(
+£lf
+.
+ši_fe
+, 'cÚf/'+
+os
+.
+·th
+.
+	`¥l™ext
+(
+fe
+)[0]+'.ini')
+
+39 
+def
+ 
+	$di¥Ïy_£ùiÚ_cÚ‹Ás
+(
+£lf
+, 
+ev’t
+=
+NÚe
+):
+
+40 
+i
+ = 0
+
+41 
+key
+ 
+š
+ 
+£lf
+.
+aùive_ši
+["SETTING"]:
+
+42 
+Ãw_Ïb–
+ = 
+‰k
+.
+	`Lab–
+(
+£lf
+.
+roÙ
+, 
+‹xt
+=
+key
+, 
+fÚt
+=(
+NÚe
+, 12)).
+	$grid
+(
+cŞumn
+=0, 
+row
+=
+i
+, 
+¡icky
+=
+W
+)
+
+43 #´št(
+key
++" "+
+£lf
+.
+aùive_ši
+["SETTING"][key])
+
+44 
+v®ue
+ = 
+£lf
+.
+aùive_ši
+["SETTING"][
+key
+]
+
+45 
+ši_–em’t
+ = 
+‰k
+.
+	$EÁry
+(
+£lf
+.
+roÙ
+)
+
+46 
+ši_–em’t
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=
+i
+)
+
+47 
+ši_–em’t
+.
+	$š£¹
+(0, 
+v®ue
+)
+
+48 
+£lf
+.
+ši_–em’ts
+[
+key
+] = 
+ši_–em’t
+
+
+49 
+i
+ = i+1
+
+51 
+§ve_bu‰Ú
+ = 
+tk
+.
+	`Bu‰Ú
+(
+£lf
+.
+roÙ
+, 
+‹xt
+="SavCÚfig", 
+commªd
+=£lf.
+§ve_cÚfig
+)
+
+52 
+§ve_bu‰Ú
+.
+	$grid
+(
+cŞumn
+=0, 
+row
+=
+i
+, 
+¡icky
+=
+W
+)
+
+53 
+­¶y_bu‰Ú
+ = 
+tk
+.
+	`Bu‰Ú
+(
+£lf
+.
+roÙ
+, 
+‹xt
+="Aµly CÚfig", 
+commªd
+=£lf.
+­¶y_cÚfig
+)
+
+54 
+­¶y_bu‰Ú
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=
+i
+, 
+¡icky
+=
+E
+)
+
+58 
+def
+ 
+	$š™UI
+(
+£lf
+):
+
+59 
+roÙ
+ = 
+	$Tk
+()
+
+60 
+roÙ
+.
+	$t™Ë
+(
+£lf
+.
+Çme
+)
+
+61 
+roÙ
+.
+	`geom‘ry
+("300x400+300+200")
+
+62 
+roÙ
+.
+	$»sizabË
+(
+width
+=
+F®£
+, 
+height
+=False)
+
+63 
+£lf
+.
+roÙ
+ =„oot
+
+64 
+£lf
+.
+	$·r£_ši_fe
+(
+£lf
+.
+ši_fe
+)
+
+66 
+roÙ
+.
+	$mašloİ
+()
+
+69 
+__Çme__
+ == '__main__':
+
+70 
+obj
+ = 
+	`Glob®CÚfig
+("Global Config")
+
+71 
+obj
+.
+	`š™UI
+()
+
+	@OfflineParser.py
+
+1 #!/
+u¤
+/
+bš
+/
+’v
+ 
+pythÚ
+
+
+3 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ *
+
+4 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+‰k
+
+
+5 
+impÜt
+ 
+RLKDB
+
+
+6 
+impÜt
+ 
+RLKDeviû
+
+
+8 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+mes§gebox
+ 
+as
+ 
+mBox
+
+
+9 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+fedŸlog
+ 
+as
+ 
+fd
+
+
+10 
+impÜt
+ 
+os
+
+
+11 
+äom
+ 
+os
+ 
+impÜt
+ 
+·th
+
+
+12 
+impÜt
+ 
+V”siÚ
+ 
+as
+ 
+v
+
+
+14 
+impÜt
+ 
+Debug
+ 
+as
+ 
+d
+
+
+16 
+şass
+ 
+	gOfæšeP¬£r
+:
+
+18 
+def
+ 
+	$__š™__
+(
+£lf
+, 
+Çme
+):
+
+19 
+£lf
+.
+Çme
+ =‚ame
+
+20 
+£lf
+.
+deviûs
+ = {
+	}
+}
+
+21 
+d
+.
+	$š™
+()
+
+24 
+def
+ 
+	$İ’db_dŸlog
+(
+£lf
+):
+
+25 
+fDœ
+ = 
+·th
+.
+	$dœÇme
+(
+__fe__
+)
+
+26 
+dbf’ame
+ = 
+fd
+.
+	$askİ’f’ame
+(
+·»Á
+=
+£lf
+.
+roÙ
+, 
+š™Ÿldœ
+=
+fDœ
+)
+
+27 
+d
+.
+	$d
+(
+fDœ
+)
+
+28 
+d
+.
+	$d
+(
+dbf’ame
+)
+
+29 
+dbf’ame
+:
+
+30 (
+f•©h
+, 
+‹mpf’ame
+èğ
+os
+.
+·th
+.
+	$¥l™
+(
+dbf’ame
+)
+
+31 (
+dev_¢
+, 
+ex‹nsiÚ
+èğ
+os
+.
+·th
+.
+	$¥l™ext
+(
+‹mpf’ame
+)
+
+32 
+£lf
+.
+	$add_dbdeviû_to_·r£¾i¡
+(
+dbf’ame
+, 
+dev_¢
+)
+
+35 
+def
+ 
+	$İ’dbs_dŸlog
+(
+£lf
+):
+
+36 
+fDœ
+ = 
+·th
+.
+	$dœÇme
+(
+__fe__
+)
+
+37 
+dbf’ames
+ = 
+fd
+.
+	$askİ’f’ames
+(
+·»Á
+=
+£lf
+.
+roÙ
+, 
+š™Ÿldœ
+=
+fDœ
+)
+
+38 
+d
+.
+	$d
+(
+fDœ
+)
+
+39 
+d
+.
+	$d
+(
+dbf’ames
+)
+
+40 
+dbf’ames
+:
+
+41 
+dbf’ame
+ 
+š
+ 
+dbf’ames
+:
+
+42 (
+f•©h
+, 
+‹mpf’ame
+èğ
+os
+.
+·th
+.
+	$¥l™
+(
+dbf’ame
+)
+
+43 (
+dev_¢
+, 
+ex‹nsiÚ
+èğ
+os
+.
+·th
+.
+	$¥l™ext
+(
+‹mpf’ame
+)
+
+44 
+£lf
+.
+	$add_dbdeviû_to_·r£¾i¡
+(
+dbf’ame
+, 
+dev_¢
+)
+
+47 
+def
+ 
+	$de¡roy_pİm’u
+(
+£lf
+, 
+ev’t
+):
+
+48 
+£lf
+.
+pİm’uB¬_deviûs
+:
+
+49 
+£lf
+.
+pİm’uB¬_deviûs
+.
+	$de¡roy
+()
+
+51 
+def
+ 
+	$š™UI
+(
+£lf
+):
+
+52 
+roÙ
+ = 
+	$Tk
+()
+
+53 
+roÙ
+.
+	$t™Ë
+(
+£lf
+.
+Çme
+)
+
+54 
+roÙ
+.
+	`geom‘ry
+("295x400+300+200")
+
+55 
+roÙ
+.
+	$»sizabË
+(
+width
+=
+F®£
+, 
+height
+=False)
+
+56 
+£lf
+.
+roÙ
+ =„oot
+
+58 ###m’u 
+¡¬t
+ ###
+ = M’uÔoÙ, fÚt=("MÚo¥aû ReguÏr", 16))
+
+60 
+roÙ
+.
+	$cÚfig
+(
+m’u
+=
+m’uB¬
+)
+
+61 
+feM’u
+ = 
+	$M’u
+(
+m’uB¬
+, 
+‹¬off
+=0)
+
+62 
+m’uB¬
+.
+	`add_ÿsÿde
+(
+Ïb–
+="Fe", 
+m’u
+=
+feM’u
+)
+
+63 
+feM’u
+.
+	`add_commªd
+(
+Ïb–
+="O³ÀDB", 
+fÚt
+=("MÚo¥aû ReguÏr", 16), 
+commªd
+=
+£lf
+.
+İ’db_dŸlog
+)
+
+64 
+feM’u
+.
+	`add_commªd
+(
+Ïb–
+="O³ÀDBs", 
+fÚt
+=("MÚo¥aû ReguÏr", 16), 
+commªd
+=
+£lf
+.
+İ’dbs_dŸlog
+)
+
+66 
+‰k
+.
+	`Lab–
+(
+roÙ
+, 
+‹xt
+="P¬£ Li¡", 
+fÚt
+=("MÚo¥aû ReguÏr", 16)).
+	$grid
+(
+cŞumn
+=0, 
+row
+=0)
+
+67 
+v¬
+ = 
+	$SŒšgV¬
+()
+
+68 
+lb_deviûs
+ = 
+	`Li¡box
+(
+roÙ
+, 
+fÚt
+=("MÚo¥aû ReguÏr", 16), 
+width
+=29, 
+height
+=13, 
+li¡v¬ŸbË
+=
+v¬
+)
+
+69 
+lb_deviûs
+.
+	$grid
+(
+cŞumn
+=0, 
+row
+=1)
+
+70 
+£lf
+.
+lb_deviûs
+ =†b_devices
+
+72 ## 
+pİm’uB¬_deviûs
+ 
+¡¬t
+
+
+73 
+£lf
+.
+	$ü—‹_pİm’uB¬_deviûs
+()
+
+74 
+lb_deviûs
+.
+	`bšd
+("<Bu‰ÚR–—£-3>", 
+£lf
+.
+pİ_Ú_deviû¦i¡
+)
+
+76 
+£lf
+.
+roÙ
+.
+	`bšd
+('<Bu‰ÚR–—£-1>', s–f.
+de¡roy_pİm’u
+)
+
+78 
+roÙ
+.
+	`´ÙocŞ
+("WM_DELETE_WINDOW", 
+£lf
+.
+wšdow_şo£
+)
+
+79 
+roÙ
+.
+	$mašloİ
+()
+
+81 
+def
+ 
+	$wšdow_şo£
+(
+£lf
+):
+
+82 
+£lf
+.
+roÙ
+.
+	$de¡roy
+()
+
+84 
+def
+ 
+	$add_dbdeviû_to_·r£¾i¡
+(
+£lf
+, 
+dbfe
+, 
+dev_¢
+):
+
+85 
+db
+ = 
+RLKDB
+.
+	$RLKDB
+(
+dbfe
+)
+
+86 
+deviû
+ = 
+RLKDeviû
+.
+	$RLKDeviû
+(
+dev_¢
+, 
+db
+, 
+True
+)
+
+87 
+£lf
+.
+deviûs
+[
+dev_¢
+] = 
+deviû
+
+
+88 
+£lf
+.
+lb_deviûs
+.
+	$š£¹
+(
+END
+, 
+dev_¢
+)
+
+91 
+def
+ 
+	$ü—‹_pİm’uB¬_deviûs
+(
+£lf
+):
+
+92 
+pİm’uB¬_deviûs
+ = 
+	`M’u
+(
+£lf
+.
+roÙ
+, 
+fÚt
+=("MÚo¥aû ReguÏr", 16), 
+‹¬off
+=0)
+
+93 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="D¿w F¿gm’tÕlÙly)", 
+commªd
+=
+£lf
+.
+d¿w_äagm’t_by¶Ùly_Ú_deviûli¡
+)
+
+94 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="Draw Fragment(matplot)",
+
+95 
+commªd
+=
+£lf
+.
+d¿w_äagm’t_bym©¶Ù_Ú_deviûli¡
+)
+
+96 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="D¿w Anim©iÚ", 
+commªd
+=
+£lf
+.
+d¿w_ªim©iÚ_Ú_deviûli¡
+)
+
+97 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="SavAnim©iÚ(mp4)", 
+commªd
+=
+£lf
+.
+§ve_ªim©iÚ_tomp4_Ú_deviûli¡
+)
+
+98 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="SavAnim©iÚ(gif)", 
+commªd
+=
+£lf
+.
+§ve_ªim©iÚ_togif_Ú_deviûli¡
+)
+
+99 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="D¿w PlÙ(äag)", 
+commªd
+=
+£lf
+.
+d¿w_äagm’t_¶Ù_Ú_deviûli¡
+)
+
+100 
+pİm’uB¬_deviûs
+.
+	`add_commªd
+(
+Ïb–
+="D¿w PlÙ(bÙh)", 
+commªd
+=
+£lf
+.
+d¿w_bÙh_¶Ù_Ú_deviûli¡
+)
+
+101 
+£lf
+.
+pİm’uB¬_deviûs
+ =…opmenuBar_devices
+
+103 
+def
+ 
+	$pİ_Ú_deviû¦i¡
+(
+£lf
+, 
+ev’t
+):
+
+104 
+£lf
+.
+	$ü—‹_pİm’uB¬_deviûs
+()
+
+105 
+£lf
+.
+pİm’uB¬_deviûs
+.
+	$po¡
+(
+ev’t
+.
+x_roÙ
+,ƒv’t.
+y_roÙ
+)
+
+107 
+def
+ 
+	$No_S–eù
+(
+£lf
+):
+
+108 
+mBox
+.
+	`showšfo
+('Alert', "Please select‡ device!!!")
+
+111 
+def
+ 
+	$d¿w_äagm’t_by¶Ùly_Ú_deviûli¡
+(
+£lf
+):
+
+112 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+113 
+£lf
+.
+	$No_S–eù
+()
+
+116 
+dev_¢
+ = 
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+117 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_äagm’t_h—tm­_by¶Ùly
+()
+
+120 
+def
+ 
+	$d¿w_äagm’t_bym©¶Ù_Ú_deviûli¡
+(
+£lf
+):
+
+121 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+122 
+£lf
+.
+	$No_S–eù
+()
+
+125 
+dev_¢
+ = 
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+126 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_äagm’t_h—tm­_bym©¶Ù
+()
+
+129 
+def
+ 
+	$d¿w_ªim©iÚ_Ú_deviûli¡
+(
+£lf
+):
+
+130 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+131 
+£lf
+.
+	$No_S–eù
+()
+
+134 
+dev_¢
+ = 
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+135 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_äagm’t_h—tm­_ªim©iÚ
+()
+
+138 
+def
+ 
+	$§ve_ªim©iÚ_tomp4_Ú_deviûli¡
+(
+£lf
+):
+
+139 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+140 
+£lf
+.
+	$No_S–eù
+()
+
+143 
+dev_¢
+ = 
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+144 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	`d¿w_äagm’t_h—tm­_ªim©iÚ
+(
+True
+, "mp4")
+
+147 
+def
+ 
+	$§ve_ªim©iÚ_togif_Ú_deviûli¡
+(
+£lf
+):
+
+148 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+149 
+£lf
+.
+	$No_S–eù
+()
+
+152 
+dev_¢
+ = 
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+153 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	`d¿w_äagm’t_h—tm­_ªim©iÚ
+(
+True
+, "gif")
+
+156 
+def
+ 
+	$d¿w_bÙh_¶Ù_Ú_deviûli¡
+(
+£lf
+):
+
+157 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+158 
+£lf
+.
+	$No_S–eù
+()
+
+161 
+dev_¢
+ = 
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+162 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_bÙh_bytime
+()
+
+165 
+def
+ 
+	$d¿w_äagm’t_¶Ù_Ú_deviûli¡
+(
+£lf
+):
+
+166 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+167 
+£lf
+.
+	$No_S–eù
+()
+
+170 
+dev_¢
+ = 
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+171 
+£lf
+.
+deviûs
+[
+dev_¢
+].
+	$d¿w_äagm’t_¿tio_bytime
+()
+
+175 
+__Çme__
+ == "__main__":
+
+176 
+İ
+ = 
+	$OfæšeP¬£r
+(
+v
+.
+Çme
+)
+
+177 
+İ
+.
+	`š™UI
+()
+
+	@RLKDB.py
+
+1 
+impÜt
+ 
+sql™e3
+
+
+2 
+impÜt
+ 
+	gm©¶Ùlib
+.
+py¶Ù
+ 
+as
+ 
+¶t
+
+
+4 
+şass
+ 
+	gRLKDB
+:
+
+6 
+def
+ 
+	$__š™__
+(
+£lf
+, 
+dbfe
+):
+
+7 
+£lf
+.
+db
+ = 
+dbfe
+
+
+9 
+def
+ 
+	$cÚÃù
+(
+£lf
+):
+
+10 
+£lf
+.
+cÚn
+ = 
+sql™e3
+.
+	$cÚÃù
+(
+£lf
+.
+db
+, 
+check_§me_th»ad
+ = 
+F®£
+)
+
+11 
+£lf
+.
+cursÜ
+ = s–f.
+cÚn
+.
+	$cursÜ
+()
+
+13 
+def
+ 
+	$ü—‹_bË
+(
+£lf
+, 
+cmd
+):
+
+14 
+£lf
+.
+cursÜ
+.
+	$execu‹
+(
+cmd
+)
+
+16 
+def
+ 
+	$execu‹
+(
+£lf
+, 
+cmd
+, 
+d©a
+):
+
+17 
+£lf
+.
+cursÜ
+.
+	$execu‹
+(
+cmd
+, 
+d©a
+)
+
+19 
+def
+ 
+	$ãtch
+(
+£lf
+, 
+cmd
+):
+
+20 
+£lf
+.
+cursÜ
+.
+	$execu‹
+(
+cmd
+)
+
+21  
+£lf
+.
+cursÜ
+.
+	$ãtch®l
+()
+
+23 
+def
+ 
+	$execu‹mªy
+(
+£lf
+, 
+cmd
+, 
+d©a
+):
+
+24 
+£lf
+.
+cursÜ
+.
+	$execu‹mªy
+(
+cmd
+, 
+d©a
+)
+
+26 
+def
+ 
+	$comm™
+(
+£lf
+):
+
+27 
+£lf
+.
+cÚn
+.
+	$comm™
+()
+
+29 
+def
+ 
+	$şo£
+(
+£lf
+):
+
+30 
+£lf
+.
+cursÜ
+.
+	$şo£
+()
+
+31 
+£lf
+.
+cÚn
+.
+	$şo£
+()
+
+33 
+def
+ 
+	$‹¡sql™e
+():
+
+34 
+db
+ = 
+	`RLKDB
+("dbs/033141181U000281.db")
+
+35 
+db
+.
+	$cÚÃù
+()
+
+36 #db.
+	`ü—‹_bË
+('''
+
+37 #ü—‹ 
+bË
+ 
+IF
+ 
+NOT
+ 
+EXISTS
+ 
+deviûšfo
+
+
+38 #(
+¢
+ 
+‹xt
+, 
+df
+ext, 
+¿tio
+ , 
+¡ime
+ 
+d©‘ime
+, 
+£gšfo
+ext);
+
+42 #buàğ
+db
+.
+	`ãtch
+(
+£l_cmd
+)
+
+43 #úˆğ
+	`Ën
+(
+buf
+)
+
+44 #´št(
+út
+)
+
+46 #fig2 = 
+¶t
+.
+	`figu»
+()
+
+49 #fÜ 
+i
+ 
+š
+ 
+	`¿nge
+(
+út
+):
+
+50 #bb = 
+buf
+[
+i
+]
+
+51 #cøğ
+jsÚ
+.
+	`lßds
+(
+bb
+[0].
+	`»¶aû
+("'", "\""))["z"]
+
+52 #dx1 = (
+	`Ën
+(
+cc
+è/ 
+dy1
+)
+
+53 #´št(
+dx1
+)
+
+54 #dd = 
+Å
+.
+	`¬¿y
+(
+cc
+).
+	`»sh­e
+(
+dx1
+,
+dy1
+)
+
+55 #ims.
+	`­³nd
+((
+¶t
+.
+	`pcŞÜ
+(
+Å
+.
+	`¬ªge
+(0, 
+dy1
+ + 1, 1),‚p.¬ªge(
+dx1
+, -1, -1), 
+dd
+, 
+nÜm
+õÉ.
+	`NÜm®ize
+(0, 30)),))
+
+57 #im_ª˜ğ
+ªim©iÚ
+.
+	`A¹i¡Anim©iÚ
+(
+fig2
+, 
+ims
+, 
+š‹rv®
+=200, 
+»³©_d–ay
+=500,
+bl™
+=
+True
+)
+
+58 #¶t.
+	`show
+()
+
+60 
+£l_cmd
+ = "select df,ratio from deviceinfo"
+
+61 
+buf
+ = 
+db
+.
+	$ãtch
+(
+£l_cmd
+)
+
+62 
+út
+ = 
+	$Ën
+(
+buf
+)
+
+63 
+	$´št
+(
+út
+)
+
+64 
+	`´št
+(
+	$ty³
+(
+buf
+))
+
+65 
+	$´št
+(
+buf
+)
+
+66 
+fig
+ = 
+¶t
+.
+	$figu»
+()
+
+67 
+a
+ = []
+
+68 
+b
+ = []
+
+69 
+i
+ 
+š
+ 
+	$¿nge
+(
+út
+):
+
+70 
+a
+.
+	$­³nd
+(
+buf
+[
+i
+][0])
+
+71 
+b
+.
+	$­³nd
+(
+buf
+[
+i
+][1])
+
+72 
+lše1
+ = 
+¶t
+.
+	$¶Ù
+(
+a
+)
+
+73 #lše1.
+	`£t_cŞÜ
+('r')
+
+74 
+lše2
+ = 
+¶t
+.
+	$¶Ù
+(
+b
+)
+
+75 #lše2.
+	`£t_cŞÜ
+('g')
+
+76 
+¶t
+.
+	$show
+()
+
+78 
+db
+.
+	$comm™
+()
+
+79 
+db
+.
+	$şo£
+()
+
+81 
+__Çme__
+ == '__main__':
+
+82 
+	`‹¡sql™e
+()
+
+	@RLKDevice.py
+
+1 
+impÜt
+ 
+os
+
+
+2 
+impÜt
+ 
+sub´oûss
+
+
+3 
+impÜt
+ 
+RLKTh»ad
+
+
+4 
+impÜt
+ 
+RLKDB
+
+
+5 
+impÜt
+ 
+th»adšg
+
+
+6 
+impÜt
+ 
+time
+
+
+7 
+impÜt
+ 
+d©‘ime
+
+
+8 
+impÜt
+ 
+»
+
+
+9 
+impÜt
+ 
+¿ndom
+
+
+11 
+impÜt
+ 
+numpy
+ 
+as
+ 
+Å
+
+
+12 
+impÜt
+ 
+	g¶Ùly
+.
+ofæše
+ 
+as
+ 
+py
+
+
+13 
+impÜt
+ 
+	g¶Ùly
+.
+g¿ph_objs
+ 
+as
+ 
+go
+
+
+14 
+impÜt
+ 
+	gm©¶Ùlib
+.
+py¶Ù
+ 
+as
+ 
+¶t
+
+
+15 
+äom
+ 
+m©¶Ùlib
+ 
+impÜt
+ 
+ªim©iÚ
+
+
+16 
+impÜt
+ 
+jsÚ
+
+
+17 
+impÜt
+ 
+cÚfig·r£r
+ 
+as
+ 
+ı
+
+
+18 
+impÜt
+ 
+Ut
+ 
+as
+ 
+u
+
+
+20 
+impÜt
+ 
+Debug
+ 
+as
+ 
+d
+
+
+22 
+şass
+ 
+	$RLKDeviû
+():
+
+24 
+def
+ 
+	$__š™__
+(
+£lf
+, 
+dev_¢
+, 
+db
+, 
+ofæše
+=
+F®£
+):
+
+25 
+£lf
+.
+dev_¢
+ = dev_sn
+
+26 
+d
+.
+	$š™
+()
+
+28 
+ofæše
+:
+
+29 
+£lf
+.
+dmšx
+ = "0"
+
+30 
+£lf
+.
+db
+ = db
+
+31 
+£lf
+.
+db
+.
+	$cÚÃù
+()
+
+32 
+£lf
+.
+cmd
+ = "select * from deviceinfo order by stime desc†imit 1"
+
+33 
+buf
+ = 
+£lf
+.
+db
+.
+	$ãtch
+(
+£lf
+.
+cmd
+)
+
+34 
+£lf
+.
+¡Üage
+ = 
+buf
+[0][2]
+
+35 
+£lf
+.
+¿tio
+ = 
+buf
+[0][3]
+
+36 
+£lf
+.
+£gm’t
+ = 
+jsÚ
+.
+	`lßds
+(
+buf
+[0][5].
+	`»¶aû
+("'", "\""))
+
+37 
+£lf
+.
+db
+.
+	$comm™
+()
+
+39 
+£lf
+.
+ši_fe
+ = "cÚf/" + s–f.
+dev_¢
+ + ".ini"
+
+40 
+£lf
+.
+	$lßd_cÚfig
+()
+
+42 
+£lf
+.
+db
+ = db
+
+43 
+£lf
+.
+mÚth»ad
+ = "on"
+
+45 
+£lf
+.
+db
+.
+	$cÚÃù
+()
+
+46 
+£lf
+.
+db
+.
+	`ü—‹_bË
+('''
+
+47 
+ü—‹
+ 
+bË
+ 
+IF
+ 
+NOT
+ 
+EXISTS
+ 
+deviûšfo
+
+
+48 (
+¢
+ 
+‹xt
+, 
+fs
+ext, 
+df
+ , 
+¿tio
+ , 
+¡ime
+ 
+d©‘ime
+, 
+£gšfo
+ext)
+
+50 
+£lf
+.
+cmd
+ = "insert into deviceinfo(sn, fs, df,„atio, stime, seginfo) values(?,?,?,?,?,?)"
+
+51 
+£lf
+.
+db
+.
+	$comm™
+()
+
+52 
+£lf
+.
+has_wršg
+ = 
+F®£
+
+
+53 
+£lf
+.
+has_d–šg
+ = 
+F®£
+
+
+54 
+£lf
+.
+has_mÚšg
+ = 
+F®£
+
+
+55 
+£lf
+.
+¡©us
+ = "online"
+
+56 
+£lf
+.
+¿tio
+ = 0.0
+
+57 
+£lf
+.
+£gm’t
+ = {"0":0, "512":0, "z":[]
+	}
+}
+
+58 
+£lf
+.
+dmšx
+ = "0"
+
+59 
+£lf
+.
+fs
+ = "f2fs"
+
+60 
+£lf
+.
+	$qu”y_dmšx
+()
+
+61 
+£lf
+.
+	$qu”y_fesy¡em
+()
+
+63 
+def
+ 
+	$lßd_cÚfig
+(
+£lf
+):
+
+64 
+nÙ
+ 
+os
+.
+·th
+.
+	$exi¡s
+(
+£lf
+.
+ši_fe
+):
+
+65 
+u
+.
+	`cİyfe
+("cÚf/glob®.ši", 
+£lf
+.
+ši_fe
+)
+
+66 
+£lf
+.
+	$·r£_ši_fe
+(
+£lf
+.
+ši_fe
+)
+
+68 
+def
+ 
+	$·r£_ši_fe
+(
+£lf
+, 
+ši_fe
+):
+
+69 
+£lf
+.
+aùive_ši
+ = 
+ı
+.
+	$CÚfigP¬£r
+()
+
+70 
+£lf
+.
+aùive_ši
+.
+	$»ad
+(
+ši_fe
+)
+
+71 
+£lf
+.
+aùive_ši_f’ame
+ = 
+ši_fe
+
+
+72 #fÜ 
+key
+ 
+š
+ 
+£lf
+.
+aùive_ši
+["SETTING"]:
+
+73 #´št(
+key
++" "+
+£lf
+.
+aùive_ši
+["SETTING"][key])
+
+74 
+£lf
+.
+w¹h»ads
+ = (£lf.
+aùive_ši
+["SETTING"]["wrthreads"])
+
+75 
+£lf
+.
+wrd–ay
+ = (£lf.
+aùive_ši
+["SETTING"]["wrdelay"])
+
+76 
+£lf
+.
+d–th»ads
+ = (£lf.
+aùive_ši
+["SETTING"]["delthreads"])
+
+77 
+£lf
+.
+d–d–ay
+ = (£lf.
+aùive_ši
+["SETTING"]["deldelay"])
+
+78 
+£lf
+.
+mÚd–ay
+ = (£lf.
+aùive_ši
+["SETTING"]["mondelay"])
+
+79 
+£lf
+.
+d‘d–ay
+ = (£lf.
+aùive_ši
+["SETTING"]["detdelay"])
+
+80 
+£lf
+.
+·th
+ = s–f.
+aùive_ši
+["SETTING"]["path"]
+
+81 
+£lf
+.
+dœ
+ = s–f.
+aùive_ši
+["SETTING"]["dir"]
+
+82 
+£lf
+.
+¡İ_wr
+ = (£lf.
+aùive_ši
+["SETTING"]["stop_wr"])
+
+83 
+£lf
+.
+¡İ_d–
+ = (£lf.
+aùive_ši
+["SETTING"]["stop_del"])
+
+84 
+£lf
+.
+¦“±ime
+ = (£lf.
+aùive_ši
+["SETTING"]["sleeptime"])
+
+86 
+def
+ 
+	$de¡roy
+(
+£lf
+):
+
+87 
+£lf
+.
+db
+.
+	$comm™
+()
+
+88 
+£lf
+.
+db
+.
+	$şo£
+()
+
+90 #uÇuthÜized 
+ofæše
+ 
+deviû
+
+
+91 
+def
+ 
+	$¡©us_¡r
+(
+£lf
+, 
+¡r
+):
+
+92 "deviû" =ğ
+¡r
+:
+
+95  
+¡r
+
+
+97 
+def
+ 
+	$d‘eù
+(
+£lf
+, 
+dev_¢
+, 
+·th
+):
+
+98 
+cmd
+ = ["adb", "-s", 
+£lf
+.
+dev_¢
+, "devices"]
+
+99 
+Œy
+:
+
+100 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+101 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+102 
+	$´št
+(
+e
+)
+
+103  
+NÚe
+
+
+104 
+tmp_dev
+ = []
+
+105 
+i
+ = 0
+
+106 
+True
+:
+
+107 
+lše
+ = 
+´oc
+.
+¡dout
+.
+	`»adlše
+().
+	$¡r
+()
+
+108 
+	$Ën
+(
+lše
+è
+is
+ 
+nÙ
+ 0:
+
+109 
+lše
+[0:4] =ğ
+b
+'Li¡' 
+Ü
+†ine[0:1] == b'*':
+
+112 
+£lf
+.
+¡©us
+ = s–f.
+	`¡©us_¡r
+(
+by‹s
+.
+	`decode
+(
+lše
+.
+	`¥l™
+()[1]))
+
+115 
+£lf
+.
+¡©us
+ = "offline"
+
+118 
+£lf
+.
+¡©us
+ != "online":
+
+119 
+£lf
+.
+has_mÚšg
+:
+
+120 
+£lf
+.
+	$¡İ_mÚth»ad
+()
+
+123 
+def
+ 
+	$¡İ_d‘eùth»ad
+(
+£lf
+):
+
+124 
+d
+.
+	`d
+("¡İpšg "+
+£lf
+.
+dev_¢
++"-detect-0")
+
+125 
+£lf
+.
+d‘eù_¡İevt
+.
+	$£t
+()
+
+128 
+def
+ 
+	$¡¬t_d‘eùth»ad
+(
+£lf
+):
+
+129 
+d
+.
+	`d
+("¡¬tšg "+
+£lf
+.
+dev_¢
++"-detect-0")
+
+130 
+£lf
+.
+d‘eù_¡İevt
+ = 
+th»adšg
+.
+	$Ev’t
+()
+
+131 
+t
+=
+RLKTh»ad
+.
+	`RLKTh»ad
+(
+¡İevt
+=
+£lf
+.
+d‘eù_¡İevt
+, 
+Çme
+=£lf.
+dev_¢
++"-d‘eù-0", 
+rg‘
+=£lf.
+d‘eù
+, 
+¬gs
+=£lf.dev_¢, 
+kw¬gs
+={
+	}
+}, 
+	gd–ay
+=£lf.
+d‘d–ay
+)
+
+132 
+t
+.
+	$¡¬t
+()
+
+134 
+def
+ 
+	$qu”y_fesy¡em
+(
+£lf
+):
+
+135 #adb 
+sh–l
+ 
+mouÁ
+|
+g»p
+ "\/d©¨"|
+cut
+ -
+d
+ " " -
+f
+ 5
+
+136 
+cmd
+ = ["adb", "-s", 
+£lf
+.
+dev_¢
+, "shell", "mount", "|", "grep", "\/data\ ", "|", "cut", "-d", " ", "-f", "5"]
+
+137 
+Œy
+:
+
+138 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+139 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+140 
+	$´št
+(
+e
+)
+
+141  
+NÚe
+
+
+143 
+cmd_out
+ = 
+by‹s
+.
+	`decode
+(
+´oc
+.
+¡dout
+.
+	`»ad
+().
+	`¥l™
+()[0])
+
+144 
+£lf
+.
+fs
+ = 
+cmd_out
+
+
+146  
+£lf
+.
+fs
+
+
+148 
+def
+ 
+	$qu”y_dmšx
+(
+£lf
+):
+
+149 #adb 
+sh–l
+ 
+mouÁ
+|
+g»p
+ "\/d©¨"|
+awk
+ '{print $1}'
+
+150 
+cmd
+ = ["adb", "-s", 
+£lf
+.
+dev_¢
+, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
+
+151 
+Œy
+:
+
+152 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+153 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+154 
+	$´št
+(
+e
+)
+
+155  
+NÚe
+
+
+157 
+cmd_out
+ = 
+by‹s
+.
+	`decode
+(
+´oc
+.
+¡dout
+.
+	`»ad
+().
+	`¥l™
+()[0])[-1]
+
+158 
+£lf
+.
+dmšx
+ = 
+cmd_out
+
+
+160  
+£lf
+.
+dmšx
+
+
+162 
+def
+ 
+	$qu”y_¡Üage
+(
+£lf
+):
+
+163 
+cmd
+ = ["adb", "-s", 
+£lf
+.
+dev_¢
+, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
+
+164 
+Œy
+:
+
+165 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+166 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+167 
+	$´št
+(
+e
+)
+
+168  
+NÚe
+
+
+170 
+cmd_out
+ = 
+by‹s
+.
+	`decode
+(
+´oc
+.
+¡dout
+.
+	`»ad
+().
+	`¥l™
+()[4])
+
+171 
+£lf
+.
+¡Üage
+ = (
+cmd_out
+.
+	`¡r
+('%'))/100
+
+172  
+£lf
+.
+¡Üage
+
+
+174 
+def
+ 
+	$qu”y_äagm’t
+(
+£lf
+):
+
+175 "f2fs" =ğ
+£lf
+.
+fs
+:
+
+176 
+¿tio
+ = 
+£lf
+.
+	$ÿlc_äagm’t_¿tio
+()
+
+177 
+£lf
+.
+äag
+ = ('%.2f' % 
+¿tio
+)
+
+179 
+£lf
+.
+äag
+ = 0
+
+183 ## 
+¡Üage
+ 
+the
+ 
+šfo
+ 
+—ch
+ 
+Úe
+ 
+mšu‹
+
+
+184 
+def
+ 
+	$¡Üe_deviûšfo
+(
+£lf
+):
+
+185 
+£lf
+.
+	$qu”y_¡Üage
+()
+
+186 
+£lf
+.
+	$qu”y_äagm’t
+()
+
+187 
+£lf
+.
+db
+.
+	`execu‹
+(£lf.
+cmd
+, (£lf.
+dev_¢
+, s–f.
+fs
+, s–f.
+¡Üage
+, s–f.
+¿tio
+, 
+d©‘ime
+.d©‘ime.
+	`now
+(), 
+	$¡r
+(
+£lf
+.
+£gm’t
+)))
+
+188 
+£lf
+.
+db
+.
+	$comm™
+()
+
+191 
+def
+ 
+	$upd©e_¡©us
+(
+£lf
+, 
+¡©us
+):
+
+192 
+£lf
+.
+¡©us
+ = status
+
+194 
+def
+ 
+	$¡İ_w¹h»ads
+(
+£lf
+):
+
+195 
+d
+.
+	`d
+("stopping wrthreads.....")
+
+196 
+£lf
+.
+has_wršg
+ = 
+F®£
+
+
+197 
+£lf
+.
+wr_¡İevt
+.
+	$£t
+()
+
+200 
+def
+ 
+	$¡¬t_w¹h»ads
+(
+£lf
+):
+
+201 
+d
+.
+	`d
+("starting wrthreads.....")
+
+202 
+£lf
+.
+wr_¡İevt
+ = 
+th»adšg
+.
+	$Ev’t
+()
+
+203 
+£lf
+.
+has_wršg
+ = 
+True
+
+
+204 
+i
+ 
+š
+ 
+	$¿nge
+(
+£lf
+.
+w¹h»ads
+):
+
+205 
+t
+=
+RLKTh»ad
+.
+	`RLKTh»ad
+(
+¡İevt
+=
+£lf
+.
+wr_¡İevt
+, 
+Çme
+=£lf.
+dev_¢
++"-wr-"+
+	`¡r
+(
+i
+), 
+rg‘
+=£lf.
+wr™e
+, 
+¬gs
+=£lf.dev_¢, 
+kw¬gs
+={"·th":£lf.
+·th
++£lf.
+dœ
++¡r(i)
+	}
+}, 
+	gd–ay
+=£lf.
+wrd–ay
+)
+
+206 
+t
+.
+	$¡¬t
+()
+
+208 
+def
+ 
+	$wr™e
+(
+£lf
+,
+dev_¢
+,
+·th
+):
+
+209 
+cmd_¡r
+="ià[ ! -à"+
+·th
+["path"]+" ];then mkdir -p "+path["path"]+";fi;"+"_tmp_size=$(($RANDOM%99+1));dd if=/dev/urandom of="+path["path"]+"/$(($RANDOM*1000+$RANDOM))_${_tmp_size}k.dat bs=${_tmp_size}k count=1;sync;"
+
+210 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "sh–l", 
+cmd_¡r
+]
+
+212 
+Œy
+:
+
+213 
+´oc
+ = 
+sub´oûss
+.
+	$run
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+214 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+215 
+	$´št
+(
+e
+)
+
+218 
+def
+ 
+	$¡İ_d–th»ads
+(
+£lf
+):
+
+219 
+d
+.
+	`d
+("stopping delthreads.....")
+
+220 
+£lf
+.
+has_d–šg
+ = 
+F®£
+
+
+221 
+£lf
+.
+d–_¡İevt
+.
+	$£t
+()
+
+224 
+def
+ 
+	$¡¬t_d–th»ads
+(
+£lf
+):
+
+225 
+d
+.
+	`d
+("starting delthreads.....")
+
+226 
+£lf
+.
+d–_¡İevt
+ = 
+th»adšg
+.
+	$Ev’t
+()
+
+227 
+£lf
+.
+has_d–šg
+ = 
+True
+
+
+228 
+i
+ 
+š
+ 
+	$¿nge
+(
+£lf
+.
+d–th»ads
+):
+
+229 #j = 
+¿ndom
+.
+	`¿ndšt
+(1,
+£lf
+.
+w¹h»ads
+)
+
+230 
+t
+=
+RLKTh»ad
+.
+	`RLKTh»ad
+(
+¡İevt
+=
+£lf
+.
+d–_¡İevt
+, 
+Çme
+=£lf.
+dev_¢
++"-d–-"+
+	`¡r
+(
+i
+), 
+rg‘
+=£lf.
+d–‘e
+, 
+¬gs
+=£lf.dev_¢, 
+kw¬gs
+={"·th":£lf.
+·th
++£lf.
+dœ
+}, d–ay=£lf.d–d–ay)
+
+231 
+t
+.
+	$¡¬t
+()
+
+233 
+def
+ 
+	$d–‘e
+(
+£lf
+,
+dev_¢
+,
+·th
+):
+
+234 
+cmd_¡r
+="rm -rà"+
+·th
+["path"]+"$(($RANDOM%10+1))/*_$(($RANDOM%99+1))k.dat;sync"
+
+235 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "sh–l", 
+cmd_¡r
+]
+
+236 
+d
+.
+	$d
+(
+cmd_¡r
+)
+
+237 
+Œy
+:
+
+238 
+´oc
+ = 
+sub´oûss
+.
+	$ÿÎ
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+239 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+240 
+	$´št
+(
+e
+)
+
+244 
+def
+ 
+	$¡İ_mÚth»ad
+(
+£lf
+):
+
+245 
+£lf
+.
+has_mÚšg
+ = 
+F®£
+
+
+246 
+£lf
+.
+mÚ_¡İevt
+.
+	$£t
+()
+
+247 
+£lf
+.
+has_wršg
+:
+
+248 
+£lf
+.
+	$¡İ_w¹h»ads
+()
+
+250 
+£lf
+.
+has_d–šg
+:
+
+251 
+£lf
+.
+	$¡İ_d–th»ads
+()
+
+254 
+def
+ 
+	$¡¬t_mÚth»ad
+(
+£lf
+):
+
+255 
+d
+.
+	`d
+("starting monthread.....")
+
+256 
+£lf
+.
+mÚ_¡İevt
+ = 
+th»adšg
+.
+	$Ev’t
+()
+
+257 
+£lf
+.
+has_mÚšg
+ = 
+True
+
+
+258 
+t
+=
+RLKTh»ad
+.
+	`RLKTh»ad
+(
+¡İevt
+=
+£lf
+.
+mÚ_¡İevt
+, 
+Çme
+=£lf.
+dev_¢
++"-mÚ-0", 
+rg‘
+=£lf.
+mÚ™Ü
+, 
+¬gs
+=£lf.dev_¢, 
+kw¬gs
+={
+	}
+}, 
+	gd–ay
+=£lf.
+mÚd–ay
+)
+
+259 
+t
+.
+	$¡¬t
+()
+
+261 ## 
+mÚ™Ü
+ 
+th»ad
+ 
+wl
+ mÚ™Ü 
+wh’
+ 
+deviû
+ 
+should
+ 
+wr™e
+, wh’ should 
+d–‘e
+
+
+262 
+def
+ 
+	$mÚ™Ü
+(
+£lf
+,
+dev_¢
+, 
+·th
+):
+
+263 #´št("mÚ™Ü funøÚ deviû:"+
+£lf
+.
+dev_¢
+)
+
+264 
+df
+ = 
+£lf
+.
+	$qu”y_¡Üage
+()
+
+265 
+df
+ > 
+£lf
+.
+¡İ_wr
+:
+
+266 
+£lf
+.
+has_wršg
+:
+
+267 
+£lf
+.
+	$¡İ_w¹h»ads
+()
+
+269 
+nÙ
+ 
+£lf
+.
+has_d–šg
+:
+
+270 
+£lf
+.
+	$¡¬t_d–th»ads
+()
+
+271 
+df
+ < 
+£lf
+.
+¡İ_d–
+:
+
+272 
+£lf
+.
+has_d–šg
+:
+
+273 
+£lf
+.
+	$¡İ_d–th»ads
+()
+
+275 
+nÙ
+ 
+£lf
+.
+has_wršg
+:
+
+276 
+£lf
+.
+	$¡¬t_w¹h»ads
+()
+
+278 
+£lf
+.
+	$¡Üe_deviûšfo
+()
+
+281 
+def
+ 
+	$adju¡_v®ue
+(
+£lf
+, 
+v
+):
+
+282 ià(
+v
+ > 0è
+	`ªd
+ (v < 512):
+
+285  
+v
+
+
+287 
+def
+ 
+	$·r£_šfo
+(
+£lf
+, 
+lše
+):
+
+288 
+»t
+ = 
+»
+.
+	`¥l™
+(
+r
+'\d\|',
+lše
+)
+
+289 
+»t
+ 
+is
+ 
+NÚe
+:
+
+290  
+NÚe
+
+
+292 
+	`Ën
+(
+»t
+) == 1:
+
+293  
+NÚe
+
+
+295 
+šfo
+ = 
+»t
+[1:]
+
+296 
+l
+ = 
+	$Ën
+(
+šfo
+)
+
+298 
+z
+=[]
+
+299 
+út_0
+ = 0
+
+300 
+út_512
+ = 0
+
+301 
+i
+ 
+š
+ 
+	$¿nge
+(
+l
+):
+
+302 (
+šfo
+[
+i
+]) == 0:
+
+303 
+út_0
+ += 1
+
+304 (
+šfo
+[
+i
+]) == 512:
+
+305 
+út_512
+ += 1
+
+306 
+k
+ = (
+šfo
+[
+i
+])
+
+307 
+z
+.
+	$­³nd
+(
+k
+)
+
+309  {"0":
+út_0
+, "512":
+út_512
+, "z":
+z
+}
+
+311 
+def
+ 
+	$ÿlc_äagm’t_¿tio
+(
+£lf
+):
+
+312 
+£lf
+.
+£gm’t
+ğ{"0":0, "512":0, "z":[]
+	}
+}
+
+314 
+·th
+ = "/´oc/fs/f2fs/dm-"+
+£lf
+.
+dmšx
++"/segment_info"
+
+315 
+cmd
+ = ["adb", "-s", 
+£lf
+.
+dev_¢
+, "sh–l", "ÿt", 
+·th
+]
+
+316 
+	gd
+.
+d
+("["+
+£lf
+.
+dev_¢
++"]: calc_fragment_ratio....")
+
+317 
+	gŒy
+:
+
+318 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+319 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+320 
+	$´št
+(
+e
+)
+
+321  
+NÚe
+
+
+323 
+True
+:
+
+324 
+lše
+ = 
+´oc
+.
+¡dout
+.
+	`»adlše
+().
+	$¡r
+()
+
+325 
+	$Ën
+(
+lše
+è
+is
+ 0:
+
+327 
+Œy
+:
+
+328 
+lše
+ = 
+	`¡r
+Öše, 
+’codšg
+ = "utf-8")
+
+329 
+exû±
+ 
+UnicodeDecodeE¼Ü
+ 
+as
+ 
+e
+:
+
+330 
+	$´št
+(
+e
+)
+
+333 
+šfo
+ = 
+£lf
+.
+	$·r£_šfo
+(
+lše
+)
+
+334 
+šfo
+ 
+is
+ 
+nÙ
+ 
+NÚe
+:
+
+335 
+£lf
+.
+£gm’t
+["0"] +ğ
+šfo
+["0"]
+
+336 
+£lf
+.
+£gm’t
+["512"] +ğ
+šfo
+["512"]
+
+337 
+£lf
+.
+£gm’t
+["z"] +ğ
+šfo
+["z"]
+
+338 
+£lf
+.
+¿tio
+ = (
+	`Ën
+(£lf.
+£gm’t
+["z"])-self.segment["0"]-self.segment["512"])/len(self.segment["z"])
+
+339 
+£lf
+.
+	$upd©e_£gm’t
+()
+
+340  
+£lf
+.
+¿tio
+
+
+342 
+def
+ 
+	$upd©e_£gm’t
+(
+£lf
+):
+
+343 
+út
+ = 
+	`Ën
+(
+£lf
+.
+£gm’t
+["z"])
+
+344 
+dy1
+ = 100
+
+345 
+dx1
+ = (
+út
+ / 
+dy1
+) + 1
+
+346 
+i
+ = 0
+
+347 
+dút
+ = 
+dx1
+ * 
+dy1
+
+
+348 ià(
+dút
+ > 
+út
+):
+
+349 
+i
+ 
+š
+ 
+	$¿nge
+(
+út
+, 
+dút
+):
+
+350 
+£lf
+.
+£gm’t
+["z"].
+	$­³nd
+(999)
+
+352 
+def
+ 
+	$d¿w_äagm’t_h—tm­_by¶Ùly
+(
+£lf
+): ##
+u£
+ 
+¶Ùly
+
+
+353 
+dy1
+ = 100
+
+354 
+dx1
+ = (
+	`Ën
+(
+£lf
+.
+£gm’t
+["z"]è/ 
+dy1
+)
+
+356 
+bb
+ = []
+
+357 
+bb
+ = 
+Å
+.
+	`¬¿y
+(
+£lf
+.
+£gm’t
+["z"]).
+	$»sh­e
+(
+dx1
+, 
+dy1
+)
+
+359 
+xa
+ = 
+Å
+.
+	`¬¿y
+(
+	$¿nge
+(
+dx1
+))
+
+360 
+ya
+ = 
+Å
+.
+	`¬¿y
+(
+	$¿nge
+(
+dy1
+))
+
+361 
+Œaû
+ = 
+go
+.
+	`H—tm­
+(
+
+362 
+x
+=
+xa
+,
+
+363 
+y
+=
+ya
+[::-1],
+
+364 
+z
+=
+bb
+,
+
+366 
+cŞÜsÿË
+='Jet',
+
+368 
+d©a
+ = [
+Œaû
+]
+
+370 
+Ïyout
+ = 
+go
+.
+	`Layout
+(
+
+371 
+t™Ë
+=
+£lf
+.
+dev_¢
+ + ": df[" + 
+	`¡r
+(('%.2f' % s–f.
+¡Üage
+)) + "]„atio[" + str(
+
+372 ('%.2f' % 
+£lf
+.
+¿tio
+)) + "]",
+
+373 
+xaxis
+=
+	`diù
+(
+t™Ë
+="segment„ow"),
+
+374 
+yaxis
+=
+	`diù
+(
+t™Ë
+="segment col"),
+
+377 
+fig
+ = 
+go
+.
+	$Figu»
+(
+d©a
+=d©a, 
+Ïyout
+=layout)
+
+378 
+ouut_f’ame
+ = "f2fs_äagm’t_v2_" + 
+£lf
+.
+dev_¢
+ + ".html"
+
+379 
+py
+.
+	$¶Ù
+(
+fig
+, 
+f’ame
+=
+ouut_f’ame
+)
+
+381 
+def
+ 
+	$d¿w_bÙh_bytime
+(
+£lf
+):
+
+382 
+£l_cmd
+ = "select df,ratio from deviceinfo"
+
+383 
+buf
+ = 
+£lf
+.
+db
+.
+	$ãtch
+(
+£l_cmd
+)
+
+384 
+út
+ = 
+	$Ën
+(
+buf
+)
+
+385 
+fig
+ = 
+¶t
+.
+	$figu»
+()
+
+386 
+a
+ = []
+
+387 
+b
+ = []
+
+388 
+i
+ 
+š
+ 
+	$¿nge
+(
+út
+):
+
+389 
+a
+.
+	$­³nd
+(
+buf
+[
+i
+][0])
+
+390 
+b
+.
+	$­³nd
+(
+buf
+[
+i
+][1])
+
+391 
+¶t
+.
+	`¶Ù
+(
+a
+, 'r', 
+Ïb–
+="df")
+
+392 
+¶t
+.
+	`¶Ù
+(
+b
+, 'g', 
+Ïb–
+="ratio")
+
+393 
+t™Ë
+ = 
+£lf
+.
+dev_¢
+ + ": df[" + 
+	`¡r
+(('%.2f' % s–f.
+¡Üage
+)) + "]„atio[" + str(
+
+394 ('%.2f' % 
+£lf
+.
+¿tio
+)) + "]"
+
+395 
+¶t
+.
+	`xÏb–
+("times")
+
+396 
+¶t
+.
+	`yÏb–
+("percent")
+
+397 
+¶t
+.
+	$t™Ë
+(
+t™Ë
+)
+
+398 
+¶t
+.
+	$show
+()
+
+400 
+def
+ 
+	$d¿w_äagm’t_¿tio_bytime
+(
+£lf
+):
+
+401 
+£l_cmd
+ = "select„atio from deviceinfo"
+
+402 
+buf
+ = 
+£lf
+.
+db
+.
+	$ãtch
+(
+£l_cmd
+)
+
+403 
+fig
+ = 
+¶t
+.
+	$figu»
+()
+
+404 
+lše
+ = 
+¶t
+.
+	`¶Ù
+(
+buf
+)[0]
+
+405 
+lše
+.
+	`£t_cŞÜ
+('r')
+
+406 
+t™Ë
+ = 
+£lf
+.
+dev_¢
+ + ": df[" + 
+	`¡r
+(('%.2f' % s–f.
+¡Üage
+)) + "]„atio[" + str(
+
+407 ('%.2f' % 
+£lf
+.
+¿tio
+)) + "]"
+
+408 
+¶t
+.
+	`xÏb–
+("times")
+
+409 
+¶t
+.
+	`yÏb–
+("percent")
+
+410 
+¶t
+.
+	$t™Ë
+(
+t™Ë
+)
+
+411 
+¶t
+.
+	$show
+()
+
+414 
+def
+ 
+	$d¿w_äagm’t_h—tm­_ªim©iÚ
+(
+£lf
+, 
+§ve
+=
+F®£
+, 
+ty³
+=
+NÚe
+):
+
+416 
+£l_cmd
+ = "select seginfo from deviceinfo"
+
+417 
+buf
+ = 
+£lf
+.
+db
+.
+	$ãtch
+(
+£l_cmd
+)
+
+418 
+út
+ = 
+	$Ën
+(
+buf
+)
+
+419 
+dy1
+ = 100
+
+420 
+fig
+ = 
+¶t
+.
+	`figu»
+(
+figsize
+=(16,8),
+dpi
+=100)
+
+421 #fig, 
+ax
+ = 
+¶t
+.
+	`sub¶Ùs
+()
+
+422 
+ims
+ = []
+
+424 
+út
+ > 100:
+
+425 
+¡•
+=(
+út
+/100)+1
+
+426 
+i
+ 
+š
+ 
+	$¿nge
+(0, 
+út
+, 
+¡•
+):
+
+427 
+bb
+ = 
+buf
+[
+i
+]
+
+428 
+cc
+ = 
+jsÚ
+.
+	`lßds
+(
+bb
+[0].
+	`»¶aû
+("'", "\""))["z"]
+
+429 
+dx1
+ = (
+	`Ën
+(
+cc
+è/ 
+dy1
+)
+
+430 
+dd
+ = 
+Å
+.
+	`¬¿y
+(
+cc
+).
+	$»sh­e
+(
+dx1
+,
+dy1
+)
+
+431 
+ims
+.
+	`­³nd
+((
+¶t
+.
+	`pcŞÜ
+(
+Å
+.
+	`¬ªge
+(0, 
+dy1
+ + 1, 1),‚p.¬ªge(
+dx1
+, -1, -1), 
+dd
+, 
+nÜm
+õÉ.
+	`NÜm®ize
+(0, 999)),))
+
+433 
+i
+ 
+š
+ 
+	$¿nge
+(
+út
+):
+
+434 
+bb
+ = 
+buf
+[
+i
+]
+
+435 
+cc
+ = 
+jsÚ
+.
+	`lßds
+(
+bb
+[0].
+	`»¶aû
+("'", "\""))["z"]
+
+436 
+dx1
+ = (
+	`Ën
+(
+cc
+è/ 
+dy1
+)
+
+437 
+dd
+ = 
+Å
+.
+	`¬¿y
+(
+cc
+).
+	$»sh­e
+(
+dx1
+,
+dy1
+)
+
+438 
+ims
+.
+	`­³nd
+((
+¶t
+.
+	`pcŞÜ
+(
+Å
+.
+	`¬ªge
+(0, 
+dy1
+ + 1, 1),‚p.¬ªge(
+dx1
+, -1, -1), 
+dd
+, 
+nÜm
+õÉ.
+	`NÜm®ize
+(0, 999)),))
+
+440 #fig.
+	`cŞÜb¬
+(
+ims
+)
+
+441 
+¶t
+.
+	$cŞÜb¬
+()
+
+442 
+im_ªi
+ = 
+ªim©iÚ
+.
+	$A¹i¡Anim©iÚ
+(
+fig
+, 
+ims
+, 
+š‹rv®
+=500, 
+»³©_d–ay
+=1000,
+bl™
+=
+True
+)
+
+443 
+t™Ë
+ = 
+£lf
+.
+dev_¢
+ + ": df[" + 
+	`¡r
+(('%.2f' % s–f.
+¡Üage
+)è+ "]„©io[" + sŒ(('%.2f' % s–f.
+¿tio
+)) + "]"
+
+444 
+¶t
+.
+	$t™Ë
+(
+t™Ë
+)
+
+446 
+§ve
+ 
+ªd
+ 
+ty³
+ == "mp4":
+
+447 
+Wr™”
+ = 
+ªim©iÚ
+.
+wr™”s
+['ffmpeg']
+
+448 
+wr™”
+ = 
+	`Wr™”
+(
+ås
+=15, 
+m‘ad©a
+=
+	`diù
+(
+¬ti¡
+=
+t™Ë
+), 
+b™¿‹
+=1800)
+
+450 
+§ve
+:
+
+451 
+ty³
+ == "mp4":
+
+452 
+im_ªi
+.
+	`§ve
+(
+£lf
+.
+dev_¢
++".mp4", 
+wr™”
+=writer)
+
+453 
+d
+.
+	`d
+("save mp4 success!")
+
+454 
+–if
+ 
+ty³
+ == "gif":
+
+455 
+im_ªi
+.
+	`§ve
+(
+£lf
+.
+dev_¢
++".gif", 
+wr™”
+='imagemagick', 
+ås
+=15)
+
+456 
+d
+.
+	`d
+("save gif success!")
+
+457 :##
+no
+ 
+ty³
+ 
+defše
+, 
+show
+ 
+™
+ 
+»¶aû
+
+
+458 
+¶t
+.
+	$show
+()
+
+460 
+¶t
+.
+	$show
+()
+
+463 
+def
+ 
+	$d¿w_äagm’t_h—tm­_bym©¶Ù
+(
+£lf
+):##
+u£
+ 
+m©¶Ùlib
+
+
+465 
+dy1
+ = 100
+
+466 
+dx1
+ = (
+	`Ën
+(
+£lf
+.
+£gm’t
+["z"])/
+dy1
+)
+
+468 
+bb
+ = []
+
+469 
+bb
+ = 
+Å
+.
+	`¬¿y
+(
+£lf
+.
+£gm’t
+["z"]).
+	$»sh­e
+(
+dx1
+,
+dy1
+)
+
+471 
+fig
+, 
+ax
+ = 
+¶t
+.
+	$sub¶Ùs
+()
+
+472 
+im
+ = 
+ax
+.
+	`pcŞÜ
+(
+Å
+.
+	`¬ªge
+(0, 
+dy1
+ + 1, 1),‚p.¬ªge(
+dx1
+, -1, -1), 
+bb
+, 
+nÜm
+=
+¶t
+.
+	$NÜm®ize
+(0, 999))
+
+473 
+fig
+.
+	$cŞÜb¬
+(
+im
+)
+
+474 
+t™Ë
+ = 
+£lf
+.
+dev_¢
+ + ": df[" + 
+	`¡r
+(('%.2f' % s–f.
+¡Üage
+)) + "]„atio[" + str(
+
+475 ('%.2f' % 
+£lf
+.
+¿tio
+)) + "]"
+
+476 
+¶t
+.
+	$t™Ë
+(
+t™Ë
+)
+
+478 
+¶t
+.
+	$show
+()
+
+480 
+def
+ 
+	$‹¡Deviûs
+():
+
+481 
+db
+ = 
+RLKDB
+.
+	`RLKDB
+("./test1.db")
+
+482 
+dev
+ = 
+	`RLKDeviû
+("FA7841800628", 
+db
+)
+
+483 #dev.
+	`¡¬t_w¹h»ads
+()
+
+484 
+dev
+.
+	$¡¬t_d‘eùth»ad
+()
+
+485 
+	`´št
+(
+th»adšg
+.
+	$’um”©e
+())
+
+486 
+time
+.
+	$¦“p
+(5)
+
+487 
+	`´št
+(
+	`»´
+(
+th»adšg
+.
+	`cu¼’tTh»ad
+())+'send stop signal\n')
+
+488 #dev.
+	`¡İ_w¹h»ads
+()
+
+489 
+dev
+.
+	$¡İ_d‘eùth»ad
+()
+
+490 #´št(
+dev
+.
+	`d‘eù
+())
+
+491 #´št(
+dev
+.
+	`qu”y_dmšx
+())
+
+492 #´št(
+dev
+.
+	`qu”y_¡Üage
+())
+
+494 
+__Çme__
+ == "__main__":
+
+495 
+	`‹¡Deviûs
+()
+
+	@RLKThread.py
+
+1 
+impÜt
+ 
+th»adšg
+
+
+2 
+impÜt
+ 
+time
+
+
+3 
+impÜt
+ 
+Debug
+ 
+as
+ 
+d
+
+
+5 
+şass
+ 
+	$RLKTh»ad
+(
+th»adšg
+.
+Th»ad
+):
+
+6 
+def
+ 
+	$__š™__
+(
+£lf
+, 
+Çme
+, 
+rg‘
+, 
+¬gs
+, 
+kw¬gs
+, 
+¡İevt
+, 
+d–ay
+=0):
+
+7 
+th»adšg
+.
+Th»ad
+.
+	$__š™__
+(
+£lf
+)
+
+8 
+£lf
+.
+¡İevt
+ = stopevt
+
+9 
+£lf
+.
+Çme
+ =‚ame
+
+10 
+£lf
+.
+rg‘
+ =arget
+
+11 
+£lf
+.
+¬gs
+ =‡rgs
+
+12 
+£lf
+.
+kw¬gs
+ = kwargs
+
+13 
+£lf
+.
+d–ay
+ = delay
+
+14 
+d
+.
+	$š™
+()
+
+16 
+def
+ 
+	$Ev’Œun
+(
+£lf
+):
+
+17 
+nÙ
+ 
+£lf
+.
+¡İevt
+.
+	$isS‘
+():
+
+18 
+£lf
+.
+	$rg‘
+(
+£lf
+.
+¬gs
+, s–f.
+kw¬gs
+)
+
+19 
+£lf
+.
+d–ay
+:
+
+20 
+time
+.
+	$¦“p
+(
+£lf
+.
+d–ay
+)
+
+21 
+d
+.
+	`d
+('stoped')
+
+23 
+def
+ 
+	$run
+(
+£lf
+):
+
+24 
+£lf
+.
+	$Ev’Œun
+()
+
+26 
+def
+ 
+	$‹¡func
+(
+¬gs
+, 
+kw¬gs
+):
+
+27 
+	`´št
+("I'm wÜkšg funùiÚ "+
+	`¡r
+(
+kw¬gs
+)+
+	`»´
+(
+th»adšg
+.
+	`cu¼’tTh»ad
+())+'‡live\n')
+
+29 
+def
+ 
+	$‹¡th»ad
+():
+
+30 
+¡İevt
+ = 
+th»adšg
+.
+	$Ev’t
+()
+
+31 
+A
+ = 
+	`RLKTh»ad
+(
+¡İevt
+=¡İevt, 
+Çme
+='subth»adA', 
+rg‘
+=
+‹¡func
+, 
+¬gs
+=" ", 
+kw¬gs
+={"¢":"123456","s":"Úlše"
+	}
+})
+
+32 
+B
+ = 
+RLKTh»ad
+(
+¡İevt
+=¡İevt, 
+Çme
+='subth»adB', 
+rg‘
+=
+‹¡func
+, 
+¬gs
+=" ", 
+kw¬gs
+={"sn":"343434","s":"offline"})
+
+33 
+´št
+(
+»´
+(
+th»adšg
+.
+cu¼’tTh»ad
+())+'alive\n')
+
+34 
+A
+.
+	$¡¬t
+()
+
+35 
+B
+.
+	$¡¬t
+()
+
+36 
+	`´št
+(
+th»adšg
+.
+	$’um”©e
+())
+
+37 
+time
+.
+	$¦“p
+(5)
+
+38 
+	`´št
+(
+	`»´
+(
+th»adšg
+.
+	`cu¼’tTh»ad
+())+'send stop signal\n')
+
+39 
+¡İevt
+.
+	$£t
+()
+
+40 
+	`´št
+(
+th»adšg
+.
+	$’um”©e
+())
+
+41 
+time
+.
+	$¦“p
+(5)
+
+42 
+	`´št
+("clear..")
+
+43 
+¡İevt
+.
+	$ş—r
+()
+
+44 #A.
+	`¡¬t
+()
+
+45 #B.
+	`¡¬t
+()
+
+46 
+time
+.
+	$¦“p
+(5)
+
+47 
+A
+.
+	$još
+()
+
+48 
+B
+.
+	$još
+()
+
+49 
+	`´št
+(
+	`»´
+(
+th»adšg
+.
+	`cu¼’tTh»ad
+())+'stoped\n')
+
+51 
+__Çme__
+ =='__main__':
+
+52 
+	`‹¡th»ad
+()
+
+	@ToolV1.1.py
+
+1 #!/
+u¤
+/
+bš
+/
+’v
+ 
+pythÚ
+
+
+3 
+impÜt
+ 
+os
+
+
+4 
+impÜt
+ 
+m©h
+
+
+5 
+impÜt
+ 
+sub´oûss
+
+
+6 
+impÜt
+ 
+d©‘ime
+
+
+7 
+impÜt
+ 
+time
+
+
+8 
+impÜt
+ 
+»
+
+
+9 
+impÜt
+ 
+¿ndom
+
+
+10 
+impÜt
+ 
+th»adšg
+
+
+12 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+mes§gebox
+ 
+as
+ 
+mBox
+
+
+13 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ *
+
+14 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+‰k
+
+
+15 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+süŞËd‹xt
+
+
+17 
+impÜt
+ 
+numpy
+ 
+as
+ 
+Å
+
+
+18 
+impÜt
+ 
+·ndas
+ 
+as
+ 
+pd
+
+
+19 
+impÜt
+ 
+	g¶Ùly
+.
+ofæše
+ 
+as
+ 
+py
+
+
+20 
+impÜt
+ 
+	g¶Ùly
+.
+g¿ph_objs
+ 
+as
+ 
+go
+
+
+22 
+şass
+ 
+	gF¿gm’tUI
+:
+
+24 
+def
+ 
+	$__š™__
+(
+£lf
+,
+Çme
+):
+
+25 
+£lf
+.
+Çme
+ =‚ame
+
+26 
+£lf
+.
+deviûs
+ = {
+	}
+}
+
+27 
+£lf
+.
+w¹h»ads
+ = 10
+
+28 
+£lf
+.
+d–th»ads
+ = 5
+
+29 
+£lf
+.
+·th
+ = "/sdcard/tmp/"
+
+30 
+£lf
+.
+dœ
+ = "dir"
+
+31 
+£lf
+.
+¡İ_wr
+ = 0.95
+
+32 
+£lf
+.
+¡İ_d–
+ = 0.90
+
+33 
+£lf
+.
+¦“±ime
+ = 10
+
+34 
+£lf
+.
+mÚth»ad
+ = "on"
+
+35 ## 
+dmšx
+ ==> 
+dm
+-0
+
+36 
+£lf
+.
+dmšx
+ = "0"
+
+38 
+def
+ 
+	$wšdow_şÛ
+(
+£lf
+):
+
+39 
+£lf
+.
+	$¡İ_®l
+()
+
+40 
+£lf
+.
+ui
+.
+	$de¡roy
+()
+
+41 
+	`´št
+("close windows....")
+
+44 
+def
+ 
+	$_qu™
+(
+£lf
+):
+
+45 
+£lf
+.
+	$wšdow_şÛ
+()
+
+47 
+def
+ 
+	$pİ
+(
+£lf
+,
+ev’t
+):
+
+48 
+£lf
+.
+pİm’uB¬
+.
+	$po¡
+(
+ev’t
+.
+x_roÙ
+,ev’t.
+y_roÙ
+)
+
+50 
+def
+ 
+	$No_S–eù
+(
+£lf
+):
+
+51 
+mBox
+.
+	`showšfo
+('Alert', "Please select‡ device!!!")
+
+54 
+def
+ 
+	$d¿w_äagm’t
+(
+£lf
+):
+
+55 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+56 
+£lf
+.
+	$No_S–eù
+()
+
+59 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+60 
+£lf
+.
+	$ÿlc_äagm’t_¿tio
+(
+dev_¢
+, 
+True
+)
+
+63 
+def
+ 
+	$š™_ui
+(
+£lf
+,
+li¡™ems
+):
+
+64 
+roÙ
+ = 
+	$Tk
+()
+
+65 
+roÙ
+.
+	`t™Ë
+("Fragmentools V1.0")
+
+66 
+roÙ
+.
+	`geom‘ry
+("720x400")
+
+67 
+roÙ
+.
+	$»sizabË
+(
+width
+=
+F®£
+, 
+height
+=False)
+
+68 
+£lf
+.
+roÙ
+ =„oot
+
+70 
+s
+ = 
+‰k
+.
+	$StyË
+()
+
+71 
+s
+.
+	`theme_u£
+('classic')
+
+73 
+m’uB¬
+ = 
+	`M’u
+(
+roÙ
+, 
+fÚt
+=("Monospace Regular",16))
+
+74 
+roÙ
+.
+	$cÚfig
+(
+m’u
+=
+m’uB¬
+)
+
+75 
+feM’u
+ = 
+	$M’u
+(
+m’uB¬
+, 
+‹¬off
+=0)
+
+76 
+m’uB¬
+.
+	`add_ÿsÿde
+(
+Ïb–
+="Fe", 
+m’u
+=
+feM’u
+)
+
+77 
+feM’u
+.
+	`add_commªd
+(
+Ïb–
+="New", 
+fÚt
+=("Monospace Regular",16))
+
+78 #feM’u.
+	`add_commªd
+(
+Ïb–
+="Exit")
+
+79 
+feM’u
+.
+	$add_£·¿tÜ
+()
+
+80 
+feM’u
+.
+	`add_commªd
+(
+Ïb–
+="Ex™", 
+commªd
+=
+£lf
+.
+_qu™
+, 
+fÚt
+=("Monospace Regular",16))
+
+82 
+cÚfigM’u
+ = 
+	$M’u
+(
+m’uB¬
+, 
+‹¬off
+=0)
+
+83 
+m’uB¬
+.
+	`add_ÿsÿde
+(
+Ïb–
+="CÚfig", 
+m’u
+=
+cÚfigM’u
+)
+
+84 
+cÚfigM’u
+.
+	`add_commªd
+(
+Ïb–
+="Glob®", 
+fÚt
+=("Monospace Regular",16))
+
+86 
+h–pM’u
+ = 
+	$M’u
+(
+m’uB¬
+, 
+‹¬off
+=0)
+
+87 
+m’uB¬
+.
+	`add_ÿsÿde
+(
+Ïb–
+="H–p", 
+m’u
+=
+h–pM’u
+)
+
+88 
+h–pM’u
+.
+	`add_commªd
+(
+Ïb–
+="About", 
+fÚt
+=("Monospace Regular",16))
+
+89 
+h–pM’u
+.
+	$add_£·¿tÜ
+()
+
+90 
+h–pM’u
+.
+	`add_commªd
+(
+Ïb–
+="H–p", 
+fÚt
+=("Monospace Regular",16))
+
+92 
+äm
+ = 
+‰k
+.
+	`Lab–F¿me
+(
+roÙ
+,
+‹xt
+="F¿gm’ˆtoŞ V1.0").
+	$grid
+(
+cŞumn
+=0,
+row
+=0)
+
+94 ## 
+äm_deviûs
+ 
+¡¬t
+
+
+95 
+‰k
+.
+	`Lab–
+(
+‹xt
+="choo£‡ deviû", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=0,
+cŞumn¥ª
+=2)
+
+97 
+v¬
+ = 
+	$SŒšgV¬
+()
+
+98 
+lb_deviûs
+ = 
+	`Li¡box
+(
+äm
+, 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+width
+=20, 
+li¡v¬ŸbË
+ = 
+v¬
+)
+
+99 
+lb_deviûs
+.
+	$grid
+(
+cŞumn
+=0,
+row
+=1,
+row¥ª
+=2,
+cŞumn¥ª
+=2)
+
+100 
+£lf
+.
+lb_deviûs
+ =†b_devices
+
+101 #´št(
+lb_deviûs
+)
+
+103 
+lb_deviûs
+.
+	`bšd
+('<Bu‰ÚR–—£-1>', 
+£lf
+.
+š™_™em
+)
+
+104 
+li¡_™em
+ = 
+li¡™ems
+
+
+105 
+™em
+ 
+š
+ 
+li¡_™em
+:
+
+106 
+lb_deviûs
+.
+	$š£¹
+(
+END
+, 
+™em
+)
+
+108 
+	`´št
+(
+lb_deviûs
+.
+	`g‘
+(0, "end"))
+
+110 
+¡¬t_bŠ
+ = 
+‰k
+.
+	`Bu‰Ú
+(
+äm
+, 
+‹xt
+=">>>", 
+commªd
+=
+£lf
+.
+¡¬t_func
+)
+
+111 
+¡¬t_bŠ
+.
+	$grid
+(
+cŞumn
+=2,
+row
+=1)
+
+112 
+¡İ_bŠ
+ = 
+‰k
+.
+	`Bu‰Ú
+(
+äm
+, 
+‹xt
+="<<<", 
+commªd
+=
+£lf
+.
+¡İ_func
+)
+
+113 
+¡İ_bŠ
+.
+	$grid
+(
+cŞumn
+=2,
+row
+=2)
+
+115 
+‰k
+.
+	`Lab–
+(
+‹xt
+="mÚ™Ü deviûs", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=3,
+row
+=0)
+
+116 
+v¬
+ = 
+	$SŒšgV¬
+()
+
+117 
+lb_mÚ™Üs
+ = 
+	`Li¡box
+(
+äm
+, 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+width
+=20, 
+li¡v¬ŸbË
+ = 
+v¬
+)
+
+118 
+lb_mÚ™Üs
+.
+	$grid
+(
+cŞumn
+=3,
+row
+=1,
+row¥ª
+=2)
+
+119 
+£lf
+.
+lb_mÚ™Üs
+ =†b_monitors
+
+121 
+lb_mÚ™Üs
+.
+	`bšd
+('<Bu‰ÚR–—£-1>', 
+£lf
+.
+mÚ™Ü_™em
+)
+
+123 ## 
+pİ
+ 
+nume
+ 
+¡¬t
+
+
+124 
+pİm’uB¬
+ = 
+	`M’u
+(
+roÙ
+, 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+‹¬off
+=0)
+
+125 
+pİm’uB¬
+.
+	`add_commªd
+(
+Ïb–
+="show", 
+commªd
+=
+£lf
+.
+d¿w_äagm’t
+)
+
+126 
+£lf
+.
+pİm’uB¬
+ =…opmenuBar
+
+127 
+lb_mÚ™Üs
+.
+	`bšd
+("<Bu‰ÚR–—£-3>", 
+£lf
+.
+pİ
+)
+
+128 ## 
+pİ
+ 
+m’u
+ 
+’d
+
+
+130 ## 
+äm_¡©us
+ 
+¡¬t
+
+
+131 
+‰k
+.
+	`Lab–
+(
+‹xt
+="deviû stus", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=4,
+row
+=0)
+
+132 
+süŞW
+ = 30 #è®¾ç½®æ–‡æœ¬æ¡†çš„é•¿åº¦
+
+133 
+süŞH
+ = 13 #è®¾ç½®æ–‡æœ¬æ¡†çš„é«˜åº¦
+
+134 
+sü
+ = 
+süŞËd‹xt
+.
+	`SüŞËdText
+(
+äm
+, 
+width
+=
+süŞW
+, 
+height
+=
+süŞH
+, 
+w¿p
+=
+WORD
+, 
+fÚt
+=("Monospace Regular",12))
+
+135 
+sü
+.
+	$grid
+(
+cŞumn
+=4, 
+row
+=1, 
+row¥ª
+=2)
+
+136 
+£lf
+.
+sü
+ = scr
+
+138 
+‰k
+.
+	`Lab–
+(
+‹xt
+="w¸th»ads:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=3)
+
+139 
+£lf
+.
+wºame
+ = 
+	$SŒšgV¬
+()
+
+140 
+wºameEÁ”ed
+ = 
+‰k
+.
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+wºame
+)
+
+141 
+wºameEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=3)
+
+142 
+wºameEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+w¹h»ads
+)
+
+143 
+wºameEÁ”ed
+.
+	$focus
+()
+
+145 
+‰k
+.
+	`Lab–
+(
+‹xt
+="d–h»ads:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=4)
+
+146 
+£lf
+.
+d–Çme
+ = 
+	$SŒšgV¬
+()
+
+147 
+d–ÇmeEÁ”ed
+ = 
+‰k
+.
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+d–Çme
+)
+
+148 
+d–ÇmeEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+d–th»ads
+)
+
+149 
+d–ÇmeEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=4)
+
+151 
+‰k
+.
+	`Lab–
+(
+‹xt
+="¦“°time:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=5)
+
+152 
+£lf
+.
+¦“²ame
+ = 
+	$SŒšgV¬
+()
+
+153 
+¦“²ameEÁ”ed
+ = 
+‰k
+.
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+¦“²ame
+)
+
+154 
+¦“²ameEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+¦“±ime
+)
+
+155 
+¦“²ameEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=5)
+
+157 
+‰k
+.
+	`Lab–
+(
+‹xt
+="Max…”ûÁ:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=6)
+
+158 
+£lf
+.
+maxÇme
+ = 
+	$SŒšgV¬
+()
+
+159 
+maxÇmeEÁ”ed
+ = 
+‰k
+.
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+maxÇme
+)
+
+160 
+maxÇmeEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+¡İ_wr
+)
+
+161 
+maxÇmeEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=6)
+
+163 
+‰k
+.
+	`Lab–
+(
+‹xt
+="Mš…”ûÁ:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=7)
+
+164 
+£lf
+.
+mšÇme
+ = 
+	$SŒšgV¬
+()
+
+165 
+mšÇmeEÁ”ed
+ = 
+‰k
+.
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+mšÇme
+)
+
+166 
+mšÇmeEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+¡İ_d–
+)
+
+167 
+mšÇmeEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=7)
+
+169 
+upd©e_cÚfig_bŠ
+ = 
+‰k
+.
+	`Bu‰Ú
+(
+äm
+, 
+‹xt
+="Upd©e", 
+commªd
+=
+£lf
+.
+upd©e_cÚfig
+)
+
+170 
+upd©e_cÚfig_bŠ
+.
+	$grid
+(
+cŞumn
+=1,
+row
+=8)
+
+172 ## 
+UI
+ 
+loİ
+ 
+¡¬t
+
+
+173 
+£lf
+.
+ui
+ = 
+roÙ
+
+
+174 
+roÙ
+.
+	`´ÙocŞ
+("WM_DELETE_WINDOW", 
+£lf
+.
+wšdow_şÛ
+)
+
+175 
+roÙ
+.
+	$mašloİ
+()
+
+177 
+def
+ 
+	$upd©e_cÚfig
+(
+£lf
+):
+
+178 
+£lf
+.
+w¹h»ads
+ = (£lf.
+wºame
+.
+	$g‘
+())
+
+179 #´št(
+£lf
+.
+w¹h»ads
+)
+
+180 
+£lf
+.
+d–th»ads
+ = (£lf.
+d–Çme
+.
+	$g‘
+())
+
+181 #´št(
+£lf
+.
+d–th»ads
+)
+
+182 
+£lf
+.
+¦“±ime
+ = (£lf.
+¦“²ame
+.
+	$g‘
+())
+
+183 #´št(
+£lf
+.
+¦“±ime
+)
+
+184 
+£lf
+.
+¡İ_wr
+ = (£lf.
+maxÇme
+.
+	$g‘
+())
+
+185 
+£lf
+.
+¡İ_d–
+ = (£lf.
+mšÇme
+.
+	$g‘
+())
+
+186 #´št(
+£lf
+)
+
+189 
+def
+ 
+	$¡¬t_func
+(
+£lf
+):
+
+190 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+193 
+dev_¢
+=
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+194 
+£lf
+.
+deviûs
+[
+dev_¢
+]={"s":"Úlše","df":0.0,"äag":0.0,"¡ime":
+d©‘ime
+.d©‘ime.
+	`now
+(),"wrâ":"Ú","d–â":"off"
+	}
+}
+
+195 
+£lf
+.
+lb_deviûs
+.
+d–‘e
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+196 
+£lf
+.
+lb_mÚ™Üs
+.
+	$š£¹
+(
+END
+, 
+dev_¢
+)
+
+197 
+£lf
+.
+	$ü—‹_wr_th»ad
+(
+dev_¢
+)
+
+198 
+£lf
+.
+	$ü—‹_d–_th»ad
+(
+dev_¢
+)
+
+199 
+£lf
+.
+	$ü—‹_mÚ™Ü_th»ad
+()
+
+201 
+def
+ 
+	$¡İ_func
+(
+£lf
+):
+
+202 
+	`´št
+("stop_func")
+
+203 
+	`´št
+(
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	$cur£ËùiÚ
+()))
+
+204 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) != 0:
+
+205 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+206 
+£lf
+.
+deviûs
+[
+dev_¢
+]["s"] = "offline"
+
+207 
+£lf
+.
+lb_mÚ™Üs
+.
+	`d–‘e
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+208 
+£lf
+.
+lb_deviûs
+.
+	$š£¹
+(
+END
+, 
+dev_¢
+)
+
+209 
+£lf
+.
+sü
+.
+	`d–‘e
+(0.0,
+	`Ën
+(£lf.sü.
+	`g‘
+(0.0,
+END
+))-1.0)
+
+210 
+	$´št
+(
+£lf
+.
+deviûs
+)
+
+213 
+def
+ 
+	$show_¡©us
+(
+£lf
+, 
+dev_¢
+):
+
+214 
+£lf
+.
+	$qu”y_deviû_¡Üage
+(
+dev_¢
+)
+
+215 
+£lf
+.
+	$qu”y_deviû_äagm’t
+(
+dev_¢
+)
+
+216 
+	`´št
+("´šˆdeviû["+
+dev_¢
++ "]'s status")
+
+217 
+£lf
+.
+sü
+.
+	`d–‘e
+(0.0,
+	`Ën
+(£lf.sü.
+	`g‘
+(0.0,
+END
+))-1.0)
+
+218 
+¡©us_¡r
+="deviû["+
+dev_¢
++"]: \n"
+
+219 
+¡©us_¡r
+=¡©us_¡r+"Stus: "+
+£lf
+.
+deviûs
+[
+dev_¢
+]["s"]+"\n"
+
+220 
+¡©us_¡r
+=¡©us_¡r+"df: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+]["df"])+"\n"
+
+221 
+¡©us_¡r
+=¡©us_¡r+"äag: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+]["frag"])+"\n"
+
+222 
+¡©us_¡r
+=¡©us_¡r+"¡ime: "+
+£lf
+.
+deviûs
+[
+dev_¢
+]["¡ime"].
+	`¡ráime
+('%Y-%m-%d %H:%M:%S')+"\n"
+
+223 
+¡©us_¡r
+=¡©us_¡r+"wr™e: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+]["wrfn"])+"\n"
+
+224 
+¡©us_¡r
+=¡©us_¡r+"d–‘e: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+]["delfn"])+"\n"
+
+225 
+¡©us_¡r
+=status_str+"\nGlobal config: \n"
+
+226 
+¡©us_¡r
+=¡©us_¡r+"wr™th»ads: "+
+	`¡r
+(
+£lf
+.
+w¹h»ads
+)+"\n"
+
+227 
+¡©us_¡r
+=¡©us_¡r+"d–h»ads: "+
+	`¡r
+(
+£lf
+.
+d–th»ads
+)+"\n"
+
+228 
+¡©us_¡r
+=¡©us_¡r+"¦“°time: "+
+	`¡r
+(
+£lf
+.
+¦“±ime
+)+"\n"
+
+229 
+¡©us_¡r
+=¡©us_¡r+"Max…”ûÁ: "+
+	`¡r
+(
+£lf
+.
+¡İ_wr
+*100)+"%\n"
+
+230 
+¡©us_¡r
+=¡©us_¡r+"Mš…”ûÁ: "+
+	`¡r
+(
+£lf
+.
+¡İ_d–
+*100)+"%\n"
+
+231 
+£lf
+.
+sü
+.
+	$š£¹
+(
+END
+,
+¡©us_¡r
+)
+
+233 
+def
+ 
+	$š™_™em
+(
+£lf
+,
+ev’t
+):
+
+234 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+237 
+£lf
+.
+	$show_š™_¡©us
+()
+
+239 
+def
+ 
+	$qu”y_dm_šx
+(
+£lf
+, 
+dev_¢
+):
+
+240 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
+
+241 
+	`´št
+("qu”y_dm_šx:"+" ".
+	$još
+(
+cmd
+))
+
+242 
+Œy
+:
+
+243 #´oøğ
+sub´oûss
+.
+	`ÿÎ
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+244 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+245 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+246 
+	$´št
+(
+e
+)
+
+247  
+NÚe
+
+
+249 
+cmd_out
+ = 
+by‹s
+.
+	`decode
+(
+´oc
+.
+¡dout
+.
+	`»ad
+().
+	`¥l™
+()[0])[-1]
+
+250 
+£lf
+.
+dmšx
+ = 
+cmd_out
+
+
+253 
+def
+ 
+	$show_š™_¡©us
+(
+£lf
+):
+
+254 
+dev_¢
+=
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+255 
+£lf
+.
+deviûs
+[
+dev_¢
+]={"s":"ofæše","df":0.0,"äag":0.0,"¡ime":
+d©‘ime
+.d©‘ime.
+	`now
+(),"wrâ":"off","d–â":"off"
+	}
+}
+
+256 
+£lf
+.
+	$qu”y_dm_šx
+(
+dev_¢
+)
+
+257 #´št(
+	`ty³
+(
+dev_¢
+))
+
+258 
+£lf
+.
+	$show_¡©us
+(
+dev_¢
+)
+
+260 
+def
+ 
+	$show_Úlše_¡©us
+(
+£lf
+):
+
+261 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+262 
+£lf
+.
+	$show_¡©us
+(
+dev_¢
+)
+
+264 
+def
+ 
+	$mÚ™Ü_™em
+(
+£lf
+,
+ev’t
+):
+
+265 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+268 
+£lf
+.
+	$show_Úlše_¡©us
+()
+
+270 
+def
+ 
+	$qu”y_deviû_¡Üage
+(
+£lf
+, 
+dev_¢
+):
+
+271 #adb 
+sh–l
+ 
+df
+ -
+h
+ | 
+g»p
+ "/dev/block/dm-" | g»°"\/d©a" | 
+awk
+ '{print $5}'
+
+272 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
+
+273 
+	`´št
+("qu”y_deviû_¡Üage:"+" ".
+	$još
+(
+cmd
+))
+
+274 
+Œy
+:
+
+275 #´oøğ
+sub´oûss
+.
+	`ÿÎ
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+276 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+277 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+278 
+	$´št
+(
+e
+)
+
+279  
+NÚe
+
+
+281 
+cmd_out
+ = 
+by‹s
+.
+	`decode
+(
+´oc
+.
+¡dout
+.
+	`»ad
+().
+	`¥l™
+()[4])
+
+282 
+£lf
+.
+deviûs
+[
+dev_¢
+]["df"] = 
+cmd_out
+
+
+283 #´št((
+cmd_out
+.
+	`¡r
+('%')))
+
+284 #´št(
+£lf
+.
+¡İ_wr
+)
+
+285 (
+cmd_out
+.
+	`¡r
+('%')è> 
+£lf
+.
+¡İ_wr
+*100:
+
+286 
+	`´št
+("stop wrhread....")
+
+287 
+£lf
+.
+deviûs
+[
+dev_¢
+]["wrfn"] = "off"
+
+288 
+	`´št
+("start deletehread....")
+
+289 
+£lf
+.
+deviûs
+[
+dev_¢
+]["delfn"] = "on"
+
+290 
+£lf
+.
+	$ü—‹_d–_th»ad
+(
+dev_¢
+)
+
+292 (
+cmd_out
+.
+	`¡r
+('%')è< 
+£lf
+.
+¡İ_d–
+*100:
+
+293 
+	`´št
+("stop deletehread...")
+
+294 
+£lf
+.
+deviûs
+[
+dev_¢
+]["delfn"] = "off"
+
+295 
+	`´št
+("start wrhread...")
+
+296 
+£lf
+.
+deviûs
+[
+dev_¢
+]["wrfn"] == "off":
+
+297 
+£lf
+.
+deviûs
+[
+dev_¢
+]["wrfn"] = "on"
+
+298 
+£lf
+.
+	$ü—‹_wr_th»ad
+(
+dev_¢
+)
+
+302 
+def
+ 
+	$adju¡_v®ue
+(
+£lf
+, 
+v
+):
+
+303 ià(
+v
+ > 0è
+	`ªd
+ (v < 512):
+
+306  
+v
+
+
+308 
+def
+ 
+	$·r£_šfo
+(
+£lf
+, 
+lše
+):
+
+309 
+»t
+ = 
+»
+.
+	`¥l™
+(
+r
+'\d\|',
+lše
+)
+
+310 
+»t
+ 
+is
+ 
+NÚe
+:
+
+311  
+NÚe
+
+
+313 
+	`Ën
+(
+»t
+) == 1:
+
+314  
+NÚe
+
+
+316 #šdex = 
+»t
+[0].
+	`¡r
+()
+
+317 
+šfo
+ = 
+»t
+[1:]
+
+318 
+l
+ = 
+	$Ën
+(
+šfo
+)
+
+319 #´št(
+l
+)
+
+323 
+z
+=[]
+
+324 
+út_0
+ = 0
+
+325 
+út_512
+ = 0
+
+326 
+i
+ 
+š
+ 
+	$¿nge
+(
+l
+):
+
+327 #x.
+	`­³nd
+((
+i
+))
+
+328 #y.
+	`­³nd
+((
+šdex
+))
+
+329 #´št(
+šfo
+[
+i
+])
+
+330 (
+šfo
+[
+i
+]) == 0:
+
+331 
+út_0
+ += 1
+
+332 (
+šfo
+[
+i
+]) == 512:
+
+333 
+út_512
+ += 1
+
+334 #k = 
+£lf
+.
+	`adju¡_v®ue
+((
+šfo
+[
+i
+]))
+
+335 
+k
+ = (
+šfo
+[
+i
+])
+
+336 
+z
+.
+	$­³nd
+(
+k
+)
+
+338 #´št(
+z
+)
+
+339  {"0":
+út_0
+, "512":
+út_512
+, "z":
+z
+}
+
+341 
+def
+ 
+	$ÿlc_äagm’t_¿tio
+(
+£lf
+, 
+dev_¢
+, 
+d¿w_äagm’t
+=
+F®£
+):
+
+342 
+£gm’t
+ğ{"0":0, "512":0, "z":[]
+	}
+}
+
+344 
+·th
+ = "/´oc/fs/f2fs/dm-"+
+£lf
+.
+dmšx
++"/segment_info"
+
+345 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "sh–l", "ÿt", 
+·th
+]
+
+346 
+´št
+("ÿlc_äagm’t_¿tio:"+" ".
+	$još
+(
+cmd
+))
+
+347 
+Œy
+:
+
+348 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+349 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+350 
+	$´št
+(
+e
+)
+
+351  
+NÚe
+
+
+354 
+True
+:
+
+355 #lšğ
+´oc
+.
+¡d”r
+.
+	`»adlše
+().
+	`¡r
+()
+
+356 #ià
+	`Ën
+(
+lše
+è
+is
+ 
+nÙ
+ 0:
+
+357 #´št(
+lše
+)
+
+358 #»tuº 
+NÚe
+
+
+360 #if(
+i
+==10):
+
+362 #˜ğ
+i
+ + 1
+
+363 
+lše
+ = 
+´oc
+.
+¡dout
+.
+	`»adlše
+().
+	$¡r
+()
+
+364 
+	$Ën
+(
+lše
+è
+is
+ 0:
+
+366 
+Œy
+:
+
+367 
+lše
+ = 
+	`¡r
+Öše, 
+’codšg
+ = "utf-8")
+
+368 #´št(
+lše
+)
+
+369 
+exû±
+ 
+UnicodeDecodeE¼Ü
+ 
+as
+ 
+e
+:
+
+370 
+	$´št
+(
+e
+)
+
+373 
+šfo
+ = 
+£lf
+.
+	$·r£_šfo
+(
+lše
+)
+
+374 #´št(
+šfo
+)
+
+375 
+šfo
+ 
+is
+ 
+nÙ
+ 
+NÚe
+:
+
+376 
+£gm’t
+["0"] +ğ
+šfo
+["0"]
+
+377 
+£gm’t
+["512"] +ğ
+šfo
+["512"]
+
+378 
+£gm’t
+["z"] +ğ
+šfo
+["z"]
+
+379 #£gm’ˆ+ğ
+šfo
+
+
+380 #´št(
+£gm’t
+)
+
+381 
+¿tio
+ = (
+	`Ën
+(
+£gm’t
+["z"])-segment["0"]-segment["512"])/len(segment["z"])
+
+382 
+d¿w_äagm’t
+ =ğ
+True
+:
+
+383 
+£lf
+.
+	`d¿w_äagm’t_šfo
+(
+£gm’t
+["z"], 
+¿tio
+, 
+dev_¢
+)
+
+384 #´št(
+¿tio
+)
+
+385  
+¿tio
+
+
+387 
+def
+ 
+	$qu”y_deviû_äagm’t
+(
+£lf
+, 
+dev_¢
+):
+
+388 
+¿tio
+ = 
+£lf
+.
+	$ÿlc_äagm’t_¿tio
+(
+dev_¢
+)
+
+389 
+£lf
+.
+deviûs
+[
+dev_¢
+]["äag"] = ('%.2f' % 
+¿tio
+)
+
+392 
+def
+ 
+	$qu”y_deviû_¡©us
+(
+£lf
+, 
+dev_¢
+):
+
+393 
+£lf
+.
+	$qu”y_deviû_¡Üage
+(
+dev_¢
+)
+
+394 
+£lf
+.
+	$qu”y_deviû_äagm’t
+(
+dev_¢
+)
+
+397 
+def
+ 
+	$¡İ_wr_th»ads
+(
+£lf
+, 
+dev_¢
+):
+
+400 #deviûs{"¢1":{"s":"Úlše","fg":0.6,"äag":0.63,"¡ime":
+xxxxx
+,"func":"off"}
+	}
+}
+
+401 
+def
+ 
+	$wr_func
+(
+£lf
+,
+dev_¢
+,
+·th
+):
+
+402 
+cmd_¡r
+="wh[ 1 ]; dØià[ ! -à"+
+·th
++" ];then mkdir -p "+path+";fi;"+"_tmp_size=$(($RANDOM%99+1));dd if=/dev/urandom of="+path+"/$(($RANDOM*1000+$RANDOM))_${_tmp_size}k.dat bs=${_tmp_size}k count=1 status=none;sync;done &"
+
+403 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "sh–l", 
+cmd_¡r
+]
+
+405 
+£lf
+.
+deviûs
+[
+dev_¢
+]["s"] =ğ"Úlše" 
+ªd
+ self.devices[dev_sn]["wrfn"] == "on":
+
+406 #´št(
+cmd_¡r
+)
+
+407 #´št(
+cmd
+)
+
+409 
+Œy
+:
+
+410 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+411 #´oøğ
+sub´oûss
+.
+	`check_ÿÎ
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+412 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+413 
+	$´št
+(
+e
+)
+
+417 
+def
+ 
+	$d–_func
+(
+£lf
+,
+dev_¢
+,
+·th
+):
+
+418 #cmd_¡r="wh[ 1 ];dØfe_li¡=`l "+
+·th
++"/*k.dat`;j=0;for file in $file_list;do„m -f $file;j=`expr $j + 1`;echo '$j: delete "+path+"/$file';if [ $j -gt 10 ];then break;fi;done;sync;exit;done"
+
+419 
+cmd_¡r
+="wh[ 1 ];dØrm -rà"+
+£lf
+.
+·th
++£lf.
+dœ
++"$(($RANDOM%99+1))/*_$(($RANDOM%99+1))k.dat;sync;done"
+
+420 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "sh–l", 
+cmd_¡r
+]
+
+422 
+£lf
+.
+deviûs
+[
+dev_¢
+]["s"] =ğ"Úlše" 
+ªd
+ self.devices[dev_sn]["delfn"] == "on":
+
+423 #´št(
+cmd_¡r
+)
+
+424 #´št(
+cmd
+)
+
+426 
+Œy
+:
+
+427 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+428 #´oøğ
+sub´oûss
+.
+	`ÿÎ
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+429 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+430 
+	$´št
+(
+e
+)
+
+434 
+def
+ 
+	$æush_deviû_šfo
+(
+£lf
+, 
+dev_¢
+):
+
+437 
+def
+ 
+	$¡İ_®l
+(
+£lf
+):
+
+438 
+£lf
+.
+mÚth»ad
+ = "off"
+
+439 
+	`Ën
+(
+£lf
+.
+deviûs
+) != 0:
+
+441 
+k
+ 
+š
+ 
+£lf
+.
+deviûs
+.
+	$keys
+():
+
+442 
+	$´št
+(
+k
+)
+
+443 
+£lf
+.
+deviûs
+[
+k
+]["s"] = "offline"
+
+446 
+def
+ 
+	$mÚ™Ü_deviûs
+(
+£lf
+):
+
+447 
+True
+:
+
+448 
+£lf
+.
+mÚth»ad
+ == "on":
+
+449 
+time
+.
+	$¦“p
+(
+£lf
+.
+¦“±ime
+)
+
+450 
+	`Ën
+(
+£lf
+.
+deviûs
+) != 0:
+
+452 
+k
+ 
+š
+ 
+£lf
+.
+deviûs
+.
+	$keys
+():
+
+453 #´št(
+k
+)
+
+454 #£lf.
+	`qu”y_deviû_¡©us
+(
+k
+)
+
+455 
+£lf
+.
+	$show_¡©us
+(
+k
+)
+
+456 #£lf.
+	`æush_deviû_šfo
+(
+k
+)
+
+460 
+def
+ 
+	$ü—‹_mÚ™Ü_th»ad
+(
+£lf
+):
+
+461 
+	`´št
+("create_monitor_thread...")
+
+462 
+t
+=
+th»adšg
+.
+	`Th»ad
+(
+rg‘
+=
+£lf
+.
+mÚ™Ü_deviûs
+,
+Çme
+="fragment-test-monitor")
+
+463 
+t
+.
+	$¡¬t
+()
+
+466 
+def
+ 
+	$ü—‹_wr_th»ad
+(
+£lf
+,
+dev
+):
+
+467 
+	`´št
+("create_wr_thread...")
+
+468 
+i
+ 
+š
+ 
+	$¿nge
+(
+£lf
+.
+w¹h»ads
+):
+
+469 #´št(
+i
+)
+
+470 #t=
+th»adšg
+.
+	`Th»ad
+(
+rg‘
+=
+£lf
+.
+wr_func
+,
+Çme
+=
+dev
++"-wr-"+
+	`¡r
+(
+i
+),
+¬gs
+=(dev,£lf.
+·th
++£lf.
+dœ
++str(i)))
+
+471 #t.
+	`¡¬t
+()
+
+472 
+£lf
+.
+	`wr_func
+(
+dev
+, s–f.
+·th
++£lf.
+dœ
++
+	$¡r
+(
+i
+))
+
+475 
+def
+ 
+	$ü—‹_d–_th»ad
+(
+£lf
+,
+dev
+):
+
+476 
+	`´št
+("create_del_thread...")
+
+477 
+i
+ 
+š
+ 
+	$¿nge
+(
+£lf
+.
+d–th»ads
+):
+
+478 #´št(
+i
+)
+
+479 
+t
+=
+th»adšg
+.
+	`Th»ad
+(
+rg‘
+=
+£lf
+.
+d–_func
+,
+Çme
+=
+dev
++"-d–-"+
+	`¡r
+(
+i
+),
+¬gs
+=(dev,£lf.
+·th
++£lf.
+dœ
++
+	$¡r
+(
+i
+)))
+
+480 
+t
+.
+	$¡¬t
+()
+
+483 
+def
+ 
+	$g‘_deviû_šfo
+(
+£lf
+):
+
+484 
+cmd
+ = ["adb", "devices"]
+
+485 
+Œy
+:
+
+486 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+487 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+488 
+	$´št
+(
+e
+)
+
+489  
+NÚe
+
+
+490 
+tmp_dev
+ = []
+
+491 
+i
+ = 0
+
+492 
+True
+:
+
+493 
+lše
+ = 
+´oc
+.
+¡dout
+.
+	`»adlše
+().
+	$¡r
+()
+
+494 
+	$Ën
+(
+lše
+è
+is
+ 
+nÙ
+ 0:
+
+495 
+lše
+[0:4] =ğ
+b
+'Li¡' 
+Ü
+†ine[0:1] == b'*':
+
+498 
+tmp_dev
+.
+	`­³nd
+(
+by‹s
+.
+	`decode
+(
+lše
+.
+	`¥l™
+()[0]))
+
+500  
+tmp_dev
+
+
+502 
+def
+ 
+	$d¿w_äagm’t_šfo
+(
+£lf
+, 
+£gm’t
+, 
+¿tio
+, 
+dev_¢
+):
+
+503 
+¯
+ = []
+
+504 
+út
+ = 0
+
+505 
+lše
+ 
+š
+ 
+£gm’t
+:
+
+506 
+x
+ = (
+lše
+)
+
+507 if(
+x
+>0è
+	`ªd
+ (x<512):
+
+508 
+x
+=256
+
+509 
+¯
+.
+	$­³nd
+(
+x
+)
+
+510 
+út
+=cnt+1
+
+512 
+dy1
+ = 100
+
+513 
+dx1
+ = (
+út
+/
+dy1
+) + 1
+
+514 
+i
+=0
+
+515 
+dút
+=
+dx1
+*
+dy1
+
+
+516 if(
+dút
+>
+út
+):
+
+517 
+i
+ 
+š
+ 
+	$¿nge
+(
+út
+,
+dút
+):
+
+518 
+¯
+.
+	`­³nd
+((999))
+
+520 
+bb
+ = []
+
+521 
+bb
+ = 
+Å
+.
+	`¬¿y
+(
+¯
+).
+	$»sh­e
+(
+dx1
+,
+dy1
+)
+
+523 
+xa
+ = 
+Å
+.
+	`¬¿y
+(
+	$¿nge
+(
+dx1
+))
+
+524 
+ya
+ = 
+Å
+.
+	`¬¿y
+(
+	$¿nge
+(
+dy1
+))
+
+525 
+Œaû
+ = 
+go
+.
+	`H—tm­
+(
+
+526 
+x
+=
+xa
+,
+
+527 
+y
+=
+ya
+[::-1],
+
+528 
+z
+=
+bb
+,
+
+530 
+cŞÜsÿË
+='Jet',
+
+532 
+d©a
+=[
+Œaû
+]
+
+534 
+Ïyout
+ = 
+go
+.
+	`Layout
+(
+
+535 
+t™Ë
+="["+
+dev_¢
++"] f¿g info: ["+
+£lf
+.
+deviûs
+[dev_¢]["df"]+"] "+
+	`¡r
+(('%.2f' % 
+¿tio
+)),
+
+536 #heighˆğ(
+	`Ën
+(
+£gm’t
+["z"])
+
+537 
+xaxis
+ = 
+	`diù
+(
+t™Ë
+ = "segment„ow"),
+
+538 
+yaxis
+ = 
+	`diù
+(
+t™Ë
+ = "segment col"),
+
+541 
+fig
+ = 
+go
+.
+	$Figu»
+(
+d©a
+=d©a, 
+Ïyout
+=layout)
+
+542 
+ouut_f’ame
+="f2fs_äagm’t_v2_"+
+dev_¢
++".html"
+
+543 
+py
+.
+	$¶Ù
+(
+fig
+,
+f’ame
+=
+ouut_f’ame
+)
+
+545 
+__Çme__
+ == '__main__':
+
+546 
+obj
+ = 
+	`F¿gm’tUI
+("fgool")
+
+547 
+obj
+.
+	`š™_ui
+(obj.
+	`g‘_deviû_šfo
+())
+
+	@ToolV1.py
+
+1 #!/
+u¤
+/
+bš
+/
+’v
+ 
+pythÚ
+
+
+3 
+impÜt
+ 
+os
+
+
+4 
+impÜt
+ 
+m©h
+
+
+5 
+impÜt
+ 
+sub´oûss
+
+
+6 
+impÜt
+ 
+d©‘ime
+
+
+7 
+impÜt
+ 
+time
+
+
+8 
+impÜt
+ 
+»
+
+
+9 
+impÜt
+ 
+¿ndom
+
+
+10 
+impÜt
+ 
+th»adšg
+
+
+12 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+mes§gebox
+ 
+as
+ 
+mBox
+
+
+13 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ *
+
+14 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+‰k
+
+
+15 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+süŞËd‹xt
+
+
+17 
+impÜt
+ 
+numpy
+ 
+as
+ 
+Å
+
+
+18 
+impÜt
+ 
+·ndas
+ 
+as
+ 
+pd
+
+
+19 
+impÜt
+ 
+	g¶Ùly
+.
+ofæše
+ 
+as
+ 
+py
+
+
+20 
+impÜt
+ 
+	g¶Ùly
+.
+g¿ph_objs
+ 
+as
+ 
+go
+
+
+22 
+şass
+ 
+	gF¿gm’tUI
+:
+
+24 
+def
+ 
+	$__š™__
+(
+£lf
+,
+Çme
+):
+
+25 
+£lf
+.
+Çme
+ =‚ame
+
+26 
+£lf
+.
+deviûs
+ = {
+	}
+}
+
+27 
+£lf
+.
+w¹h»ads
+ = 10
+
+28 
+£lf
+.
+d–th»ads
+ = 5
+
+29 
+£lf
+.
+·th
+ = "/sdcard/tmp/"
+
+30 
+£lf
+.
+dœ
+ = "dir"
+
+31 
+£lf
+.
+¡İ_wr
+ = 0.95
+
+32 
+£lf
+.
+¡İ_d–
+ = 0.90
+
+33 
+£lf
+.
+¦“±ime
+ = 10
+
+34 
+£lf
+.
+mÚth»ad
+ = "on"
+
+35 ## 
+dmšx
+ ==> 
+dm
+-0
+
+36 
+£lf
+.
+dmšx
+ = "0"
+
+38 
+def
+ 
+	$wšdow_şÛ
+(
+£lf
+):
+
+39 
+£lf
+.
+	$¡İ_®l
+()
+
+40 
+£lf
+.
+ui
+.
+	$de¡roy
+()
+
+41 
+	`´št
+("close windows....")
+
+44 
+def
+ 
+	$_qu™
+(
+£lf
+):
+
+45 
+£lf
+.
+	$wšdow_şÛ
+()
+
+47 
+def
+ 
+	$pİ
+(
+£lf
+,
+ev’t
+):
+
+48 
+£lf
+.
+pİm’uB¬
+.
+	$po¡
+(
+ev’t
+.
+x_roÙ
+,ev’t.
+y_roÙ
+)
+
+50 
+def
+ 
+	$No_S–eù
+(
+£lf
+):
+
+51 
+mBox
+.
+	`showšfo
+('Alert', "Please select‡ device!!!")
+
+54 
+def
+ 
+	$d¿w_äagm’t
+(
+£lf
+):
+
+55 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+56 
+£lf
+.
+	$No_S–eù
+()
+
+59 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+60 
+£lf
+.
+	$ÿlc_äagm’t_¿tio
+(
+dev_¢
+, 
+True
+)
+
+63 
+def
+ 
+	$š™_ui
+(
+£lf
+,
+li¡™ems
+):
+
+64 
+roÙ
+ = 
+	$Tk
+()
+
+65 
+roÙ
+.
+	`t™Ë
+("Fragmentools V1.0")
+
+66 
+roÙ
+.
+	`geom‘ry
+("720x400")
+
+67 
+roÙ
+.
+	$»sizabË
+(
+width
+=
+F®£
+, 
+height
+=False)
+
+68 
+£lf
+.
+roÙ
+ =„oot
+
+70 
+s
+ = 
+‰k
+.
+	$StyË
+()
+
+71 
+s
+.
+	`theme_u£
+('classic')
+
+73 
+m’uB¬
+ = 
+	`M’u
+(
+roÙ
+, 
+fÚt
+=("Monospace Regular",16))
+
+74 
+roÙ
+.
+	$cÚfig
+(
+m’u
+=
+m’uB¬
+)
+
+75 
+feM’u
+ = 
+	$M’u
+(
+m’uB¬
+, 
+‹¬off
+=0)
+
+76 
+m’uB¬
+.
+	`add_ÿsÿde
+(
+Ïb–
+="Fe", 
+m’u
+=
+feM’u
+)
+
+77 
+feM’u
+.
+	`add_commªd
+(
+Ïb–
+="New", 
+fÚt
+=("Monospace Regular",16))
+
+78 #feM’u.
+	`add_commªd
+(
+Ïb–
+="Exit")
+
+79 
+feM’u
+.
+	$add_£·¿tÜ
+()
+
+80 
+feM’u
+.
+	`add_commªd
+(
+Ïb–
+="Ex™", 
+commªd
+=
+£lf
+.
+_qu™
+, 
+fÚt
+=("Monospace Regular",16))
+
+82 
+cÚfigM’u
+ = 
+	$M’u
+(
+m’uB¬
+, 
+‹¬off
+=0)
+
+83 
+m’uB¬
+.
+	`add_ÿsÿde
+(
+Ïb–
+="CÚfig", 
+m’u
+=
+cÚfigM’u
+)
+
+84 
+cÚfigM’u
+.
+	`add_commªd
+(
+Ïb–
+="Glob®", 
+fÚt
+=("Monospace Regular",16))
+
+86 
+h–pM’u
+ = 
+	$M’u
+(
+m’uB¬
+, 
+‹¬off
+=0)
+
+87 
+m’uB¬
+.
+	`add_ÿsÿde
+(
+Ïb–
+="H–p", 
+m’u
+=
+h–pM’u
+)
+
+88 
+h–pM’u
+.
+	`add_commªd
+(
+Ïb–
+="About", 
+fÚt
+=("Monospace Regular",16))
+
+89 
+h–pM’u
+.
+	$add_£·¿tÜ
+()
+
+90 
+h–pM’u
+.
+	`add_commªd
+(
+Ïb–
+="H–p", 
+fÚt
+=("Monospace Regular",16))
+
+92 
+äm
+ = 
+‰k
+.
+	`Lab–F¿me
+(
+roÙ
+,
+‹xt
+="F¿gm’ˆtoŞ V1.0").
+	$grid
+(
+cŞumn
+=0,
+row
+=0)
+
+94 ## 
+äm_deviûs
+ 
+¡¬t
+
+
+95 
+‰k
+.
+	`Lab–
+(
+‹xt
+="choo£‡ deviû", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=0,
+cŞumn¥ª
+=2)
+
+97 
+v¬
+ = 
+	$SŒšgV¬
+()
+
+98 
+lb_deviûs
+ = 
+	`Li¡box
+(
+äm
+, 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+width
+=20, 
+li¡v¬ŸbË
+ = 
+v¬
+)
+
+99 
+lb_deviûs
+.
+	$grid
+(
+cŞumn
+=0,
+row
+=1,
+row¥ª
+=2,
+cŞumn¥ª
+=2)
+
+100 
+£lf
+.
+lb_deviûs
+ =†b_devices
+
+101 #´št(
+lb_deviûs
+)
+
+103 
+lb_deviûs
+.
+	`bšd
+('<Bu‰ÚR–—£-1>', 
+£lf
+.
+š™_™em
+)
+
+104 
+li¡_™em
+ = 
+li¡™ems
+
+
+105 
+™em
+ 
+š
+ 
+li¡_™em
+:
+
+106 
+lb_deviûs
+.
+	$š£¹
+(
+END
+, 
+™em
+)
+
+108 
+¡¬t_bŠ
+ = 
+‰k
+.
+	`Bu‰Ú
+(
+äm
+, 
+‹xt
+=">>>", 
+commªd
+=
+£lf
+.
+¡¬t_func
+)
+
+109 
+¡¬t_bŠ
+.
+	$grid
+(
+cŞumn
+=2,
+row
+=1)
+
+110 
+¡İ_bŠ
+ = 
+‰k
+.
+	`Bu‰Ú
+(
+äm
+, 
+‹xt
+="<<<", 
+commªd
+=
+£lf
+.
+¡İ_func
+)
+
+111 
+¡İ_bŠ
+.
+	$grid
+(
+cŞumn
+=2,
+row
+=2)
+
+113 
+‰k
+.
+	`Lab–
+(
+‹xt
+="mÚ™Ü deviûs", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=3,
+row
+=0)
+
+114 
+v¬
+ = 
+	$SŒšgV¬
+()
+
+115 
+lb_mÚ™Üs
+ = 
+	`Li¡box
+(
+äm
+, 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+width
+=20, 
+li¡v¬ŸbË
+ = 
+v¬
+)
+
+116 
+lb_mÚ™Üs
+.
+	$grid
+(
+cŞumn
+=3,
+row
+=1,
+row¥ª
+=2)
+
+117 
+£lf
+.
+lb_mÚ™Üs
+ =†b_monitors
+
+119 
+lb_mÚ™Üs
+.
+	`bšd
+('<Bu‰ÚR–—£-1>', 
+£lf
+.
+mÚ™Ü_™em
+)
+
+121 ## 
+pİ
+ 
+nume
+ 
+¡¬t
+
+
+122 
+pİm’uB¬
+ = 
+	`M’u
+(
+roÙ
+, 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+‹¬off
+=0)
+
+123 
+pİm’uB¬
+.
+	`add_commªd
+(
+Ïb–
+="show", 
+commªd
+=
+£lf
+.
+d¿w_äagm’t
+)
+
+124 
+£lf
+.
+pİm’uB¬
+ =…opmenuBar
+
+125 
+lb_mÚ™Üs
+.
+	`bšd
+("<Bu‰ÚR–—£-3>", 
+£lf
+.
+pİ
+)
+
+126 ## 
+pİ
+ 
+m’u
+ 
+’d
+
+
+128 ## 
+äm_¡©us
+ 
+¡¬t
+
+
+129 
+‰k
+.
+	`Lab–
+(
+‹xt
+="deviû stus", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=4,
+row
+=0)
+
+130 
+süŞW
+ = 30 #è®¾ç½®æ–‡æœ¬æ¡†çš„é•¿åº¦
+
+131 
+süŞH
+ = 13 #è®¾ç½®æ–‡æœ¬æ¡†çš„é«˜åº¦
+
+132 
+sü
+ = 
+süŞËd‹xt
+.
+	`SüŞËdText
+(
+äm
+, 
+width
+=
+süŞW
+, 
+height
+=
+süŞH
+, 
+w¿p
+=
+WORD
+, 
+fÚt
+=("Monospace Regular",12))
+
+133 
+sü
+.
+	$grid
+(
+cŞumn
+=4, 
+row
+=1, 
+row¥ª
+=2)
+
+134 
+£lf
+.
+sü
+ = scr
+
+136 
+‰k
+.
+	`Lab–
+(
+‹xt
+="w¸th»ads:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=3)
+
+137 
+£lf
+.
+wºame
+ = 
+	$SŒšgV¬
+()
+
+138 
+wºameEÁ”ed
+ = 
+‰k
+.
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+wºame
+)
+
+139 
+wºameEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=3)
+
+140 
+wºameEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+w¹h»ads
+)
+
+141 
+wºameEÁ”ed
+.
+	$focus
+()
+
+143 
+‰k
+.
+	`Lab–
+(
+‹xt
+="d–h»ads:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=4)
+
+144 
+£lf
+.
+d–Çme
+ = 
+	$SŒšgV¬
+()
+
+145 
+d–ÇmeEÁ”ed
+ = 
+‰k
+.
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+d–Çme
+)
+
+146 
+d–ÇmeEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+d–th»ads
+)
+
+147 
+d–ÇmeEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=4)
+
+149 
+‰k
+.
+	`Lab–
+(
+‹xt
+="¦“°time:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=5)
+
+150 
+£lf
+.
+¦“²ame
+ = 
+	$SŒšgV¬
+()
+
+151 
+¦“²ameEÁ”ed
+ = 
+‰k
+.
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+¦“²ame
+)
+
+152 
+¦“²ameEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+¦“±ime
+)
+
+153 
+¦“²ameEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=5)
+
+155 
+‰k
+.
+	`Lab–
+(
+‹xt
+="Max…”ûÁ:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=6)
+
+156 
+£lf
+.
+maxÇme
+ = 
+	$SŒšgV¬
+()
+
+157 
+maxÇmeEÁ”ed
+ = 
+‰k
+.
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+maxÇme
+)
+
+158 
+maxÇmeEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+¡İ_wr
+)
+
+159 
+maxÇmeEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=6)
+
+161 
+‰k
+.
+	`Lab–
+(
+‹xt
+="Mš…”ûÁ:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=7)
+
+162 
+£lf
+.
+mšÇme
+ = 
+	$SŒšgV¬
+()
+
+163 
+mšÇmeEÁ”ed
+ = 
+‰k
+.
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+mšÇme
+)
+
+164 
+mšÇmeEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+¡İ_d–
+)
+
+165 
+mšÇmeEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=7)
+
+167 
+upd©e_cÚfig_bŠ
+ = 
+‰k
+.
+	`Bu‰Ú
+(
+äm
+, 
+‹xt
+="Upd©e", 
+commªd
+=
+£lf
+.
+upd©e_cÚfig
+)
+
+168 
+upd©e_cÚfig_bŠ
+.
+	$grid
+(
+cŞumn
+=1,
+row
+=8)
+
+170 ## 
+UI
+ 
+loİ
+ 
+¡¬t
+
+
+171 
+£lf
+.
+ui
+ = 
+roÙ
+
+
+172 
+roÙ
+.
+	`´ÙocŞ
+("WM_DELETE_WINDOW", 
+£lf
+.
+wšdow_şÛ
+)
+
+173 
+roÙ
+.
+	$mašloİ
+()
+
+175 
+def
+ 
+	$upd©e_cÚfig
+(
+£lf
+):
+
+176 
+£lf
+.
+w¹h»ads
+ = (£lf.
+wºame
+.
+	$g‘
+())
+
+177 #´št(
+£lf
+.
+w¹h»ads
+)
+
+178 
+£lf
+.
+d–th»ads
+ = (£lf.
+d–Çme
+.
+	$g‘
+())
+
+179 #´št(
+£lf
+.
+d–th»ads
+)
+
+180 
+£lf
+.
+¦“±ime
+ = (£lf.
+¦“²ame
+.
+	$g‘
+())
+
+181 #´št(
+£lf
+.
+¦“±ime
+)
+
+182 
+£lf
+.
+¡İ_wr
+ = (£lf.
+maxÇme
+.
+	$g‘
+())
+
+183 
+£lf
+.
+¡İ_d–
+ = (£lf.
+mšÇme
+.
+	$g‘
+())
+
+184 #´št(
+£lf
+)
+
+187 
+def
+ 
+	$¡¬t_func
+(
+£lf
+):
+
+188 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+191 
+dev_¢
+=
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+192 
+£lf
+.
+deviûs
+[
+dev_¢
+]={"s":"Úlše","df":0.0,"äag":0.0,"¡ime":
+d©‘ime
+.d©‘ime.
+	`now
+(),"wrâ":"Ú","d–â":"off"
+	}
+}
+
+193 
+£lf
+.
+lb_deviûs
+.
+d–‘e
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+194 
+£lf
+.
+lb_mÚ™Üs
+.
+	$š£¹
+(
+END
+, 
+dev_¢
+)
+
+195 
+£lf
+.
+	$ü—‹_wr_th»ad
+(
+dev_¢
+)
+
+196 
+£lf
+.
+	$ü—‹_d–_th»ad
+(
+dev_¢
+)
+
+197 
+£lf
+.
+	$ü—‹_mÚ™Ü_th»ad
+()
+
+199 
+def
+ 
+	$¡İ_func
+(
+£lf
+):
+
+200 
+	`´št
+("stop_func")
+
+201 
+	`´št
+(
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	$cur£ËùiÚ
+()))
+
+202 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) != 0:
+
+203 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+204 
+£lf
+.
+deviûs
+[
+dev_¢
+]["s"] = "offline"
+
+205 
+£lf
+.
+lb_mÚ™Üs
+.
+	`d–‘e
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+206 
+£lf
+.
+lb_deviûs
+.
+	$š£¹
+(
+END
+, 
+dev_¢
+)
+
+207 
+£lf
+.
+sü
+.
+	`d–‘e
+(0.0,
+	`Ën
+(£lf.sü.
+	`g‘
+(0.0,
+END
+))-1.0)
+
+208 
+	$´št
+(
+£lf
+.
+deviûs
+)
+
+211 
+def
+ 
+	$show_¡©us
+(
+£lf
+, 
+dev_¢
+):
+
+212 
+£lf
+.
+	$qu”y_deviû_¡Üage
+(
+dev_¢
+)
+
+213 
+£lf
+.
+	$qu”y_deviû_äagm’t
+(
+dev_¢
+)
+
+214 
+	`´št
+("´šˆdeviû["+
+dev_¢
++ "]'s status")
+
+215 
+£lf
+.
+sü
+.
+	`d–‘e
+(0.0,
+	`Ën
+(£lf.sü.
+	`g‘
+(0.0,
+END
+))-1.0)
+
+216 
+¡©us_¡r
+="deviû["+
+dev_¢
++"]: \n"
+
+217 
+¡©us_¡r
+=¡©us_¡r+"Stus: "+
+£lf
+.
+deviûs
+[
+dev_¢
+]["s"]+"\n"
+
+218 
+¡©us_¡r
+=¡©us_¡r+"df: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+]["df"])+"\n"
+
+219 
+¡©us_¡r
+=¡©us_¡r+"äag: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+]["frag"])+"\n"
+
+220 
+¡©us_¡r
+=¡©us_¡r+"¡ime: "+
+£lf
+.
+deviûs
+[
+dev_¢
+]["¡ime"].
+	`¡ráime
+('%Y-%m-%d %H:%M:%S')+"\n"
+
+221 
+¡©us_¡r
+=¡©us_¡r+"wr™e: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+]["wrfn"])+"\n"
+
+222 
+¡©us_¡r
+=¡©us_¡r+"d–‘e: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+]["delfn"])+"\n"
+
+223 
+¡©us_¡r
+=status_str+"\nGlobal config: \n"
+
+224 
+¡©us_¡r
+=¡©us_¡r+"wr™th»ads: "+
+	`¡r
+(
+£lf
+.
+w¹h»ads
+)+"\n"
+
+225 
+¡©us_¡r
+=¡©us_¡r+"d–h»ads: "+
+	`¡r
+(
+£lf
+.
+d–th»ads
+)+"\n"
+
+226 
+¡©us_¡r
+=¡©us_¡r+"¦“°time: "+
+	`¡r
+(
+£lf
+.
+¦“±ime
+)+"\n"
+
+227 
+¡©us_¡r
+=¡©us_¡r+"Max…”ûÁ: "+
+	`¡r
+(
+£lf
+.
+¡İ_wr
+*100)+"%\n"
+
+228 
+¡©us_¡r
+=¡©us_¡r+"Mš…”ûÁ: "+
+	`¡r
+(
+£lf
+.
+¡İ_d–
+*100)+"%\n"
+
+229 
+£lf
+.
+sü
+.
+	$š£¹
+(
+END
+,
+¡©us_¡r
+)
+
+231 
+def
+ 
+	$š™_™em
+(
+£lf
+,
+ev’t
+):
+
+232 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+235 
+£lf
+.
+	$show_š™_¡©us
+()
+
+237 
+def
+ 
+	$qu”y_dm_šx
+(
+£lf
+, 
+dev_¢
+):
+
+238 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
+
+239 
+	`´št
+("qu”y_dm_šx:"+" ".
+	$još
+(
+cmd
+))
+
+240 
+Œy
+:
+
+241 #´oøğ
+sub´oûss
+.
+	`ÿÎ
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+242 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+243 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+244 
+	$´št
+(
+e
+)
+
+245  
+NÚe
+
+
+247 
+cmd_out
+ = 
+by‹s
+.
+	`decode
+(
+´oc
+.
+¡dout
+.
+	`»ad
+().
+	`¥l™
+()[0])[-1]
+
+248 
+£lf
+.
+dmšx
+ = 
+cmd_out
+
+
+251 
+def
+ 
+	$show_š™_¡©us
+(
+£lf
+):
+
+252 
+dev_¢
+=
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+253 
+£lf
+.
+deviûs
+[
+dev_¢
+]={"s":"ofæše","df":0.0,"äag":0.0,"¡ime":
+d©‘ime
+.d©‘ime.
+	`now
+(),"wrâ":"off","d–â":"off"
+	}
+}
+
+254 
+£lf
+.
+	$qu”y_dm_šx
+(
+dev_¢
+)
+
+255 #´št(
+	`ty³
+(
+dev_¢
+))
+
+256 
+£lf
+.
+	$show_¡©us
+(
+dev_¢
+)
+
+258 
+def
+ 
+	$show_Úlše_¡©us
+(
+£lf
+):
+
+259 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+260 
+£lf
+.
+	$show_¡©us
+(
+dev_¢
+)
+
+262 
+def
+ 
+	$mÚ™Ü_™em
+(
+£lf
+,
+ev’t
+):
+
+263 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+266 
+£lf
+.
+	$show_Úlše_¡©us
+()
+
+268 
+def
+ 
+	$qu”y_deviû_¡Üage
+(
+£lf
+, 
+dev_¢
+):
+
+269 #adb 
+sh–l
+ 
+df
+ -
+h
+ | 
+g»p
+ "/dev/block/dm-" | g»°"\/d©a" | 
+awk
+ '{print $5}'
+
+270 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
+
+271 
+	`´št
+("qu”y_deviû_¡Üage:"+" ".
+	$još
+(
+cmd
+))
+
+272 
+Œy
+:
+
+273 #´oøğ
+sub´oûss
+.
+	`ÿÎ
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+274 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+275 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+276 
+	$´št
+(
+e
+)
+
+277  
+NÚe
+
+
+279 
+cmd_out
+ = 
+by‹s
+.
+	`decode
+(
+´oc
+.
+¡dout
+.
+	`»ad
+().
+	`¥l™
+()[4])
+
+280 
+£lf
+.
+deviûs
+[
+dev_¢
+]["df"] = 
+cmd_out
+
+
+281 #´št((
+cmd_out
+.
+	`¡r
+('%')))
+
+282 #´št(
+£lf
+.
+¡İ_wr
+)
+
+283 (
+cmd_out
+.
+	`¡r
+('%')è> 
+£lf
+.
+¡İ_wr
+*100:
+
+284 
+	`´št
+("stop wrhread....")
+
+285 
+£lf
+.
+deviûs
+[
+dev_¢
+]["wrfn"] = "off"
+
+286 
+	`´št
+("start deletehread....")
+
+287 
+£lf
+.
+deviûs
+[
+dev_¢
+]["delfn"] = "on"
+
+288 
+£lf
+.
+	$ü—‹_d–_th»ad
+(
+dev_¢
+)
+
+290 (
+cmd_out
+.
+	`¡r
+('%')è< 
+£lf
+.
+¡İ_d–
+*100:
+
+291 
+	`´št
+("stop deletehread...")
+
+292 
+£lf
+.
+deviûs
+[
+dev_¢
+]["delfn"] = "off"
+
+293 
+	`´št
+("start wrhread...")
+
+294 
+£lf
+.
+deviûs
+[
+dev_¢
+]["wrfn"] == "off":
+
+295 
+£lf
+.
+deviûs
+[
+dev_¢
+]["wrfn"] = "on"
+
+296 
+£lf
+.
+	$ü—‹_wr_th»ad
+(
+dev_¢
+)
+
+300 
+def
+ 
+	$adju¡_v®ue
+(
+£lf
+, 
+v
+):
+
+301 ià(
+v
+ > 0è
+	`ªd
+ (v < 512):
+
+304  
+v
+
+
+306 
+def
+ 
+	$·r£_šfo
+(
+£lf
+, 
+lše
+):
+
+307 
+»t
+ = 
+»
+.
+	`¥l™
+(
+r
+'\d\|',
+lše
+)
+
+308 
+»t
+ 
+is
+ 
+NÚe
+:
+
+309  
+NÚe
+
+
+311 
+	`Ën
+(
+»t
+) == 1:
+
+312  
+NÚe
+
+
+314 #šdex = 
+»t
+[0].
+	`¡r
+()
+
+315 
+šfo
+ = 
+»t
+[1:]
+
+316 
+l
+ = 
+	$Ën
+(
+šfo
+)
+
+317 #´št(
+l
+)
+
+321 
+z
+=[]
+
+322 
+út_0
+ = 0
+
+323 
+út_512
+ = 0
+
+324 
+i
+ 
+š
+ 
+	$¿nge
+(
+l
+):
+
+325 #x.
+	`­³nd
+((
+i
+))
+
+326 #y.
+	`­³nd
+((
+šdex
+))
+
+327 #´št(
+šfo
+[
+i
+])
+
+328 (
+šfo
+[
+i
+]) == 0:
+
+329 
+út_0
+ += 1
+
+330 (
+šfo
+[
+i
+]) == 512:
+
+331 
+út_512
+ += 1
+
+332 #k = 
+£lf
+.
+	`adju¡_v®ue
+((
+šfo
+[
+i
+]))
+
+333 
+k
+ = (
+šfo
+[
+i
+])
+
+334 
+z
+.
+	$­³nd
+(
+k
+)
+
+336 #´št(
+z
+)
+
+337  {"0":
+út_0
+, "512":
+út_512
+, "z":
+z
+}
+
+339 
+def
+ 
+	$ÿlc_äagm’t_¿tio
+(
+£lf
+, 
+dev_¢
+, 
+d¿w_äagm’t
+=
+F®£
+):
+
+340 
+£gm’t
+ğ{"0":0, "512":0, "z":[]
+	}
+}
+
+342 
+·th
+ = "/´oc/fs/f2fs/dm-"+
+£lf
+.
+dmšx
++"/segment_info"
+
+343 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "sh–l", "ÿt", 
+·th
+]
+
+344 
+´št
+("ÿlc_äagm’t_¿tio:"+" ".
+	$još
+(
+cmd
+))
+
+345 
+Œy
+:
+
+346 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+347 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+348 
+	$´št
+(
+e
+)
+
+349  
+NÚe
+
+
+352 
+True
+:
+
+353 #lšğ
+´oc
+.
+¡d”r
+.
+	`»adlše
+().
+	`¡r
+()
+
+354 #ià
+	`Ën
+(
+lše
+è
+is
+ 
+nÙ
+ 0:
+
+355 #´št(
+lše
+)
+
+356 #»tuº 
+NÚe
+
+
+358 #if(
+i
+==10):
+
+360 #˜ğ
+i
+ + 1
+
+361 
+lše
+ = 
+´oc
+.
+¡dout
+.
+	`»adlše
+().
+	$¡r
+()
+
+362 
+	$Ën
+(
+lše
+è
+is
+ 0:
+
+364 
+Œy
+:
+
+365 
+lše
+ = 
+	`¡r
+Öše, 
+’codšg
+ = "utf-8")
+
+366 #´št(
+lše
+)
+
+367 
+exû±
+ 
+UnicodeDecodeE¼Ü
+ 
+as
+ 
+e
+:
+
+368 
+	$´št
+(
+e
+)
+
+371 
+šfo
+ = 
+£lf
+.
+	$·r£_šfo
+(
+lše
+)
+
+372 #´št(
+šfo
+)
+
+373 
+šfo
+ 
+is
+ 
+nÙ
+ 
+NÚe
+:
+
+374 
+£gm’t
+["0"] +ğ
+šfo
+["0"]
+
+375 
+£gm’t
+["512"] +ğ
+šfo
+["512"]
+
+376 
+£gm’t
+["z"] +ğ
+šfo
+["z"]
+
+377 #£gm’ˆ+ğ
+šfo
+
+
+378 #´št(
+£gm’t
+)
+
+379 
+¿tio
+ = (
+	`Ën
+(
+£gm’t
+["z"])-segment["0"]-segment["512"])/len(segment["z"])
+
+380 
+d¿w_äagm’t
+ =ğ
+True
+:
+
+381 
+£lf
+.
+	`d¿w_äagm’t_šfo
+(
+£gm’t
+["z"], 
+¿tio
+, 
+dev_¢
+)
+
+382 #´št(
+¿tio
+)
+
+383  
+¿tio
+
+
+385 
+def
+ 
+	$qu”y_deviû_äagm’t
+(
+£lf
+, 
+dev_¢
+):
+
+386 
+¿tio
+ = 
+£lf
+.
+	$ÿlc_äagm’t_¿tio
+(
+dev_¢
+)
+
+387 
+£lf
+.
+deviûs
+[
+dev_¢
+]["äag"] = ('%.2f' % 
+¿tio
+)
+
+390 
+def
+ 
+	$qu”y_deviû_¡©us
+(
+£lf
+, 
+dev_¢
+):
+
+391 
+£lf
+.
+	$qu”y_deviû_¡Üage
+(
+dev_¢
+)
+
+392 
+£lf
+.
+	$qu”y_deviû_äagm’t
+(
+dev_¢
+)
+
+395 #deviûs{"¢1":{"s":"Úlše","fg":0.6,"äag":0.63,"¡ime":
+xxxxx
+,"func":"off"}
+	}
+}
+
+396 
+def
+ 
+	$wr_func
+(
+£lf
+,
+dev_¢
+,
+·th
+):
+
+397 
+cmd_¡r
+="ià[ ! -à"+
+·th
++" ];then mkdir -p "+path+";fi;"+"_tmp_size=$(($RANDOM%99+1));dd if=/dev/urandom of="+path+"/$(($RANDOM*1000+$RANDOM))_${_tmp_size}k.dat bs=${_tmp_size}k count=1;sync;"
+
+398 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "sh–l", 
+cmd_¡r
+]
+
+400 
+£lf
+.
+deviûs
+[
+dev_¢
+]["s"] =ğ"Úlše" 
+ªd
+ self.devices[dev_sn]["wrfn"] == "on":
+
+401 #´št(
+cmd_¡r
+)
+
+402 #´št(
+cmd
+)
+
+404 
+Œy
+:
+
+405 
+´oc
+ = 
+sub´oûss
+.
+	$run
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+406 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+407 
+	$´št
+(
+e
+)
+
+411 
+def
+ 
+	$d–_func
+(
+£lf
+,
+dev_¢
+,
+·th
+):
+
+412 #cmd_¡r="wh[ 1 ];dØfe_li¡=`l "+
+·th
++"/*k.dat`;j=0;for file in $file_list;do„m -f $file;j=`expr $j + 1`;echo '$j: delete "+path+"/$file';if [ $j -gt 10 ];then break;fi;done;sync;exit;done"
+
+413 
+cmd_¡r
+="rm -rà"+
+£lf
+.
+·th
++£lf.
+dœ
++"$(($RANDOM%99+1))/*_$(($RANDOM%99+1))k.dat;sync"
+
+414 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "sh–l", 
+cmd_¡r
+]
+
+416 
+£lf
+.
+deviûs
+[
+dev_¢
+]["s"] =ğ"Úlše" 
+ªd
+ self.devices[dev_sn]["delfn"] == "on":
+
+417 #´št(
+cmd_¡r
+)
+
+418 #´št(
+cmd
+)
+
+420 
+Œy
+:
+
+421 
+´oc
+ = 
+sub´oûss
+.
+	$ÿÎ
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+422 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+423 
+	$´št
+(
+e
+)
+
+427 
+def
+ 
+	$æush_deviû_šfo
+(
+£lf
+, 
+dev_¢
+):
+
+430 
+def
+ 
+	$¡İ_®l
+(
+£lf
+):
+
+431 
+£lf
+.
+mÚth»ad
+ = "off"
+
+432 
+	`Ën
+(
+£lf
+.
+deviûs
+) != 0:
+
+434 
+k
+ 
+š
+ 
+£lf
+.
+deviûs
+.
+	$keys
+():
+
+435 
+	$´št
+(
+k
+)
+
+436 
+£lf
+.
+deviûs
+[
+k
+]["s"] = "offline"
+
+439 
+def
+ 
+	$mÚ™Ü_deviûs
+(
+£lf
+):
+
+440 
+True
+:
+
+441 
+£lf
+.
+mÚth»ad
+ == "on":
+
+442 
+time
+.
+	$¦“p
+(
+£lf
+.
+¦“±ime
+)
+
+443 
+	`Ën
+(
+£lf
+.
+deviûs
+) != 0:
+
+445 
+k
+ 
+š
+ 
+£lf
+.
+deviûs
+.
+	$keys
+():
+
+446 #´št(
+k
+)
+
+447 #£lf.
+	`qu”y_deviû_¡©us
+(
+k
+)
+
+448 
+£lf
+.
+	$show_¡©us
+(
+k
+)
+
+449 #£lf.
+	`æush_deviû_šfo
+(
+k
+)
+
+453 
+def
+ 
+	$ü—‹_mÚ™Ü_th»ad
+(
+£lf
+):
+
+454 
+	`´št
+("create_monitor_thread...")
+
+455 
+t
+=
+th»adšg
+.
+	`Th»ad
+(
+rg‘
+=
+£lf
+.
+mÚ™Ü_deviûs
+,
+Çme
+="fragment-test-monitor")
+
+456 
+t
+.
+	$¡¬t
+()
+
+459 
+def
+ 
+	$ü—‹_wr_th»ad
+(
+£lf
+,
+dev
+):
+
+460 
+	`´št
+("create_wr_thread...")
+
+461 
+i
+ 
+š
+ 
+	$¿nge
+(
+£lf
+.
+w¹h»ads
+):
+
+462 #´št(
+i
+)
+
+463 
+t
+=
+th»adšg
+.
+	`Th»ad
+(
+rg‘
+=
+£lf
+.
+wr_func
+,
+Çme
+=
+dev
++"-wr-"+
+	`¡r
+(
+i
+),
+¬gs
+=(dev,£lf.
+·th
++£lf.
+dœ
++
+	$¡r
+(
+i
+)))
+
+464 
+t
+.
+	$¡¬t
+()
+
+467 
+def
+ 
+	$ü—‹_d–_th»ad
+(
+£lf
+,
+dev
+):
+
+468 
+	`´št
+("create_del_thread...")
+
+469 
+i
+ 
+š
+ 
+	$¿nge
+(
+£lf
+.
+d–th»ads
+):
+
+470 #´št(
+i
+)
+
+471 
+t
+=
+th»adšg
+.
+	`Th»ad
+(
+rg‘
+=
+£lf
+.
+d–_func
+,
+Çme
+=
+dev
++"-d–-"+
+	`¡r
+(
+i
+),
+¬gs
+=(dev,£lf.
+·th
++£lf.
+dœ
++
+	$¡r
+(
+i
+)))
+
+472 
+t
+.
+	$¡¬t
+()
+
+475 
+def
+ 
+	$g‘_deviû_šfo
+(
+£lf
+):
+
+476 
+cmd
+ = ["adb", "devices"]
+
+477 
+Œy
+:
+
+478 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+479 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+480 
+	$´št
+(
+e
+)
+
+481  
+NÚe
+
+
+482 
+tmp_dev
+ = []
+
+483 
+i
+ = 0
+
+484 
+True
+:
+
+485 
+lše
+ = 
+´oc
+.
+¡dout
+.
+	`»adlše
+().
+	$¡r
+()
+
+486 
+	$Ën
+(
+lše
+è
+is
+ 
+nÙ
+ 0:
+
+487 
+lše
+[0:4] =ğ
+b
+'Li¡' 
+Ü
+†ine[0:1] == b'*':
+
+490 
+tmp_dev
+.
+	`­³nd
+(
+by‹s
+.
+	`decode
+(
+lše
+.
+	`¥l™
+()[0]))
+
+492  
+tmp_dev
+
+
+494 
+def
+ 
+	$d¿w_äagm’t_šfo
+(
+£lf
+, 
+£gm’t
+, 
+¿tio
+, 
+dev_¢
+):
+
+495 
+¯
+ = []
+
+496 
+út
+ = 0
+
+497 
+lše
+ 
+š
+ 
+£gm’t
+:
+
+498 
+x
+ = (
+lše
+)
+
+499 if(
+x
+>0è
+	`ªd
+ (x<512):
+
+500 
+x
+=256
+
+501 
+¯
+.
+	$­³nd
+(
+x
+)
+
+502 
+út
+=cnt+1
+
+504 
+dy1
+ = 100
+
+505 
+dx1
+ = (
+út
+/
+dy1
+) + 1
+
+506 
+i
+=0
+
+507 
+dút
+=
+dx1
+*
+dy1
+
+
+508 if(
+dút
+>
+út
+):
+
+509 
+i
+ 
+š
+ 
+	$¿nge
+(
+út
+,
+dút
+):
+
+510 
+¯
+.
+	`­³nd
+((999))
+
+512 
+bb
+ = []
+
+513 
+bb
+ = 
+Å
+.
+	`¬¿y
+(
+¯
+).
+	$»sh­e
+(
+dx1
+,
+dy1
+)
+
+515 
+xa
+ = 
+Å
+.
+	`¬¿y
+(
+	$¿nge
+(
+dx1
+))
+
+516 
+ya
+ = 
+Å
+.
+	`¬¿y
+(
+	$¿nge
+(
+dy1
+))
+
+517 
+Œaû
+ = 
+go
+.
+	`H—tm­
+(
+
+518 
+x
+=
+xa
+,
+
+519 
+y
+=
+ya
+[::-1],
+
+520 
+z
+=
+bb
+,
+
+522 
+cŞÜsÿË
+='Jet',
+
+524 
+d©a
+=[
+Œaû
+]
+
+526 
+Ïyout
+ = 
+go
+.
+	`Layout
+(
+
+527 
+t™Ë
+="["+
+dev_¢
++"] f¿g info: ["+
+£lf
+.
+deviûs
+[dev_¢]["df"]+"] "+
+	`¡r
+(('%.2f' % 
+¿tio
+)),
+
+528 #heighˆğ(
+	`Ën
+(
+£gm’t
+["z"])
+
+529 
+xaxis
+ = 
+	`diù
+(
+t™Ë
+ = "segment„ow"),
+
+530 
+yaxis
+ = 
+	`diù
+(
+t™Ë
+ = "segment col"),
+
+533 
+fig
+ = 
+go
+.
+	$Figu»
+(
+d©a
+=d©a, 
+Ïyout
+=layout)
+
+534 
+ouut_f’ame
+="f2fs_äagm’t_v2_"+
+dev_¢
++".html"
+
+535 
+py
+.
+	$¶Ù
+(
+fig
+,
+f’ame
+=
+ouut_f’ame
+)
+
+537 
+__Çme__
+ == '__main__':
+
+538 
+obj
+ = 
+	`F¿gm’tUI
+("fgool")
+
+539 
+obj
+.
+	`š™_ui
+(obj.
+	`g‘_deviû_šfo
+())
+
+	@ToolV2.py
+
+1 
+impÜt
+ 
+F¿gm’tUI
+
+
+2 
+impÜt
+ 
+V”siÚ
+ 
+as
+ 
+v
+
+
+4 
+	g__Çme__
+ == "__main__":
+
+5 
+obj
+ = 
+F¿gm’tUI
+.F¿gm’tUI(
+v
+.
+Çme
+ + " " + v.
+v”siÚ
+)
+
+6 
+obj
+.
+š™UI
+()
+
+	@Util.py
+
+1 
+impÜt
+ 
+shut
+
+
+2 
+impÜt
+ 
+os
+
+
+3 
+impÜt
+ 
+Debug
+ 
+as
+ 
+d
+
+
+5 
+def
+ 
+	$cİyfe
+(
+¤cfe
+, 
+d¡fe
+):
+
+6 
+nÙ
+ 
+os
+.
+·th
+.
+	$isfe
+(
+¤cfe
+):
+
+7 
+	`´št
+("% nÙƒxi¡!" + 
+¤cfe
+)
+
+9 
+å©h
+, 
+âame
+ = 
+os
+.
+·th
+.
+	$¥l™
+(
+d¡fe
+)
+
+10 
+nÙ
+ 
+os
+.
+·th
+.
+	$exi¡s
+(
+å©h
+):
+
+11 
+os
+.
+	$makedœs
+(
+å©h
+)
+
+12 
+shut
+.
+	$cİyfe
+(
+¤cfe
+, 
+d¡fe
+)
+
+13 
+d
+.
+	`d
+("cİy " + 
+¤cfe
+ + "-> " + 
+d¡fe
+)
+
+	@Version.py
+
+1 
+	gÇme
+ = "eMMC Test Tool"
+
+2 
+v”siÚ
+ = "V2.1"
+
+3 
+authÜ
+ = "Wisen Wang"
+
+4 
+ema
+ = "wisen.wang.ah@gmail.com"
+
+5 
+g™hub
+ = "https://github.com/wisen"
+
+	@animation/animate_decay.py
+
+3 
+Deÿy
+
+
+6 
+This
+ 
+exam¶e
+ 
+showÿ£s
+ 
+a
+ 
+sšusoid®
+ 
+deÿy
+ 
+ªim©iÚ
+.
+
+10 
+impÜt
+ 
+numpy
+ 
+as
+ 
+Å
+
+
+11 
+impÜt
+ 
+m©¶Ùlib
+.
+py¶Ù
+ 
+as
+ 
+¶t
+
+
+12 
+impÜt
+ 
+m©¶Ùlib
+.
+ªim©iÚ
+ 
+as
+‡nimation
+
+15 
+def
+ 
+	$d©a_g’
+(
+t
+=0):
+
+16 
+út
+ = 0
+
+17 
+út
+ < 1000:
+
+18 
+út
+ += 1
+
+19 
+t
+ += 0.1
+
+20 
+y›ld
+ 
+t
+, 
+Å
+.
+	`sš
+(2*Å.
+pi
+*tè*‚p.
+	`exp
+(-t/10.)
+
+23 
+def
+ 
+	$š™
+():
+
+24 
+ax
+.
+	`£t_ylim
+(-1.1, 1.1)
+
+25 
+ax
+.
+	$£t_xlim
+(0, 10)
+
+26 
+d–
+ 
+xd©a
+[:]
+
+27 
+d–
+ 
+yd©a
+[:]
+
+28 
+lše
+.
+	$£t_d©a
+(
+xd©a
+, 
+yd©a
+)
+
+29  
+lše
+,
+
+31 
+fig
+, 
+ax
+ = 
+¶t
+.
+	$sub¶Ùs
+()
+
+32 
+lše
+, = 
+ax
+.
+	$¶Ù
+([], [], 
+lw
+=2)
+
+33 
+ax
+.
+	$grid
+()
+
+34 
+xd©a
+, 
+yd©a
+ = [], []
+
+37 
+def
+ 
+	$run
+(
+d©a
+):
+
+38 #upd©
+the
+ 
+d©a
+
+
+39 
+t
+, 
+y
+ = 
+d©a
+
+
+40 
+xd©a
+.
+	$­³nd
+(
+t
+)
+
+41 
+yd©a
+.
+	$­³nd
+(
+y
+)
+
+42 
+xmš
+, 
+xmax
+ = 
+ax
+.
+	$g‘_xlim
+()
+
+44 
+t
+ >ğ
+xmax
+:
+
+45 
+ax
+.
+	$£t_xlim
+(
+xmš
+, 2*
+xmax
+)
+
+46 
+ax
+.
+figu»
+.
+ÿnvas
+.
+	$d¿w
+()
+
+47 
+lše
+.
+	$£t_d©a
+(
+xd©a
+, 
+yd©a
+)
+
+49  
+lše
+,
+
+51 
+ªi
+ = 
+ªim©iÚ
+.
+	$FuncAnim©iÚ
+(
+fig
+, 
+run
+, 
+d©a_g’
+, 
+bl™
+=
+F®£
+, 
+š‹rv®
+=10,
+
+52 
+»³©
+=
+F®£
+, 
+š™_func
+=
+š™
+)
+
+53 
+¶t
+.
+	`show
+()
+
+	@animation/basic_example.py
+
+3 
+Sim¶e
+ 
+ªim©iÚ
+ 
+exam¶es
+
+
+6 
+This
+ 
+exam¶e
+ 
+cÚšs
+ 
+two
+ 
+ªim©iÚs
+. 
+The
+ 
+fœ¡
+ 
+is
+ 
+a
+ 
+¿ndom
+ 
+w®k
+ 
+¶Ù
+. The
+
+7 
+£cÚd
+ 
+is
+ 
+ª
+ 
+image
+ 
+ªim©iÚ
+.
+
+10 
+impÜt
+ 
+numpy
+ 
+as
+ 
+Å
+
+
+11 
+impÜt
+ 
+m©¶Ùlib
+.
+py¶Ù
+ 
+as
+ 
+¶t
+
+
+12 
+impÜt
+ 
+m©¶Ùlib
+.
+ªim©iÚ
+ 
+as
+‡nimation
+
+15 
+def
+ 
+	$upd©e_lše
+(
+num
+, 
+d©a
+, 
+lše
+):
+
+16 
+lše
+.
+	$£t_d©a
+(
+d©a
+[..., :
+num
+])
+
+17  
+lše
+,
+
+19 
+fig1
+ = 
+¶t
+.
+	$figu»
+()
+
+21 
+d©a
+ = 
+Å
+.
+¿ndom
+.
+	$¿nd
+(2, 25)
+
+22 
+l
+, = 
+¶t
+.
+	`¶Ù
+([], [], 'r-')
+
+23 
+¶t
+.
+	$xlim
+(0, 1)
+
+24 
+¶t
+.
+	$ylim
+(0, 1)
+
+25 
+¶t
+.
+	`xÏb–
+('x')
+
+26 
+¶t
+.
+	`t™Ë
+('test')
+
+27 
+lše_ªi
+ = 
+ªim©iÚ
+.
+	`FuncAnim©iÚ
+(
+fig1
+, 
+upd©e_lše
+, 25, 
+çrgs
+=(
+d©a
+, 
+l
+),
+
+28 
+š‹rv®
+=50, 
+bl™
+=
+True
+)
+
+30 #TØ
+§ve
+ 
+the
+ 
+ªim©iÚ
+, 
+u£
+h
+commªd
+: 
+lše_ªi
+.
+	`§ve
+('lines.mp4')
+
+32 
+fig2
+ = 
+¶t
+.
+	$figu»
+()
+
+34 
+x
+ = 
+Å
+.
+	`¬ªge
+(-9, 10)
+
+35 
+y
+ = 
+Å
+.
+	`¬ªge
+(-9, 10).
+	`»sh­e
+(-1, 1)
+
+36 
+ba£
+ = 
+Å
+.
+	$hypÙ
+(
+x
+, 
+y
+)
+
+37 
+ims
+ = []
+
+38 
+add
+ 
+š
+ 
+Å
+.
+	$¬ªge
+(15):
+
+39 
+ims
+.
+	`­³nd
+((
+¶t
+.
+	`pcŞÜ
+(
+x
+, 
+y
+, 
+ba£
+ + 
+add
+, 
+nÜm
+õÉ.
+	`NÜm®ize
+(0, 30)),))
+
+41 
+im_ªi
+ = 
+ªim©iÚ
+.
+	$A¹i¡Anim©iÚ
+(
+fig2
+, 
+ims
+, 
+š‹rv®
+=50, 
+»³©_d–ay
+=3000,
+
+42 
+bl™
+=
+True
+)
+
+43 #TØ
+§ve
+ 
+this
+ 
+£cÚd
+ 
+ªim©iÚ
+ 
+w™h
+ 
+some
+ 
+m‘ad©a
+, 
+u£
+ 
+the
+ 
+fŞlowšg
+ 
+commªd
+:
+
+44 #im_ªi.
+	`§ve
+('im.mp4', 
+m‘ad©a
+={'¬ti¡':'Guido'
+	}
+})
+
+46 
+	g¶t
+.
+show
+()
+
+	@animation/dynamic_image.py
+
+3 
+An
+ 
+ªim©ed
+ 
+image
+
+
+6 
+This
+ 
+exam¶e
+ 
+demÚ¡¿‹s
+ 
+how
+ 
+to
+ 
+ªim©e
+ 
+ª
+ 
+image
+.
+
+8 
+impÜt
+ 
+numpy
+ 
+as
+ 
+Å
+
+
+9 
+impÜt
+ 
+m©¶Ùlib
+.
+py¶Ù
+ 
+as
+ 
+¶t
+
+
+10 
+impÜt
+ 
+m©¶Ùlib
+.
+ªim©iÚ
+ 
+as
+‡nimation
+
+12 
+fig
+ = 
+¶t
+.
+	$figu»
+()
+
+15 
+def
+ 
+	$f
+(
+x
+, 
+y
+):
+
+16  
+Å
+.
+	`sš
+(
+x
+è+‚p.
+	$cos
+(
+y
+)
+
+18 
+x
+ = 
+Å
+.
+	$lš¥aû
+(0, 2 * 
+Å
+.
+pi
+, 120)
+
+19 
+y
+ = 
+Å
+.
+	`lš¥aû
+(0, 2 *‚p.
+pi
+, 100).
+	`»sh­e
+(-1, 1)
+
+21 
+im
+ = 
+¶t
+.
+	`imshow
+(
+	`f
+(
+x
+, 
+y
+), 
+ªim©ed
+=
+True
+)
+
+24 
+def
+ 
+	$upd©efig
+(*
+¬gs
+):
+
+25 
+glob®
+ 
+x
+, 
+y
+
+
+26 
+x
+ +ğ
+Å
+.
+pi
+ / 15.
+
+27 
+y
+ +ğ
+Å
+.
+pi
+ / 20.
+
+28 
+im
+.
+	`£t_¬¿y
+(
+	$f
+(
+x
+, 
+y
+))
+
+29  
+im
+,
+
+31 
+ªi
+ = 
+ªim©iÚ
+.
+	$FuncAnim©iÚ
+(
+fig
+, 
+upd©efig
+, 
+š‹rv®
+=50, 
+bl™
+=
+True
+)
+
+32 
+¶t
+.
+	`show
+()
+
+	@animation/test1.py
+
+1 
+impÜt
+ 
+numpy
+ 
+as
+ 
+Å
+
+
+2 
+äom
+ 
+m©¶Ùlib
+ 
+impÜt
+ 
+py¶Ù
+ 
+as
+ 
+¶t
+
+
+3 
+äom
+ 
+m©¶Ùlib
+ 
+impÜt
+ 
+ªim©iÚ
+
+
+5 
+	gfig
+ = 
+¶t
+.
+	$figu»
+()
+
+6 
+d©a
+ = 
+Å
+.
+¿ndom
+.
+	`¿ndom
+((255, 255))
+
+7 
+im
+ = 
+¶t
+.
+	`imshow
+(
+d©a
+, 
+cm­
+='gray')
+
+9 #ªim©iÚ 
+funùiÚ
+. 
+This
+ 
+is
+ 
+ÿÎed
+ 
+£qu’tŸÎy
+
+
+10 
+def
+ 
+	$ªim©e
+(
+i
+):
+
+11 
+d©a
+ = 
+Å
+.
+¿ndom
+.
+	`¿ndom
+((255, 255))
+
+12 
+im
+.
+	$£t_¬¿y
+(
+d©a
+)
+
+13  [
+im
+]
+
+15 
+ªim
+ = 
+ªim©iÚ
+.
+	$FuncAnim©iÚ
+(
+fig
+, 
+ªim©e
+, 
+äames
+=200, 
+š‹rv®
+=60, 
+bl™
+=
+True
+)
+
+16 
+¶t
+.
+	`show
+()
+
+	@animation/test2.py
+
+1 
+impÜt
+ 
+numpy
+ 
+as
+ 
+Å
+
+
+2 
+impÜt
+ 
+	gm©¶Ùlib
+.
+py¶Ù
+ 
+as
+ 
+¶t
+
+
+4 
+	gn_pošts
+ = 10
+
+5 
+¯
+ = 
+Å
+.
+lš¥aû
+(-5, 5, 
+n_pošts
+)
+
+6 
+	gbb
+ = 
+Å
+.
+lš¥aû
+(-1.5, 1.5, 
+n_pošts
+)
+
+10 
+def
+ 
+	$co¡
+(
+a
+, 
+b
+):
+
+11  
+a
+ + 
+b
+
+
+13 
+z
+ = []
+
+14 
+a
+ 
+š
+ 
+¯
+:
+
+15 
+b
+ 
+š
+ 
+bb
+:
+
+16 
+z
+.
+	`­³nd
+(
+	$co¡
+(
+a
+, 
+b
+))
+
+18 
+z
+ = 
+Å
+.
+	`»sh­e
+(z, [
+	`Ën
+(
+¯
+),†’(
+bb
+)])
+
+20 
+	`´št
+(
+	$ty³
+(
+¯
+))
+
+21 
+	$´št
+(
+¯
+)
+
+22 
+	`´št
+(
+	$ty³
+(
+bb
+))
+
+23 
+	$´št
+(
+bb
+)
+
+24 
+	`´št
+(
+	$ty³
+(
+z
+))
+
+25 
+	$´št
+(
+z
+)
+
+27 
+fig
+, 
+ax
+ = 
+¶t
+.
+	$sub¶Ùs
+()
+
+28 
+im
+ = 
+ax
+.
+	$pcŞÜmesh
+(
+¯
+, 
+bb
+, 
+z
+)
+
+29 
+fig
+.
+	$cŞÜb¬
+(
+im
+)
+
+31 
+ax
+.
+	`axis
+('tight')
+
+32 
+¶t
+.
+	`show
+()
+
+	@animation/test3.py
+
+1 
+impÜt
+ 
+numpy
+ 
+as
+ 
+Å
+
+
+2 
+impÜt
+ 
+	gm©¶Ùlib
+.
+py¶Ù
+ 
+as
+ 
+¶t
+
+
+3 
+äom
+ 
+m©¶Ùlib
+ 
+impÜt
+ 
+ªim©iÚ
+
+
+5 
+	g£gm’t
+={'a':[1,2,3],'b':[1,2,3,4,5],'z':[1,1,1,2,2,2,2,1,1,1,1,3,3,4,4]}
+
+6 
+£gm’t
+['z']=
+Å
+.
+»sh­e
+(segment['z'],[3,5])
+
+8 
+´št
+(
+ty³
+(
+£gm’t
+['a']))
+
+9 
+´št
+(
+£gm’t
+['a'])
+
+10 
+´št
+(
+£gm’t
+['z'])
+
+12 #fig, 
+ax
+ = 
+¶t
+.
+sub¶Ùs
+()
+
+13 #im = 
+ax
+.
+pcŞÜmesh
+(
+£gm’t
+['b'], segment['a'], segment['z'])
+
+14 #im = 
+ax
+.
+pcŞÜ
+(
+£gm’t
+['b'], segment['a'], segment['z'])
+
+15 #fig.
+cŞÜb¬
+(
+im
+)
+
+17 #ax.
+axis
+('tight')
+
+19 #ªim©iÚ 
+funùiÚ
+. 
+This
+ 
+is
+ 
+ÿÎed
+ 
+£qu’tŸÎy
+
+
+20 #deà
+ªim©e
+(
+i
+):
+
+21 #d©¨ğ
+Å
+.
+¿ndom
+.¿ndom((
+£gm’t
+['b'], segment['a']))
+
+22 #im.
+£t_¬¿y
+(
+d©a
+)
+
+23 #»tuº [
+im
+]
+
+25 #ªim = 
+ªim©iÚ
+.
+FuncAnim©iÚ
+(
+fig
+, 
+ªim©e
+, 
+äames
+=200, 
+š‹rv®
+=60, 
+bl™
+=
+True
+)
+
+26 #¶t.
+show
+()
+
+28 
+	gfig2
+ = 
+¶t
+.
+	$figu»
+()
+
+30 #x = 
+Å
+.
+	`¬ªge
+(-9, 10)
+
+31 #y = 
+Å
+.
+	`¬ªge
+(-9, 10).
+	`»sh­e
+(-1, 1)
+
+32 #ba£ = 
+Å
+.
+	`hypÙ
+(
+x
+, 
+y
+)
+
+33 
+ims
+ = []
+
+34 
+add
+ 
+š
+ 
+Å
+.
+	$¬ªge
+(15):
+
+35 
+ims
+.
+	`­³nd
+((
+¶t
+.
+	`pcŞÜ
+(
+£gm’t
+['b'], segm’t['a'], segm’t['z'] + 
+add
+, 
+nÜm
+õÉ.
+	`NÜm®ize
+(0, 30)),))
+
+37 
+im_ªi
+ = 
+ªim©iÚ
+.
+	$A¹i¡Anim©iÚ
+(
+fig2
+, 
+ims
+, 
+š‹rv®
+=500, 
+»³©_d–ay
+=1000,
+
+38 
+bl™
+=
+True
+)
+
+39 #TØ
+§ve
+ 
+this
+ 
+£cÚd
+ 
+ªim©iÚ
+ 
+w™h
+ 
+some
+ 
+m‘ad©a
+, 
+u£
+ 
+the
+ 
+fŞlowšg
+ 
+commªd
+:
+
+40 #im_ªi.
+	`§ve
+('im.mp4', 
+m‘ad©a
+={'¬ti¡':'Guido'
+	}
+})
+
+42 
+	g¶t
+.
+show
+()
+
+	@animation/test4.py
+
+1 #ä½¿ç”¨
+PcŞÜ
+ç»˜åˆ¶äºŒç»´å›¾
+
+2 
+äom
+ 
+pyÏb
+ 
+impÜt
+ *
+
+3 
+	ga
+=
+¬ªge
+(-2.0,2.001,1.0)
+
+4 
+	gb
+=
+¬ªge
+(-2.0,2.001,1.0)
+
+5 
+	gx
+,
+	gy
+=
+	$meshgrid
+(
+a
+,
+b
+)
+
+6 
+func
+=
+Ïmbda
+ 
+x
+,
+y
+:(x**2.0+y**4.0)*
+	`exp
+(-x**(-2.0)-y**(-3.0))
+
+7 
+z
+=
+	$func
+(
+x
+,
+y
+)
+
+8 
+	$´št
+(
+x
+)
+
+9 
+	$´št
+(
+y
+)
+
+10 
+	$´št
+(
+z
+)
+
+11 
+	$pcŞÜ
+(
+x
+,
+y
+,
+z
+)
+
+12 #xå’Œ
+y
+æ˜¯ç½‘æ ¼,
+z
+æ˜¯(
+x
+,y)åæ ‡å¤„çš„é¢œè‰²å€¼
+
+13 
+	$cŞÜb¬
+()#ä½¿ç”¨é¢œè‰²æ¡
+
+	@emmc_fragment_test.py
+
+1 #!/
+u¤
+/
+bš
+/
+’v
+ 
+pythÚ
+
+
+3 
+impÜt
+ 
+sub´oûss
+
+
+4 
+impÜt
+ 
+d©‘ime
+
+
+5 
+impÜt
+ 
+time
+
+
+6 
+impÜt
+ 
+»
+
+
+7 
+impÜt
+ 
+sys
+
+
+8 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ *
+
+9 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+‰k
+
+
+10 
+äom
+ 
+tkš‹r
+ 
+impÜt
+ 
+süŞËd‹xt
+
+
+11 
+impÜt
+ 
+¿ndom
+
+
+12 
+impÜt
+ 
+d©‘ime
+
+
+13 
+impÜt
+ 
+th»adšg
+
+
+15 
+şass
+ 
+	gF¿gm’tUI
+:
+
+17 
+def
+ 
+	$__š™__
+(
+£lf
+,
+Çme
+):
+
+18 
+£lf
+.
+Çme
+ =‚ame
+
+19 
+£lf
+.
+deviûs
+ = {
+	}
+}
+
+20 
+£lf
+.
+w¹h»ads
+ = 10
+
+21 
+£lf
+.
+d–th»ads
+ = 5
+
+22 
+£lf
+.
+·th
+ = "/sdcard/tmp/"
+
+23 
+£lf
+.
+dœ
+ = "dir"
+
+24 
+£lf
+.
+¡İ_wr
+ = 0.95
+
+25 
+£lf
+.
+¡İ_d–
+ = 0.90
+
+26 
+£lf
+.
+¦“±ime
+ = 10
+
+27 
+£lf
+.
+mÚth»ad
+ = "on"
+
+28 ## 
+dmšx
+ ==> 
+dm
+-0
+
+29 
+£lf
+.
+dmšx
+ = "0"
+
+31 
+def
+ 
+	$wšdow_şÛ
+(
+£lf
+):
+
+32 
+£lf
+.
+	$¡İ_®l
+()
+
+33 
+£lf
+.
+ui
+.
+	$de¡roy
+()
+
+34 
+	`´št
+("close windows....")
+
+37 
+def
+ 
+	$š™_ui
+(
+£lf
+,
+li¡™ems
+):
+
+38 
+roÙ
+ = 
+	$Tk
+()
+
+39 
+roÙ
+.
+	`t™Ë
+("Fragmentools V1.0")
+
+40 
+roÙ
+.
+	`geom‘ry
+("720x400")
+
+41 
+roÙ
+.
+	$»sizabË
+(
+width
+=
+F®£
+, 
+height
+=False)
+
+42 
+£lf
+.
+roÙ
+ =„oot
+
+44 
+äm
+ = 
+	`Lab–F¿me
+(
+roÙ
+,
+‹xt
+="F¿gm’ˆtoŞ V1.0").
+	$grid
+(
+cŞumn
+=0,
+row
+=0)
+
+46 ## 
+äm_deviûs
+ 
+¡¬t
+
+
+47 
+	`Lab–
+(
+‹xt
+="choo£‡ deviû", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=0,
+cŞumn¥ª
+=2)
+
+49 
+v¬
+ = 
+	$SŒšgV¬
+()
+
+50 
+lb_deviûs
+ = 
+	`Li¡box
+(
+äm
+, 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+width
+=20, 
+li¡v¬ŸbË
+ = 
+v¬
+)
+
+51 
+lb_deviûs
+.
+	$grid
+(
+cŞumn
+=0,
+row
+=1,
+row¥ª
+=2,
+cŞumn¥ª
+=2)
+
+52 
+£lf
+.
+lb_deviûs
+ =†b_devices
+
+53 
+	$´št
+(
+lb_deviûs
+)
+
+55 
+lb_deviûs
+.
+	`bšd
+('<Bu‰ÚR–—£-1>', 
+£lf
+.
+š™_™em
+)
+
+56 
+li¡_™em
+ = 
+li¡™ems
+
+
+57 
+™em
+ 
+š
+ 
+li¡_™em
+:
+
+58 
+lb_deviûs
+.
+	$š£¹
+(
+END
+, 
+™em
+)
+
+60 
+¡¬t_bŠ
+ = 
+	`Bu‰Ú
+(
+äm
+, 
+‹xt
+=">>>", 
+fÜeground
+='»d', 
+commªd
+=
+£lf
+.
+¡¬t_func
+)
+
+61 
+¡¬t_bŠ
+.
+	$grid
+(
+cŞumn
+=2,
+row
+=1)
+
+62 
+¡İ_bŠ
+ = 
+	`Bu‰Ú
+(
+äm
+, 
+‹xt
+="<<<", 
+fÜeground
+='»d', 
+commªd
+=
+£lf
+.
+¡İ_func
+)
+
+63 
+¡İ_bŠ
+.
+	$grid
+(
+cŞumn
+=2,
+row
+=2)
+
+65 
+	`Lab–
+(
+‹xt
+="mÚ™Ü deviûs", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=3,
+row
+=0)
+
+66 
+v¬
+ = 
+	$SŒšgV¬
+()
+
+67 
+lb_mÚ™Üs
+ = 
+	`Li¡box
+(
+äm
+, 
+fÚt
+=("MÚo¥aû ReguÏr",16), 
+width
+=20, 
+li¡v¬ŸbË
+ = 
+v¬
+)
+
+68 
+lb_mÚ™Üs
+.
+	$grid
+(
+cŞumn
+=3,
+row
+=1,
+row¥ª
+=2)
+
+69 
+£lf
+.
+lb_mÚ™Üs
+ =†b_monitors
+
+71 
+lb_mÚ™Üs
+.
+	`bšd
+('<Bu‰ÚR–—£-1>', 
+£lf
+.
+mÚ™Ü_™em
+)
+
+73 ## 
+äm_¡©us
+ 
+¡¬t
+
+
+74 
+	`Lab–
+(
+‹xt
+="deviû stus", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=4,
+row
+=0)
+
+75 
+süŞW
+ = 30
+
+76 
+süŞH
+ = 13
+
+77 
+sü
+ = 
+süŞËd‹xt
+.
+	`SüŞËdText
+(
+äm
+, 
+width
+=
+süŞW
+, 
+height
+=
+süŞH
+, 
+w¿p
+=
+WORD
+, 
+fÚt
+=("Monospace Regular",12))
+
+78 
+sü
+.
+	$grid
+(
+cŞumn
+=4, 
+row
+=1, 
+row¥ª
+=2)
+
+79 
+£lf
+.
+sü
+ = scr
+
+81 
+	`Lab–
+(
+‹xt
+="w¸th»ads:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=3)
+
+82 
+£lf
+.
+wºame
+ = 
+	$SŒšgV¬
+()
+
+83 
+wºameEÁ”ed
+ = 
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+wºame
+)
+
+84 
+wºameEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=3)
+
+85 
+wºameEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+w¹h»ads
+)
+
+86 
+wºameEÁ”ed
+.
+	$focus
+()
+
+88 
+	`Lab–
+(
+‹xt
+="d–h»ads:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=4)
+
+89 
+£lf
+.
+d–Çme
+ = 
+	$SŒšgV¬
+()
+
+90 
+d–ÇmeEÁ”ed
+ = 
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+d–Çme
+)
+
+91 
+d–ÇmeEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+d–th»ads
+)
+
+92 
+d–ÇmeEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=4)
+
+94 
+	`Lab–
+(
+‹xt
+="¦“°time:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=5)
+
+95 
+£lf
+.
+¦“²ame
+ = 
+	$SŒšgV¬
+()
+
+96 
+¦“²ameEÁ”ed
+ = 
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+¦“²ame
+)
+
+97 
+¦“²ameEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+¦“±ime
+)
+
+98 
+¦“²ameEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=5)
+
+100 
+	`Lab–
+(
+‹xt
+="Max…”ûÁ:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=6)
+
+101 
+£lf
+.
+maxÇme
+ = 
+	$SŒšgV¬
+()
+
+102 
+maxÇmeEÁ”ed
+ = 
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+maxÇme
+)
+
+103 
+maxÇmeEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+¡İ_wr
+)
+
+104 
+maxÇmeEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=6)
+
+106 
+	`Lab–
+(
+‹xt
+="Mš…”ûÁ:", 
+fÚt
+=("MÚo¥aû ReguÏr",16)).
+	$grid
+(
+cŞumn
+=0,
+row
+=7)
+
+107 
+£lf
+.
+mšÇme
+ = 
+	$SŒšgV¬
+()
+
+108 
+mšÇmeEÁ”ed
+ = 
+	$EÁry
+(
+äm
+, 
+width
+=10, 
+‹xtv¬ŸbË
+=
+£lf
+.
+mšÇme
+)
+
+109 
+mšÇmeEÁ”ed
+.
+	$š£¹
+(10, 
+£lf
+.
+¡İ_d–
+)
+
+110 
+mšÇmeEÁ”ed
+.
+	$grid
+(
+cŞumn
+=1, 
+row
+=7)
+
+112 
+upd©e_cÚfig_bŠ
+ = 
+	`Bu‰Ú
+(
+äm
+, 
+‹xt
+="upd©e", 
+fÜeground
+='»d', 
+commªd
+=
+£lf
+.
+upd©e_cÚfig
+)
+
+113 
+upd©e_cÚfig_bŠ
+.
+	$grid
+(
+cŞumn
+=1,
+row
+=8)
+
+115 
+£lf
+.
+	$ü—‹_mÚ™Ü_th»ad
+()
+
+116 ## 
+UI
+ 
+loİ
+ 
+¡¬t
+
+
+117 
+£lf
+.
+ui
+ = 
+roÙ
+
+
+118 
+roÙ
+.
+	`´ÙocŞ
+("WM_DELETE_WINDOW", 
+£lf
+.
+wšdow_şÛ
+)
+
+119 
+roÙ
+.
+	$mašloİ
+()
+
+121 
+def
+ 
+	$upd©e_cÚfig
+(
+£lf
+):
+
+122 
+£lf
+.
+w¹h»ads
+ = (£lf.
+wºame
+.
+	$g‘
+())
+
+123 #´št(
+£lf
+.
+w¹h»ads
+)
+
+124 
+£lf
+.
+d–th»ads
+ = (£lf.
+d–Çme
+.
+	$g‘
+())
+
+125 #´št(
+£lf
+.
+d–th»ads
+)
+
+126 
+£lf
+.
+¦“±ime
+ = (£lf.
+¦“²ame
+.
+	$g‘
+())
+
+127 #´št(
+£lf
+.
+¦“±ime
+)
+
+128 
+£lf
+.
+¡İ_wr
+ = (£lf.
+maxÇme
+.
+	$g‘
+())
+
+129 
+£lf
+.
+¡İ_d–
+ = (£lf.
+mšÇme
+.
+	$g‘
+())
+
+130 #´št(
+£lf
+)
+
+133 
+def
+ 
+	$¡¬t_func
+(
+£lf
+):
+
+134 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+137 
+dev_¢
+=
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+138 
+£lf
+.
+deviûs
+[
+dev_¢
+]={"s":"Úlše","df":0.0,"äag":0.0,"¡ime":
+d©‘ime
+.d©‘ime.
+	`now
+(),"wrâ":"Ú","d–â":"off"
+	}
+}
+
+139 
+£lf
+.
+lb_deviûs
+.
+d–‘e
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+140 
+£lf
+.
+lb_mÚ™Üs
+.
+	$š£¹
+(
+END
+, 
+dev_¢
+)
+
+141 
+£lf
+.
+	$ü—‹_wr_th»ad
+(
+dev_¢
+)
+
+142 
+£lf
+.
+	$ü—‹_d–_th»ad
+(
+dev_¢
+)
+
+143 #£lf.
+	`ü—‹_mÚ™Ü_th»ad
+()
+
+145 
+def
+ 
+	$¡İ_func
+(
+£lf
+):
+
+146 
+	`´št
+("stop_func")
+
+147 
+	`´št
+(
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	$cur£ËùiÚ
+()))
+
+148 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) != 0:
+
+149 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+150 
+£lf
+.
+deviûs
+[
+dev_¢
+]["s"] = "offline"
+
+151 
+£lf
+.
+lb_mÚ™Üs
+.
+	`d–‘e
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+152 
+£lf
+.
+lb_deviûs
+.
+	$š£¹
+(
+END
+, 
+dev_¢
+)
+
+153 
+£lf
+.
+sü
+.
+	`d–‘e
+(0.0,
+	`Ën
+(£lf.sü.
+	`g‘
+(0.0,
+END
+))-1.0)
+
+154 
+	$´št
+(
+£lf
+.
+deviûs
+)
+
+157 
+def
+ 
+	$show_¡©us
+(
+£lf
+, 
+dev_¢
+):
+
+158 
+£lf
+.
+	$qu”y_deviû_¡Üage
+(
+dev_¢
+)
+
+159 
+£lf
+.
+	$qu”y_deviû_äagm’t
+(
+dev_¢
+)
+
+160 
+	`´št
+("´šˆdeviû["+
+dev_¢
++ "]'s status")
+
+161 
+£lf
+.
+sü
+.
+	`d–‘e
+(0.0,
+	`Ën
+(£lf.sü.
+	`g‘
+(0.0,
+END
+))-1.0)
+
+162 
+¡©us_¡r
+="deviû["+
+dev_¢
++"]: \n"
+
+163 
+¡©us_¡r
+=¡©us_¡r+"Stus: "+
+£lf
+.
+deviûs
+[
+dev_¢
+]["s"]+"\n"
+
+164 
+¡©us_¡r
+=¡©us_¡r+"df: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+]["df"])+"\n"
+
+165 
+¡©us_¡r
+=¡©us_¡r+"äag: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+]["frag"])+"\n"
+
+166 
+¡©us_¡r
+=¡©us_¡r+"¡ime: "+
+£lf
+.
+deviûs
+[
+dev_¢
+]["¡ime"].
+	`¡ráime
+('%Y-%m-%d %H:%M:%S')+"\n"
+
+167 
+¡©us_¡r
+=¡©us_¡r+"wr™e: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+]["wrfn"])+"\n"
+
+168 
+¡©us_¡r
+=¡©us_¡r+"d–‘e: "+
+	`¡r
+(
+£lf
+.
+deviûs
+[
+dev_¢
+]["delfn"])+"\n"
+
+169 
+¡©us_¡r
+=status_str+"\nGlobal config: \n"
+
+170 
+¡©us_¡r
+=¡©us_¡r+"wr™th»ads: "+
+	`¡r
+(
+£lf
+.
+w¹h»ads
+)+"\n"
+
+171 
+¡©us_¡r
+=¡©us_¡r+"d–h»ads: "+
+	`¡r
+(
+£lf
+.
+d–th»ads
+)+"\n"
+
+172 
+¡©us_¡r
+=¡©us_¡r+"¦“°time: "+
+	`¡r
+(
+£lf
+.
+¦“±ime
+)+"\n"
+
+173 
+¡©us_¡r
+=¡©us_¡r+"Max…”ûÁ: "+
+	`¡r
+(
+£lf
+.
+¡İ_wr
+*100)+"%\n"
+
+174 
+¡©us_¡r
+=¡©us_¡r+"Mš…”ûÁ: "+
+	`¡r
+(
+£lf
+.
+¡İ_d–
+*100)+"%\n"
+
+175 
+£lf
+.
+sü
+.
+	$š£¹
+(
+END
+,
+¡©us_¡r
+)
+
+177 
+def
+ 
+	$š™_™em
+(
+£lf
+,
+ev’t
+):
+
+178 
+	`Ën
+(
+£lf
+.
+lb_deviûs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+181 
+£lf
+.
+	$show_š™_¡©us
+()
+
+183 
+def
+ 
+	$qu”y_dm_šx
+(
+£lf
+, 
+dev_¢
+):
+
+184 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
+
+185 
+	`´št
+("qu”y_dm_šx:"+" ".
+	$još
+(
+cmd
+))
+
+186 
+Œy
+:
+
+187 #´oøğ
+sub´oûss
+.
+	`ÿÎ
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+188 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+189 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+190 
+	$´št
+(
+e
+)
+
+191  
+NÚe
+
+
+193 
+cmd_out
+ = 
+by‹s
+.
+	`decode
+(
+´oc
+.
+¡dout
+.
+	`»ad
+().
+	`¥l™
+()[0])[-1]
+
+194 
+£lf
+.
+dmšx
+ = 
+cmd_out
+
+
+197 
+def
+ 
+	$show_š™_¡©us
+(
+£lf
+):
+
+198 
+dev_¢
+=
+£lf
+.
+lb_deviûs
+.
+	`g‘
+(£lf.lb_deviûs.
+	$cur£ËùiÚ
+())
+
+199 
+£lf
+.
+deviûs
+[
+dev_¢
+]={"s":"ofæše","df":0.0,"äag":0.0,"¡ime":
+d©‘ime
+.d©‘ime.
+	`now
+(),"wrâ":"off","d–â":"off"
+	}
+}
+
+200 
+£lf
+.
+	$qu”y_dm_šx
+(
+dev_¢
+)
+
+201 #´št(
+	`ty³
+(
+dev_¢
+))
+
+202 
+£lf
+.
+	$show_¡©us
+(
+dev_¢
+)
+
+204 
+def
+ 
+	$show_Úlše_¡©us
+(
+£lf
+):
+
+205 
+dev_¢
+=
+£lf
+.
+lb_mÚ™Üs
+.
+	`g‘
+(£lf.lb_mÚ™Üs.
+	$cur£ËùiÚ
+())
+
+206 
+£lf
+.
+	$show_¡©us
+(
+dev_¢
+)
+
+208 
+def
+ 
+	$mÚ™Ü_™em
+(
+£lf
+,
+ev’t
+):
+
+209 
+	`Ën
+(
+£lf
+.
+lb_mÚ™Üs
+.
+	`cur£ËùiÚ
+()) == 0:
+
+212 
+£lf
+.
+	$show_Úlše_¡©us
+()
+
+214 
+def
+ 
+	$qu”y_deviû_¡Üage
+(
+£lf
+, 
+dev_¢
+):
+
+215 #adb 
+sh–l
+ 
+df
+ -
+h
+ | 
+g»p
+ "/dev/block/dm-" | g»°"\/d©a" | 
+awk
+ '{print $5}'
+
+216 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
+
+217 
+	`´št
+("query_device_storage:")
+
+218 
+Œy
+:
+
+219 #´oøğ
+sub´oûss
+.
+	`ÿÎ
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+220 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+221 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+222 
+	$´št
+(
+e
+)
+
+223  
+NÚe
+
+
+225 
+cmd_out
+ = 
+by‹s
+.
+	`decode
+(
+´oc
+.
+¡dout
+.
+	`»ad
+().
+	`¥l™
+()[4])
+
+226 
+£lf
+.
+deviûs
+[
+dev_¢
+]["df"] = 
+cmd_out
+
+
+227 #´št((
+cmd_out
+.
+	`¡r
+('%')))
+
+228 #´št(
+£lf
+.
+¡İ_wr
+)
+
+229 (
+cmd_out
+.
+	`¡r
+('%')è> 
+£lf
+.
+¡İ_wr
+*100:
+
+231 
+£lf
+.
+deviûs
+[
+dev_¢
+]["wrfn"] = "off"
+
+233 
+£lf
+.
+deviûs
+[
+dev_¢
+]["delfn"] == "on":
+
+236 
+£lf
+.
+deviûs
+[
+dev_¢
+]["delfn"] = "on"
+
+237 
+£lf
+.
+	$ü—‹_d–_th»ad
+(
+dev_¢
+)
+
+239 (
+cmd_out
+.
+	`¡r
+('%')è< 
+£lf
+.
+¡İ_d–
+*100:
+
+241 
+£lf
+.
+deviûs
+[
+dev_¢
+]["delfn"] = "off"
+
+243 
+£lf
+.
+deviûs
+[
+dev_¢
+]["wrfn"] == "on":
+
+246 
+£lf
+.
+deviûs
+[
+dev_¢
+]["wrfn"] = "on"
+
+247 
+£lf
+.
+	$ü—‹_wr_th»ad
+(
+dev_¢
+)
+
+251 
+def
+ 
+	$adju¡_v®ue
+(
+£lf
+, 
+v
+):
+
+252 ià(
+v
+ > 0è
+	`ªd
+ (v < 512):
+
+255  
+v
+
+
+257 
+def
+ 
+	$·r£_šfo
+(
+£lf
+, 
+lše
+):
+
+258 
+»t
+ = 
+»
+.
+	`¥l™
+(
+r
+'\d\|',
+lše
+)
+
+259 
+»t
+ 
+is
+ 
+NÚe
+:
+
+260  
+NÚe
+
+
+262 
+	`Ën
+(
+»t
+) == 1:
+
+263  
+NÚe
+
+
+265 #šdex = 
+»t
+[0].
+	`¡r
+()
+
+266 
+šfo
+ = 
+»t
+[1:]
+
+267 
+l
+ = 
+	$Ën
+(
+šfo
+)
+
+268 #´št(
+l
+)
+
+272 
+z
+=[]
+
+273 
+út_0
+ = 0
+
+274 
+út_512
+ = 0
+
+275 
+i
+ 
+š
+ 
+	$¿nge
+(
+l
+):
+
+276 #x.
+	`­³nd
+((
+i
+))
+
+277 #y.
+	`­³nd
+((
+šdex
+))
+
+278 #´št(
+šfo
+[
+i
+])
+
+279 (
+šfo
+[
+i
+]) == 0:
+
+280 
+út_0
+ += 1
+
+281 (
+šfo
+[
+i
+]) == 512:
+
+282 
+út_512
+ += 1
+
+283 
+k
+ = 
+£lf
+.
+	`adju¡_v®ue
+((
+šfo
+[
+i
+]))
+
+284 
+z
+.
+	$­³nd
+(
+k
+)
+
+286 #´št(
+z
+)
+
+287  {"0":
+út_0
+, "512":
+út_512
+, "z":
+z
+}
+
+289 
+def
+ 
+	$ÿlc_äagm’t_¿tio
+(
+£lf
+, 
+dev_¢
+):
+
+290 
+£gm’t
+ğ{"0":0, "512":0, "z":[]
+	}
+}
+
+292 
+·th
+ = "/´oc/fs/f2fs/dm-"+
+£lf
+.
+dmšx
++"/segment_info"
+
+293 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "sh–l", "ÿt", 
+·th
+]
+
+294 
+´št
+("calc_fragment_ratio:")
+
+295 
+	gŒy
+:
+
+296 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+297 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+298 
+	$´št
+(
+e
+)
+
+299  
+NÚe
+
+
+302 
+True
+:
+
+303 #lšğ
+´oc
+.
+¡d”r
+.
+	`»adlše
+().
+	`¡r
+()
+
+304 #ià
+	`Ën
+(
+lše
+è
+is
+ 
+nÙ
+ 0:
+
+305 #´št(
+lše
+)
+
+306 #»tuº 
+NÚe
+
+
+308 #if(
+i
+==10):
+
+310 #˜ğ
+i
+ + 1
+
+311 
+lše
+ = 
+´oc
+.
+¡dout
+.
+	`»adlše
+().
+	$¡r
+()
+
+312 
+	$Ën
+(
+lše
+è
+is
+ 0:
+
+314 
+Œy
+:
+
+315 
+lše
+ = 
+	`¡r
+Öše, 
+’codšg
+ = "utf-8")
+
+316 #´št(
+lše
+)
+
+317 
+exû±
+ 
+UnicodeDecodeE¼Ü
+ 
+as
+ 
+e
+:
+
+318 
+	$´št
+(
+e
+)
+
+321 
+šfo
+ = 
+£lf
+.
+	$·r£_šfo
+(
+lše
+)
+
+322 #´št(
+šfo
+)
+
+323 
+šfo
+ 
+is
+ 
+nÙ
+ 
+NÚe
+:
+
+324 
+£gm’t
+["0"] +ğ
+šfo
+["0"]
+
+325 
+£gm’t
+["512"] +ğ
+šfo
+["512"]
+
+326 
+£gm’t
+["z"] +ğ
+šfo
+["z"]
+
+327 #£gm’ˆ+ğ
+šfo
+
+
+328 #´št(
+£gm’t
+)
+
+329 
+¿tio
+ = (
+	`Ën
+(
+£gm’t
+["z"])-segment["0"]-segment["512"])/len(segment["z"])
+
+330 #´št(
+¿tio
+)
+
+331  
+¿tio
+
+
+333 
+def
+ 
+	$qu”y_deviû_äagm’t
+(
+£lf
+, 
+dev_¢
+):
+
+334 
+¿tio
+ = 
+£lf
+.
+	$ÿlc_äagm’t_¿tio
+(
+dev_¢
+)
+
+335 
+£lf
+.
+deviûs
+[
+dev_¢
+]["äag"] = ('%.2f' % 
+¿tio
+)
+
+338 
+def
+ 
+	$qu”y_deviû_¡©us
+(
+£lf
+, 
+dev_¢
+):
+
+339 
+£lf
+.
+	$qu”y_deviû_¡Üage
+(
+dev_¢
+)
+
+340 
+£lf
+.
+	$qu”y_deviû_äagm’t
+(
+dev_¢
+)
+
+343 #deviûs{"¢1":{"s":"Úlše","fg":0.6,"äag":0.63,"¡ime":
+xxxxx
+,"func":"off"}
+	}
+}
+
+344 
+def
+ 
+	$wr_func
+(
+£lf
+,
+dev_¢
+,
+·th
+):
+
+345 
+cmd_¡r
+="ià[ ! -à"+
+·th
++" ];then mkdir -p "+path+";fi;"+"_tmp_size=$(($RANDOM%99+1));dd if=/dev/urandom of="+path+"/$(($RANDOM*1000+$RANDOM))_${_tmp_size}k.dat bs=${_tmp_size}k count=1 status=none;sync;"
+
+346 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "sh–l", 
+cmd_¡r
+]
+
+348 
+£lf
+.
+deviûs
+[
+dev_¢
+]["s"] =ğ"Úlše" 
+ªd
+ self.devices[dev_sn]["wrfn"] == "on":
+
+349 #´št(
+cmd_¡r
+)
+
+350 #´št(
+cmd
+)
+
+352 
+Œy
+:
+
+353 
+´oc
+ = 
+sub´oûss
+.
+	$ÿÎ
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+354 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+355 
+	$´št
+(
+e
+)
+
+358 
+def
+ 
+	$d–_func
+(
+£lf
+,
+dev_¢
+,
+·th
+):
+
+359 #cmd_¡r="wh[ 1 ];dØfe_li¡=`l "+
+·th
++"/*k.dat`;j=0;for file in $file_list;do„m -f $file;j=`expr $j + 1`;echo '$j: delete "+path+"/$file';if [ $j -gt 10 ];then break;fi;done;sync;exit;done"
+
+360 
+cmd_¡r
+="rm -rà"+
+£lf
+.
+·th
++£lf.
+dœ
++"$(($RANDOM%99+1))/*_$(($RANDOM%99+1))k.dat"
+
+361 
+cmd
+ = ["adb", "-s", 
+dev_¢
+, "sh–l", 
+cmd_¡r
+]
+
+363 
+£lf
+.
+deviûs
+[
+dev_¢
+]["s"] =ğ"Úlše" 
+ªd
+ self.devices[dev_sn]["delfn"] == "on":
+
+364 #´št(
+cmd_¡r
+)
+
+365 #´št(
+cmd
+)
+
+367 
+Œy
+:
+
+368 
+´oc
+ = 
+sub´oûss
+.
+	$ÿÎ
+(
+cmd
+, 
+sh–l
+=
+F®£
+)
+
+369 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+370 
+	$´št
+(
+e
+)
+
+373 
+def
+ 
+	$æush_deviû_šfo
+(
+£lf
+, 
+dev_¢
+):
+
+376 
+def
+ 
+	$¡İ_®l
+(
+£lf
+):
+
+377 
+£lf
+.
+mÚth»ad
+ = "off"
+
+378 
+	`Ën
+(
+£lf
+.
+deviûs
+) != 0:
+
+380 
+k
+ 
+š
+ 
+£lf
+.
+deviûs
+.
+	$keys
+():
+
+381 
+	$´št
+(
+k
+)
+
+382 
+£lf
+.
+deviûs
+[
+k
+]["s"] = "offline"
+
+385 
+def
+ 
+	$mÚ™Ü_deviûs
+(
+£lf
+):
+
+386 
+True
+:
+
+387 
+£lf
+.
+mÚth»ad
+ == "on":
+
+388 
+time
+.
+	$¦“p
+(
+£lf
+.
+¦“±ime
+)
+
+389 
+	`Ën
+(
+£lf
+.
+deviûs
+) != 0:
+
+391 
+k
+ 
+š
+ 
+£lf
+.
+deviûs
+.
+	$keys
+():
+
+392 #´št(
+k
+)
+
+393 #£lf.
+	`qu”y_deviû_¡©us
+(
+k
+)
+
+394 
+£lf
+.
+	$qu”y_deviû_¡Üage
+(
+k
+)
+
+395 #£lf.
+	`show_¡©us
+(
+k
+)
+
+396 #£lf.
+	`æush_deviû_šfo
+(
+k
+)
+
+400 
+def
+ 
+	$ü—‹_mÚ™Ü_th»ad
+(
+£lf
+):
+
+401 
+	`´št
+("create_monitor_thread...")
+
+402 
+t
+=
+th»adšg
+.
+	`Th»ad
+(
+rg‘
+=
+£lf
+.
+mÚ™Ü_deviûs
+,
+Çme
+="fragment-test-monitor")
+
+403 
+t
+.
+	$¡¬t
+()
+
+406 
+def
+ 
+	$ü—‹_wr_th»ad
+(
+£lf
+,
+dev
+):
+
+407 
+	`´št
+("create_wr_thread...")
+
+408 
+i
+ 
+š
+ 
+	$¿nge
+(
+£lf
+.
+w¹h»ads
+):
+
+409 #´št(
+i
+)
+
+410 
+t
+=
+th»adšg
+.
+	`Th»ad
+(
+rg‘
+=
+£lf
+.
+wr_func
+,
+Çme
+=
+dev
++"-wr-"+
+	`¡r
+(
+i
+),
+¬gs
+=(dev,£lf.
+·th
++£lf.
+dœ
++
+	$¡r
+(
+i
+)))
+
+411 
+t
+.
+	$¡¬t
+()
+
+414 
+def
+ 
+	$ü—‹_d–_th»ad
+(
+£lf
+,
+dev
+):
+
+415 
+	`´št
+("create_del_thread...")
+
+416 
+i
+ 
+š
+ 
+	$¿nge
+(
+£lf
+.
+d–th»ads
+):
+
+417 #´št(
+i
+)
+
+418 
+t
+=
+th»adšg
+.
+	`Th»ad
+(
+rg‘
+=
+£lf
+.
+d–_func
+,
+Çme
+=
+dev
++"-d–-"+
+	`¡r
+(
+i
+),
+¬gs
+=(dev,£lf.
+·th
++£lf.
+dœ
++
+	$¡r
+(
+i
+)))
+
+419 
+t
+.
+	$¡¬t
+()
+
+422 
+def
+ 
+	$g‘_deviû_šfo
+(
+£lf
+):
+
+423 
+cmd
+ = ["adb", "devices"]
+
+424 
+Œy
+:
+
+425 
+´oc
+ = 
+sub´oûss
+.
+	$Pİ’
+(
+cmd
+, 
+¡dout
+=
+sub´oûss
+.
+PIPE
+, 
+¡d”r
+=subprocess.PIPE)
+
+426 
+exû±
+ 
+OSE¼Ü
+ 
+as
+ 
+e
+:
+
+427 
+	$´št
+(
+e
+)
+
+428  
+NÚe
+
+
+429 
+tmp_dev
+ = []
+
+430 
+i
+ = 0
+
+431 
+True
+:
+
+432 
+lše
+ = 
+´oc
+.
+¡dout
+.
+	`»adlše
+().
+	$¡r
+()
+
+433 
+	$Ën
+(
+lše
+è
+is
+ 
+nÙ
+ 0:
+
+434 
+lše
+[0:4] =ğ
+b
+'Li¡' 
+Ü
+†ine[0:1] == b'*':
+
+437 
+tmp_dev
+.
+	`­³nd
+(
+by‹s
+.
+	`decode
+(
+lše
+.
+	`¥l™
+()[0]))
+
+439  
+tmp_dev
+
+
+441 
+__Çme__
+ == '__main__':
+
+442 
+obj
+ = 
+	`F¿gm’tUI
+("fgool")
+
+443 
+obj
+.
+	`š™_ui
+(obj.
+	`g‘_deviû_šfo
+())
+
+	@
+1
+.
+1
+/usr/include
+22
+346
+About.py
+Debug.py
+DeviceConfig.py
+FragmentUI.py
+GlobalConfig.py
+OfflineParser.py
+RLKDB.py
+RLKDevice.py
+RLKThread.py
+ToolV1.1.py
+ToolV1.py
+ToolV2.py
+Util.py
+Version.py
+animation/animate_decay.py
+animation/basic_example.py
+animation/dynamic_image.py
+animation/test1.py
+animation/test2.py
+animation/test3.py
+animation/test4.py
+emmc_fragment_test.py

@@ -32,6 +32,16 @@ function green {
 	showstr_fgreen $*
 }
 
+function space {
+	local i
+	if [ ! -z $1 ];then
+		for ((i=0;i<$1;i=$i+1))
+		do
+			echo -e " \c";
+		done
+	fi
+}
+
 if [ ! -n "$1" ];then
 	red "Please Run this script with your sudo passwd"
 	echo
@@ -42,18 +52,357 @@ fi
 
 passwd=$1
 
-sudo apt-get install -y git vim terminator uget vlc fcitx fcitx-bin fcitx-config-common fcitx-config-gtk fcitx-data fcitx-frontend-all fcitx-frontend-gtk2 fcitx-frontend-gtk3 fcitx-frontend-qt4 fcitx-frontend-qt5 fcitx-libs fcitx-module-dbus fcitx-module-kimpanel fcitx-module-lua fcitx-module-x11 fcitx-modules fcitx-ui-classic fonts-wqy-microhei i965-va-driver liba52-0.7.4 libaacs0 libass5 libavcodec-ffmpeg56 libavformat-ffmpeg56 libavutil-ffmpeg54 libbasicusageenvironment1 libbdplus0 libbluray1 libcddb2 libchromaprint0 libcrystalhd3 libdc1394-22 libdca0 libdirectfb-1.2-9 libdvbpsi10 libdvdnav4 libdvdread4 libebml4v5 libfaad2 libfcitx-core0 libfcitx-qt0 libfcitx-qt5-1 libgme0 libgroupsock8 libgsm1 libiso9660-8 libkate1 liblept5 liblivemedia50 libmad0 libmatroska6v5 libmodplug1 libmp3lame0 libmpcdec6 libmpeg2-4 libopencc1 libopenjp2-7 libopenjpeg5 libpostproc-ffmpeg53 libpresage-data libpresage1v5 libproxy-tools libqgsttools-p1 libqt4-opengl libqt5clucene5 libqt5designer5 libqt5help5 libqt5multimedia5-plugins libqt5multimediawidgets5 libqt5quickwidgets5 libqtwebkit4 libresid-builder0c2a libschroedinger-1.0-0 libsdl1.2debian libshine3 libsidplay2v5 libsnappy1v5 libsoxr0 libssh-gcrypt-4 libssh2-1 libswresample-ffmpeg1 libswscale-ffmpeg3 libtesseract3 libtinyxml2.6.2v5 libtwolame0 libupnp6 libusageenvironment3 libva1 libvcdinfo0 libvdpau1 libvlc5 libvlccore8 libx264-148 libx265-79 libxvidcore4 libzvbi-common libzvbi0 mesa-vdpau-drivers presage python3-pyqt5 python3-pyqt5.qtmultimedia python3-pyqt5.qtquick python3-pyqt5.qtwebkit python3-sip python3-xlib qml-module-qtquick-controls qtdeclarative5-controls-plugin tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-chi-tra tesseract-ocr-eng tesseract-ocr-equ tesseract-ocr-osd ttf-wqy-microhei va-driver-all vdpau-driver-all vdpau-va-driver vlc-data vlc-nox lib32ncurses5 lib32z1 rdesktop shutter gnome-bluetooth
+####install flag####
+prepare_install=true
+common_install=true
+deb_install=false
+android_install=true
+latext_install=true
+opencv_install=true
+iotool_install=true
+vim_install=true
+pylib_install=true
+####install flag####
 
-for package in git vim terminator fcitx;
-do
-which $package
-if [ $? -ne 0 ];then
-	echo $passwd |sudo -S apt-get install -y $package	
-	if [ $? -ne 0 ];then
-		red "$package install fail"
-	else
-		green "$package install sucess"
-	fi
+inx=0
+failed_info[$inx]="List all failed installing, you should install them manual!"
+function inx_pp {
+	inx=`expr $inx + 1`
+}
+
+function record_failinfo {
+	inx_pp
+	failed_info[$inx]=$1
+}
+
+function apt_fix {
+	echo $passwd |sudo -S apt-get -f -y install
+}
+
+##update source list
+echo $passwd |sudo -S apt-get update
+
+##prepare for installing start
+if $prepare_install;then
+	blue "Start install some prepared packages....."
+	for package in git gitk libqtwebkit4 libqt4-opengl libsdl1.2debian lib32ncurses5 lib32z1 cifs-utils vlc;
+	do
+
+		echo $passwd |sudo -S apt-get install -y $package	
+		if [ $? -ne 0 ];then
+			red "$package install fail"
+			apt_fix
+			##reinstall it again start
+			echo $passwd |sudo -S apt-get install -y $package	
+			if [ $? -ne 0 ];then
+				red "$package install fail"
+				record_failinfo $package
+				echo
+			else
+				green "$package install sucess"
+				echo
+			fi
+			##reinstall it again end
+			echo
+		else
+			green "$package install sucess"
+			echo
+		fi
+
+	done
+	blue "End of install prepare packages....."
+	echo
 fi
-done
+##prepare for installing end
 
+##common used start
+if $common_install;then
+	blue "Start install some common packages....."
+	for package in terminator fcitx redshift uget rdesktop shutter wxhexeditor wine;
+	do
+	which $package
+	if [ $? -ne 0 ];then
+		echo $passwd |sudo -S apt-get install -y $package	
+		if [ $? -ne 0 ];then
+			red "$package install fail"
+			apt_fix
+			##reinstall it again start
+			echo $passwd |sudo -S apt-get install -y $package	
+			if [ $? -ne 0 ];then
+				red "$package install fail"
+				record_failinfo $package
+				echo
+			else
+				green "$package install sucess"
+				echo
+			fi
+			##reinstall it again end
+			echo
+		else
+			green "$package install sucess"
+			echo
+		fi
+	fi
+	done
+	blue "End of install common packages....."
+	echo
+fi
+##common used end
+
+##deb install start
+if $deb_install;then
+	blue "Start install some deb packages....."
+	for deb in `ls ~/data/ubuntu_env/install/deb/*deb`
+	do
+		echo $passwd |sudo -S dpkg -i $deb
+		if [ $? -ne 0 ];then
+			red "$deb install fail"
+			apt_fix
+			##reinstall it again start
+			echo $passwd |sudo -S dpkg -i $deb
+			if [ $? -ne 0 ];then
+				red "$deb install fail"
+				record_failinfo $deb
+				echo
+			else
+				green "$deb install sucess"
+				echo
+			fi
+			##reinstall it again end
+			echo
+		else
+			green "$deb install sucess"
+			echo
+		fi
+	done
+	blue "End of install deb related packages....."
+	echo
+fi
+##deb install end
+
+##install for android compile start####
+if $android_install;then
+	blue "Start install some Android related packages....."
+	for package in git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev ccache libgl1-mesa-dev libxml2-utils xsltproc unzip android-tools-adb;
+	do
+	which $package
+	if [ $? -ne 0 ];then
+		echo $passwd |sudo -S apt-get install -y $package	
+		if [ $? -ne 0 ];then
+			red "$package install fail"
+			apt_fix
+			##reinstall it again start
+			echo $passwd |sudo -S apt-get install -y $package	
+			if [ $? -ne 0 ];then
+				red "$package install fail"
+				record_failinfo $package
+				echo
+			else
+				green "$package install sucess"
+				echo
+			fi
+			##reinstall it again end
+			echo
+		else
+			green "$package install sucess"
+			echo
+		fi
+	fi
+	done
+	blue "End of install Android related packages....."
+	echo
+fi
+##install for android compile end####
+
+##install latex related start####
+if $latext_install;then
+	blue "Start install some latex related packages....."
+	for package in texlive-xetex latex-cjk-all texmaker fonts-wqy-microhei;
+	do
+	which $package
+	if [ $? -ne 0 ];then
+		echo $passwd |sudo -S apt-get install -y $package	
+		if [ $? -ne 0 ];then
+			red "$package install fail"
+			apt_fix
+			##reinstall it again start
+			echo $passwd |sudo -S apt-get install -y $package	
+			if [ $? -ne 0 ];then
+				red "$package install fail"
+				record_failinfo $package
+				echo
+			else
+				green "$package install sucess"
+				echo
+			fi
+			##reinstall it again end
+			echo
+		else
+			green "$package install sucess"
+			echo
+		fi
+	fi
+	done
+	blue "End of install latex related packages....."
+	echo
+fi
+##install latex related end####
+
+##install opencv related start####
+if $opencv_install;then
+	blue "Start install some opencv related packages....."
+	for package in build-essential checkinstall cmake pkg-config yasm git gfortran libjpeg8-dev libjasper-dev libpng12-dev libtiff5-dev libavcodec-dev libavformat-dev libswscale-dev libdc1394-22-dev libxine2-dev libv4l-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev qt5-default libgtk2.0-dev libtbb-dev libatlas-base-dev libfaac-dev libmp3lame-dev libtheora-dev libvorbis-dev libxvidcore-dev libopencore-amrnb-dev libopencore-amrwb-dev x264 v4l-utils libprotobuf-dev protobuf-compiler libgoogle-glog-dev libgflags-dev libgphoto2-dev libeigen3-dev libhdf5-dev doxygen;
+	do
+
+		echo $passwd |sudo -S apt-get install -y $package	
+		if [ $? -ne 0 ];then
+			red "$package install fail"
+			apt_fix
+			##reinstall it again start
+			echo $passwd |sudo -S apt-get install -y $package	
+			if [ $? -ne 0 ];then
+				red "$package install fail"
+				record_failinfo $package
+				echo
+			else
+				green "$package install sucess"
+				echo
+			fi
+			##reinstall it again end
+			echo
+		else
+			green "$package install sucess"
+			echo
+		fi
+
+	done
+	blue "End of install vim related packages....."
+	echo
+fi
+##install opencv related end####
+
+##install iotool related start####
+if $iotool_install;then
+	blue "Start install some io realted packages....."
+	for package in blktrace;
+	do
+
+		echo $passwd |sudo -S apt-get install -y $package	
+		if [ $? -ne 0 ];then
+			red "$package install fail"
+			apt_fix
+			##reinstall it again start
+			echo $passwd |sudo -S apt-get install -y $package	
+			if [ $? -ne 0 ];then
+				red "$package install fail"
+				record_failinfo $package
+				echo
+			else
+				green "$package install sucess"
+				echo
+			fi
+			##reinstall it again end
+			echo
+		else
+			green "$package install sucess"
+			echo
+		fi
+
+	done
+
+	blue "End of install io related packages....."
+	echo
+fi
+##install iotool related end####
+
+##install vim related start####
+if $vim_install;then
+	blue "Start install some vim related packages....."
+	for package in vim vim-scripts vim-doc vim-addon-manager ctags cscope;
+	do
+
+		echo $passwd |sudo -S apt-get install -y $package	
+		if [ $? -ne 0 ];then
+			red "$package install fail"
+			apt_fix
+			##reinstall it again start
+			echo $passwd |sudo -S apt-get install -y $package
+			if [ $? -ne 0 ];then
+				red "$package install fail"
+				record_failinfo $package
+				echo
+			else
+				green "$package install sucess"
+				echo
+			fi
+			##reinstall it again end
+			echo
+		else
+			green "$package install sucess"
+			echo
+		fi
+
+	done
+
+	for componant in omnicppcomplete taglist winmanager minibufexplorer;
+	do
+		vim-addons install $componant
+	done
+
+	blue "End of install vim related packages....."
+	echo
+fi
+##install vim related end####
+
+##install python lib related start####
+if $pylib_install;then
+	blue "Start install python related....."
+	for package in python-pip;
+	do
+
+		echo $passwd |sudo -S apt-get install -y $package	
+		if [ $? -ne 0 ];then
+			red "$package install fail"
+			apt_fix
+			##reinstall it again start
+			echo $passwd |sudo -S apt-get install -y $package
+			if [ $? -ne 0 ];then
+				red "$package install fail"
+				record_failinfo $package
+				echo
+			else
+				green "$package install sucess"
+				echo
+			fi
+			##reinstall it again end
+			echo
+		else
+			green "$package install sucess"
+			echo
+		fi
+
+	done
+
+	pip install --upgrade pip
+	echo
+
+	for componant in matplotlib numpy plotly configparser pandas;
+	do
+		pip install $componant
+	done
+
+	blue "End of install python related....."
+	echo
+fi
+##install python lib related end####
+
+##summary all failed info start###
+if [ $inx -gt 0 ];then
+	red ${failed_info[0]}
+	for ((i=1;i<=$inx;i=$i+1))
+	do
+		space 4
+		red "${failed_info[$i]} install fail"
+	done
+fi
+##summary all failed info start###

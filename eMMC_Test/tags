@@ -1,0 +1,290 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+About	About.py	/^class About():$/;"	c
+DATE_FORMAT	Debug.py	/^DATE_FORMAT = "%m-%d-%Y %H:%M:%S"$/;"	v
+DeviceConfig	DeviceConfig.py	/^class DeviceConfig():$/;"	c
+Eventrun	RLKThread.py	/^	def Eventrun(self):$/;"	m	class:RLKThread
+FragmentUI	FragmentUI.py	/^class FragmentUI:$/;"	c
+FragmentUI	ToolV1.1.py	/^class FragmentUI:$/;"	c
+FragmentUI	ToolV1.py	/^class FragmentUI:$/;"	c
+FragmentUI	emmc_fragment_test.py	/^class FragmentUI:$/;"	c
+GlobalConfig	GlobalConfig.py	/^class GlobalConfig():$/;"	c
+LOG_FORMAT	Debug.py	/^LOG_FORMAT = "%(asctime)s - %(threadName)s %(message)s"$/;"	v
+No_Select	FragmentUI.py	/^	def No_Select(self):$/;"	m	class:FragmentUI
+No_Select	OfflineParser.py	/^    def No_Select(self):$/;"	m	class:OfflineParser
+No_Select	ToolV1.1.py	/^	def No_Select(self):$/;"	m	class:FragmentUI
+No_Select	ToolV1.py	/^	def No_Select(self):$/;"	m	class:FragmentUI
+OfflineParser	OfflineParser.py	/^class OfflineParser:$/;"	c
+RLKDB	RLKDB.py	/^class RLKDB:$/;"	c
+RLKDevice	RLKDevice.py	/^class RLKDevice():$/;"	c
+RLKThread	RLKThread.py	/^class RLKThread(threading.Thread):$/;"	c
+__init__	About.py	/^	def __init__(self, name):$/;"	m	class:About
+__init__	DeviceConfig.py	/^	def __init__(self, name, device):$/;"	m	class:DeviceConfig
+__init__	FragmentUI.py	/^	def __init__(self,name):$/;"	m	class:FragmentUI
+__init__	GlobalConfig.py	/^	def __init__(self, name):$/;"	m	class:GlobalConfig
+__init__	OfflineParser.py	/^    def __init__(self, name):$/;"	m	class:OfflineParser
+__init__	RLKDB.py	/^	def __init__(self, dbfile):$/;"	m	class:RLKDB
+__init__	RLKDevice.py	/^	def __init__(self, dev_sn, db, offline=False):$/;"	m	class:RLKDevice
+__init__	RLKThread.py	/^	def __init__(self, name, target, args, kwargs, stopevt, delay=0):$/;"	m	class:RLKThread
+__init__	ToolV1.1.py	/^	def __init__(self,name):$/;"	m	class:FragmentUI
+__init__	ToolV1.py	/^	def __init__(self,name):$/;"	m	class:FragmentUI
+__init__	emmc_fragment_test.py	/^	def __init__(self,name):$/;"	m	class:FragmentUI
+_quit	FragmentUI.py	/^	def _quit(self):$/;"	m	class:FragmentUI
+_quit	ToolV1.1.py	/^	def _quit(self):$/;"	m	class:FragmentUI
+_quit	ToolV1.py	/^	def _quit(self):$/;"	m	class:FragmentUI
+a	animation/test4.py	/^a=arange(-2.0,2.001,1.0)$/;"	v
+aa	animation/test2.py	/^aa = np.linspace(-5, 5, n_points)$/;"	v
+about	FragmentUI.py	/^	def about(self):$/;"	m	class:FragmentUI
+add_all_devices	FragmentUI.py	/^	def add_all_devices(self):$/;"	m	class:FragmentUI
+add_dbdevice_to_parserlist	OfflineParser.py	/^    def add_dbdevice_to_parserlist(self, dbfile, dev_sn):$/;"	m	class:OfflineParser
+add_device	FragmentUI.py	/^	def add_device(self):$/;"	m	class:FragmentUI
+adjust_value	RLKDevice.py	/^	def adjust_value(self, v):$/;"	m	class:RLKDevice
+adjust_value	ToolV1.1.py	/^	def adjust_value(self, v):$/;"	m	class:FragmentUI
+adjust_value	ToolV1.py	/^	def adjust_value(self, v):$/;"	m	class:FragmentUI
+adjust_value	emmc_fragment_test.py	/^	def adjust_value(self, v):$/;"	m	class:FragmentUI
+ani	animation/animate_decay.py	/^ani = animation.FuncAnimation(fig, run, data_gen, blit=False, interval=10,$/;"	v
+ani	animation/dynamic_image.py	/^ani = animation.FuncAnimation(fig, updatefig, interval=50, blit=True)$/;"	v
+anim	animation/test1.py	/^anim = animation.FuncAnimation(fig, animate, frames=200, interval=60, blit=True)$/;"	v
+animate	animation/test1.py	/^def animate(i):$/;"	f
+apply_config	GlobalConfig.py	/^	def apply_config(self):$/;"	m	class:GlobalConfig
+author	Version.py	/^author = "Wisen Wang"$/;"	v
+b	animation/test4.py	/^b=arange(-2.0,2.001,1.0)$/;"	v
+base	animation/basic_example.py	/^base = np.hypot(x, y)$/;"	v
+bb	animation/test2.py	/^bb = np.linspace(-1.5, 1.5, n_points)$/;"	v
+blit	animation/test3.py	/^                                   blit=True)$/;"	v
+c	Debug.py	/^def c(str):$/;"	f
+calc_fragment_ratio	RLKDevice.py	/^	def calc_fragment_ratio(self):$/;"	m	class:RLKDevice
+calc_fragment_ratio	ToolV1.1.py	/^	def calc_fragment_ratio(self, dev_sn, draw_fragment=False):$/;"	m	class:FragmentUI
+calc_fragment_ratio	ToolV1.py	/^	def calc_fragment_ratio(self, dev_sn, draw_fragment=False):$/;"	m	class:FragmentUI
+calc_fragment_ratio	emmc_fragment_test.py	/^	def calc_fragment_ratio(self, dev_sn):$/;"	m	class:FragmentUI
+close	RLKDB.py	/^	def close(self):$/;"	m	class:RLKDB
+commit	RLKDB.py	/^	def commit(self):$/;"	m	class:RLKDB
+config_device	FragmentUI.py	/^	def config_device(self):$/;"	m	class:FragmentUI
+config_global	FragmentUI.py	/^	def config_global(self):$/;"	m	class:FragmentUI
+connect	RLKDB.py	/^	def connect(self):$/;"	m	class:RLKDB
+copyfile	Util.py	/^def copyfile(srcfile, dstfile):$/;"	f
+cost	animation/test2.py	/^def cost(a, b):$/;"	f
+create_del_thread	ToolV1.1.py	/^	def create_del_thread(self,dev):$/;"	m	class:FragmentUI
+create_del_thread	ToolV1.py	/^	def create_del_thread(self,dev):$/;"	m	class:FragmentUI
+create_del_thread	emmc_fragment_test.py	/^	def create_del_thread(self,dev):$/;"	m	class:FragmentUI
+create_monitor_thread	emmc_fragment_test.py	/^	def create_monitor_thread(self):$/;"	m	class:FragmentUI
+create_popmenuBar_devices	FragmentUI.py	/^	def create_popmenuBar_devices(self):$/;"	m	class:FragmentUI
+create_popmenuBar_devices	OfflineParser.py	/^    def create_popmenuBar_devices(self):$/;"	m	class:OfflineParser
+create_popmenuBar_monitor	FragmentUI.py	/^	def create_popmenuBar_monitor(self):$/;"	m	class:FragmentUI
+create_table	RLKDB.py	/^	def create_table(self, cmd):$/;"	m	class:RLKDB
+create_wr_thread	ToolV1.1.py	/^	def create_wr_thread(self,dev):$/;"	m	class:FragmentUI
+create_wr_thread	ToolV1.py	/^	def create_wr_thread(self,dev):$/;"	m	class:FragmentUI
+create_wr_thread	emmc_fragment_test.py	/^	def create_wr_thread(self,dev):$/;"	m	class:FragmentUI
+d	Debug.py	/^def d(str):$/;"	f
+data	animation/basic_example.py	/^data = np.random.rand(2, 25)$/;"	v
+data	animation/test1.py	/^data = np.random.random((255, 255))$/;"	v
+data_gen	animation/animate_decay.py	/^def data_gen(t=0):$/;"	f
+del_func	ToolV1.1.py	/^	def del_func(self,dev_sn,path):$/;"	m	class:FragmentUI
+del_func	ToolV1.py	/^	def del_func(self,dev_sn,path):$/;"	m	class:FragmentUI
+del_func	emmc_fragment_test.py	/^	def del_func(self,dev_sn,path):$/;"	m	class:FragmentUI
+delete	RLKDevice.py	/^	def delete(self,dev_sn,path):$/;"	m	class:RLKDevice
+delete_all_devices	FragmentUI.py	/^	def delete_all_devices(self):$/;"	m	class:FragmentUI
+delete_device	FragmentUI.py	/^	def delete_device(self):$/;"	m	class:FragmentUI
+destroy	RLKDevice.py	/^	def destroy(self):$/;"	m	class:RLKDevice
+destroy_popmenu	FragmentUI.py	/^	def destroy_popmenu(self, event):$/;"	m	class:FragmentUI
+destroy_popmenu	OfflineParser.py	/^    def destroy_popmenu(self, event):$/;"	m	class:OfflineParser
+detect	RLKDevice.py	/^	def detect(self, dev_sn, path):$/;"	m	class:RLKDevice
+display_section_contents	DeviceConfig.py	/^	def display_section_contents(self, event=None):$/;"	m	class:DeviceConfig
+display_section_contents	GlobalConfig.py	/^	def display_section_contents(self, event=None):$/;"	m	class:GlobalConfig
+draw_animation_on_devicelist	FragmentUI.py	/^	def draw_animation_on_devicelist(self):$/;"	m	class:FragmentUI
+draw_animation_on_devicelist	OfflineParser.py	/^    def draw_animation_on_devicelist(self):$/;"	m	class:OfflineParser
+draw_animation_on_monitorlist	FragmentUI.py	/^	def draw_animation_on_monitorlist(self):$/;"	m	class:FragmentUI
+draw_both_bytime	RLKDevice.py	/^	def draw_both_bytime(self):$/;"	m	class:RLKDevice
+draw_both_plot_on_devicelist	FragmentUI.py	/^	def draw_both_plot_on_devicelist(self):$/;"	m	class:FragmentUI
+draw_both_plot_on_devicelist	OfflineParser.py	/^    def draw_both_plot_on_devicelist(self):$/;"	m	class:OfflineParser
+draw_both_plot_on_monitorlist	FragmentUI.py	/^	def draw_both_plot_on_monitorlist(self):$/;"	m	class:FragmentUI
+draw_fragment	ToolV1.1.py	/^	def draw_fragment(self):$/;"	m	class:FragmentUI
+draw_fragment	ToolV1.py	/^	def draw_fragment(self):$/;"	m	class:FragmentUI
+draw_fragment_bymatplot_on_devicelist	FragmentUI.py	/^	def draw_fragment_bymatplot_on_devicelist(self):$/;"	m	class:FragmentUI
+draw_fragment_bymatplot_on_devicelist	OfflineParser.py	/^    def draw_fragment_bymatplot_on_devicelist(self):$/;"	m	class:OfflineParser
+draw_fragment_bymatplot_on_monitorlist	FragmentUI.py	/^	def draw_fragment_bymatplot_on_monitorlist(self):$/;"	m	class:FragmentUI
+draw_fragment_byplotly_on_devicelist	FragmentUI.py	/^	def draw_fragment_byplotly_on_devicelist(self):$/;"	m	class:FragmentUI
+draw_fragment_byplotly_on_devicelist	OfflineParser.py	/^    def draw_fragment_byplotly_on_devicelist(self):$/;"	m	class:OfflineParser
+draw_fragment_byplotly_on_monitorlist	FragmentUI.py	/^	def draw_fragment_byplotly_on_monitorlist(self):$/;"	m	class:FragmentUI
+draw_fragment_heatmap_animation	RLKDevice.py	/^	def draw_fragment_heatmap_animation(self, save=False, type=None):$/;"	m	class:RLKDevice
+draw_fragment_heatmap_bymatplot	RLKDevice.py	/^	def draw_fragment_heatmap_bymatplot(self):##use matplotlib$/;"	m	class:RLKDevice
+draw_fragment_heatmap_byplotly	RLKDevice.py	/^	def draw_fragment_heatmap_byplotly(self):  ##use plotly$/;"	m	class:RLKDevice
+draw_fragment_info	ToolV1.1.py	/^	def draw_fragment_info(self, segment, ratio, dev_sn):$/;"	m	class:FragmentUI
+draw_fragment_info	ToolV1.py	/^	def draw_fragment_info(self, segment, ratio, dev_sn):$/;"	m	class:FragmentUI
+draw_fragment_plot_on_devicelist	FragmentUI.py	/^	def draw_fragment_plot_on_devicelist(self):$/;"	m	class:FragmentUI
+draw_fragment_plot_on_devicelist	OfflineParser.py	/^    def draw_fragment_plot_on_devicelist(self):$/;"	m	class:OfflineParser
+draw_fragment_plot_on_monitorlist	FragmentUI.py	/^	def draw_fragment_plot_on_monitorlist(self):$/;"	m	class:FragmentUI
+draw_fragment_ratio_bytime	RLKDevice.py	/^	def draw_fragment_ratio_bytime(self):$/;"	m	class:RLKDevice
+e	Debug.py	/^def e(str):$/;"	f
+email	Version.py	/^email = "wisen.wang.ah@gmail.com"$/;"	v
+execute	RLKDB.py	/^	def execute(self, cmd, data):$/;"	m	class:RLKDB
+executemany	RLKDB.py	/^	def executemany(self, cmd, data):$/;"	m	class:RLKDB
+f	animation/dynamic_image.py	/^def f(x, y):$/;"	f
+fetch	RLKDB.py	/^	def fetch(self, cmd):$/;"	m	class:RLKDB
+fig	animation/dynamic_image.py	/^fig = plt.figure()$/;"	v
+fig	animation/test1.py	/^fig = plt.figure()$/;"	v
+fig1	animation/basic_example.py	/^fig1 = plt.figure()$/;"	v
+fig2	animation/basic_example.py	/^fig2 = plt.figure()$/;"	v
+fig2	animation/test3.py	/^fig2 = plt.figure()$/;"	v
+flush_device_info	ToolV1.1.py	/^	def flush_device_info(self, dev_sn):$/;"	m	class:FragmentUI
+flush_device_info	ToolV1.py	/^	def flush_device_info(self, dev_sn):$/;"	m	class:FragmentUI
+flush_device_info	emmc_fragment_test.py	/^	def flush_device_info(self, dev_sn):$/;"	m	class:FragmentUI
+func	animation/test4.py	/^func=lambda x,y:(x**2.0+y**4.0)*exp(-x**(-2.0)-y**(-3.0))$/;"	v
+get_device_info	ToolV1.1.py	/^	def get_device_info(self):$/;"	m	class:FragmentUI
+get_device_info	ToolV1.py	/^	def get_device_info(self):$/;"	m	class:FragmentUI
+get_device_info	emmc_fragment_test.py	/^	def get_device_info(self):$/;"	m	class:FragmentUI
+github	Version.py	/^github = "https:\/\/github.com\/wisen"/;"	v
+help	FragmentUI.py	/^	def help(self):$/;"	m	class:FragmentUI
+i	Debug.py	/^def i(str):$/;"	f
+im	animation/dynamic_image.py	/^im = plt.imshow(f(x, y), animated=True)$/;"	v
+im	animation/test1.py	/^im = plt.imshow(data, cmap='gray')$/;"	v
+im	animation/test2.py	/^im = ax.pcolormesh(aa, bb, z)$/;"	v
+im_ani	animation/basic_example.py	/^im_ani = animation.ArtistAnimation(fig2, ims, interval=50, repeat_delay=3000,$/;"	v
+im_ani	animation/test3.py	/^im_ani = animation.ArtistAnimation(fig2, ims, interval=500, repeat_delay=1000,$/;"	v
+ims	animation/basic_example.py	/^ims = []$/;"	v
+ims	animation/test3.py	/^ims = []$/;"	v
+init	Debug.py	/^def init():$/;"	f
+init	animation/animate_decay.py	/^def init():$/;"	f
+initUI	About.py	/^	def initUI(self):$/;"	m	class:About
+initUI	DeviceConfig.py	/^	def initUI(self):$/;"	m	class:DeviceConfig
+initUI	FragmentUI.py	/^	def initUI(self):$/;"	m	class:FragmentUI
+initUI	GlobalConfig.py	/^	def initUI(self):$/;"	m	class:GlobalConfig
+initUI	OfflineParser.py	/^    def initUI(self):$/;"	m	class:OfflineParser
+init_devices	FragmentUI.py	/^	def init_devices(self):$/;"	m	class:FragmentUI
+init_item	ToolV1.1.py	/^	def init_item(self,event):$/;"	m	class:FragmentUI
+init_item	ToolV1.py	/^	def init_item(self,event):$/;"	m	class:FragmentUI
+init_item	emmc_fragment_test.py	/^	def init_item(self,event):$/;"	m	class:FragmentUI
+init_ui	ToolV1.1.py	/^	def init_ui(self,listitems):$/;"	m	class:FragmentUI
+init_ui	ToolV1.py	/^	def init_ui(self,listitems):$/;"	m	class:FragmentUI
+init_ui	emmc_fragment_test.py	/^	def init_ui(self,listitems):$/;"	m	class:FragmentUI
+line_ani	animation/basic_example.py	/^line_ani = animation.FuncAnimation(fig1, update_line, 25, fargs=(data, l),$/;"	v
+load_config	RLKDevice.py	/^	def load_config(self):$/;"	m	class:RLKDevice
+monitor	RLKDevice.py	/^	def monitor(self,dev_sn, path):$/;"	m	class:RLKDevice
+monitor_devices	FragmentUI.py	/^	def monitor_devices(self, args, kwargs):$/;"	m	class:FragmentUI
+monitor_devices	ToolV1.1.py	/^	def monitor_devices(self):$/;"	m	class:FragmentUI
+monitor_devices	ToolV1.py	/^	def monitor_devices(self):$/;"	m	class:FragmentUI
+monitor_devices	emmc_fragment_test.py	/^	def monitor_devices(self):$/;"	m	class:FragmentUI
+monitor_item	ToolV1.1.py	/^	def monitor_item(self,event):$/;"	m	class:FragmentUI
+monitor_item	ToolV1.py	/^	def monitor_item(self,event):$/;"	m	class:FragmentUI
+monitor_item	emmc_fragment_test.py	/^	def monitor_item(self,event):$/;"	m	class:FragmentUI
+n_points	animation/test2.py	/^n_points = 10$/;"	v
+name	Version.py	/^name = "eMMC Test Tool"$/;"	v
+obj	About.py	/^	obj = About("About " + v.name)$/;"	v	class:About
+obj	DeviceConfig.py	/^	obj = DeviceConfig("Config Device")$/;"	v	class:DeviceConfig
+obj	FragmentUI.py	/^	obj = FragmentUI(v.name+" "+v.version)$/;"	v	class:FragmentUI
+obj	GlobalConfig.py	/^	obj = GlobalConfig("Global Config")$/;"	v	class:GlobalConfig
+obj	ToolV1.1.py	/^	obj = FragmentUI("fg tool")$/;"	v	class:FragmentUI
+obj	ToolV1.py	/^	obj = FragmentUI("fg tool")$/;"	v	class:FragmentUI
+obj	ToolV2.py	/^	obj = FragmentUI.FragmentUI(v.name + " " + v.version)$/;"	v
+obj	emmc_fragment_test.py	/^	obj = FragmentUI("fg tool")$/;"	v	class:FragmentUI
+offline_parser	FragmentUI.py	/^	def offline_parser(self):$/;"	m	class:FragmentUI
+op	OfflineParser.py	/^    op = OfflineParser(v.name)$/;"	v	class:OfflineParser
+opendb_dialog	OfflineParser.py	/^    def opendb_dialog(self):$/;"	m	class:OfflineParser
+opendbs_dialog	OfflineParser.py	/^    def opendbs_dialog(self):$/;"	m	class:OfflineParser
+parse_info	RLKDevice.py	/^	def parse_info(self, line):$/;"	m	class:RLKDevice
+parse_info	ToolV1.1.py	/^	def parse_info(self, line):$/;"	m	class:FragmentUI
+parse_info	ToolV1.py	/^	def parse_info(self, line):$/;"	m	class:FragmentUI
+parse_info	emmc_fragment_test.py	/^	def parse_info(self, line):$/;"	m	class:FragmentUI
+parse_ini_file	DeviceConfig.py	/^	def parse_ini_file(self, ini_file):$/;"	m	class:DeviceConfig
+parse_ini_file	GlobalConfig.py	/^	def parse_ini_file(self, ini_file):$/;"	m	class:GlobalConfig
+parse_ini_file	RLKDevice.py	/^	def parse_ini_file(self, ini_file):$/;"	m	class:RLKDevice
+pop	ToolV1.1.py	/^	def pop(self,event):$/;"	m	class:FragmentUI
+pop	ToolV1.py	/^	def pop(self,event):$/;"	m	class:FragmentUI
+pop_on_deviceslist	FragmentUI.py	/^	def pop_on_deviceslist(self,event):$/;"	m	class:FragmentUI
+pop_on_deviceslist	OfflineParser.py	/^    def pop_on_deviceslist(self, event):$/;"	m	class:OfflineParser
+pop_on_monitorlist	FragmentUI.py	/^	def pop_on_monitorlist(self,event):$/;"	m	class:FragmentUI
+query_device_fragment	ToolV1.1.py	/^	def query_device_fragment(self, dev_sn):$/;"	m	class:FragmentUI
+query_device_fragment	ToolV1.py	/^	def query_device_fragment(self, dev_sn):$/;"	m	class:FragmentUI
+query_device_fragment	emmc_fragment_test.py	/^	def query_device_fragment(self, dev_sn):$/;"	m	class:FragmentUI
+query_device_status	ToolV1.1.py	/^	def query_device_status(self, dev_sn):$/;"	m	class:FragmentUI
+query_device_status	ToolV1.py	/^	def query_device_status(self, dev_sn):$/;"	m	class:FragmentUI
+query_device_status	emmc_fragment_test.py	/^	def query_device_status(self, dev_sn):$/;"	m	class:FragmentUI
+query_device_storage	ToolV1.1.py	/^	def query_device_storage(self, dev_sn):$/;"	m	class:FragmentUI
+query_device_storage	ToolV1.py	/^	def query_device_storage(self, dev_sn):$/;"	m	class:FragmentUI
+query_device_storage	emmc_fragment_test.py	/^	def query_device_storage(self, dev_sn):$/;"	m	class:FragmentUI
+query_dm_inx	ToolV1.1.py	/^	def query_dm_inx(self, dev_sn):$/;"	m	class:FragmentUI
+query_dm_inx	ToolV1.py	/^	def query_dm_inx(self, dev_sn):$/;"	m	class:FragmentUI
+query_dm_inx	emmc_fragment_test.py	/^	def query_dm_inx(self, dev_sn):$/;"	m	class:FragmentUI
+query_dminx	RLKDevice.py	/^	def query_dminx(self):$/;"	m	class:RLKDevice
+query_filesystem	RLKDevice.py	/^	def query_filesystem(self):$/;"	m	class:RLKDevice
+query_fragment	RLKDevice.py	/^	def query_fragment(self):$/;"	m	class:RLKDevice
+query_storage	RLKDevice.py	/^	def query_storage(self):$/;"	m	class:RLKDevice
+reset_config	DeviceConfig.py	/^	def reset_config(self):$/;"	m	class:DeviceConfig
+run	RLKThread.py	/^	def run(self):$/;"	m	class:RLKThread
+run	animation/animate_decay.py	/^def run(data):$/;"	f
+save_animation_togif_on_devicelist	FragmentUI.py	/^	def save_animation_togif_on_devicelist(self):$/;"	m	class:FragmentUI
+save_animation_togif_on_devicelist	OfflineParser.py	/^    def save_animation_togif_on_devicelist(self):$/;"	m	class:OfflineParser
+save_animation_togif_on_monitorlist	FragmentUI.py	/^	def save_animation_togif_on_monitorlist(self):$/;"	m	class:FragmentUI
+save_animation_tomp4_on_devicelist	FragmentUI.py	/^	def save_animation_tomp4_on_devicelist(self):$/;"	m	class:FragmentUI
+save_animation_tomp4_on_devicelist	OfflineParser.py	/^    def save_animation_tomp4_on_devicelist(self):$/;"	m	class:OfflineParser
+save_animation_tomp4_on_monitorlist	FragmentUI.py	/^	def save_animation_tomp4_on_monitorlist(self):$/;"	m	class:FragmentUI
+save_config	DeviceConfig.py	/^	def save_config(self, event=None):$/;"	m	class:DeviceConfig
+save_config	GlobalConfig.py	/^	def save_config(self, event=None):$/;"	m	class:GlobalConfig
+segment	animation/test3.py	/^segment={'a':[1,2,3],'b':[1,2,3,4,5],'z':[1,1,1,2,2,2,2,1,1,1,1,3,3,4,4]}$/;"	v
+show_init_status	ToolV1.1.py	/^	def show_init_status(self):$/;"	m	class:FragmentUI
+show_init_status	ToolV1.py	/^	def show_init_status(self):$/;"	m	class:FragmentUI
+show_init_status	emmc_fragment_test.py	/^	def show_init_status(self):$/;"	m	class:FragmentUI
+show_online_status	ToolV1.1.py	/^	def show_online_status(self):$/;"	m	class:FragmentUI
+show_online_status	ToolV1.py	/^	def show_online_status(self):$/;"	m	class:FragmentUI
+show_online_status	emmc_fragment_test.py	/^	def show_online_status(self):$/;"	m	class:FragmentUI
+show_status	ToolV1.1.py	/^	def show_status(self, dev_sn):$/;"	m	class:FragmentUI
+show_status	ToolV1.py	/^	def show_status(self, dev_sn):$/;"	m	class:FragmentUI
+show_status	emmc_fragment_test.py	/^	def show_status(self, dev_sn):$/;"	m	class:FragmentUI
+show_status_indevicelist	FragmentUI.py	/^	def show_status_indevicelist(self, event):$/;"	m	class:FragmentUI
+show_status_inmonitorlist	FragmentUI.py	/^	def show_status_inmonitorlist(self, event):$/;"	m	class:FragmentUI
+start_delthreads	RLKDevice.py	/^	def start_delthreads(self):$/;"	m	class:RLKDevice
+start_detectthread	RLKDevice.py	/^	def start_detectthread(self):$/;"	m	class:RLKDevice
+start_func	ToolV1.1.py	/^	def start_func(self):$/;"	m	class:FragmentUI
+start_func	ToolV1.py	/^	def start_func(self):$/;"	m	class:FragmentUI
+start_func	emmc_fragment_test.py	/^	def start_func(self):$/;"	m	class:FragmentUI
+start_monitorthread	FragmentUI.py	/^	def start_monitorthread(self):$/;"	m	class:FragmentUI
+start_monthread	RLKDevice.py	/^	def start_monthread(self):$/;"	m	class:RLKDevice
+start_wrthreads	RLKDevice.py	/^	def start_wrthreads(self):$/;"	m	class:RLKDevice
+status_str	RLKDevice.py	/^	def status_str(self, str):$/;"	m	class:RLKDevice
+stop_all	ToolV1.1.py	/^	def stop_all(self):$/;"	m	class:FragmentUI
+stop_all	ToolV1.py	/^	def stop_all(self):$/;"	m	class:FragmentUI
+stop_all	emmc_fragment_test.py	/^	def stop_all(self):$/;"	m	class:FragmentUI
+stop_all_devices	FragmentUI.py	/^	def stop_all_devices(self):$/;"	m	class:FragmentUI
+stop_delthreads	RLKDevice.py	/^	def stop_delthreads(self):$/;"	m	class:RLKDevice
+stop_detectthread	RLKDevice.py	/^	def stop_detectthread(self):$/;"	m	class:RLKDevice
+stop_func	ToolV1.1.py	/^	def stop_func(self):$/;"	m	class:FragmentUI
+stop_func	ToolV1.py	/^	def stop_func(self):$/;"	m	class:FragmentUI
+stop_func	emmc_fragment_test.py	/^	def stop_func(self):$/;"	m	class:FragmentUI
+stop_monitorthread	FragmentUI.py	/^	def stop_monitorthread(self):$/;"	m	class:FragmentUI
+stop_monthread	RLKDevice.py	/^	def stop_monthread(self):$/;"	m	class:RLKDevice
+stop_wr_threads	ToolV1.1.py	/^	def stop_wr_threads(self, dev_sn):$/;"	m	class:FragmentUI
+stop_wrthreads	RLKDevice.py	/^	def stop_wrthreads(self):$/;"	m	class:RLKDevice
+store_deviceinfo	RLKDevice.py	/^	def store_deviceinfo(self):$/;"	m	class:RLKDevice
+testDevices	RLKDevice.py	/^def testDevices():$/;"	f
+testfunc	RLKThread.py	/^def testfunc(args, kwargs):$/;"	f
+testsqlite	RLKDB.py	/^def testsqlite():$/;"	f
+testthread	RLKThread.py	/^def testthread():$/;"	f
+update_config	ToolV1.1.py	/^	def update_config(self):$/;"	m	class:FragmentUI
+update_config	ToolV1.py	/^	def update_config(self):$/;"	m	class:FragmentUI
+update_config	emmc_fragment_test.py	/^	def update_config(self):$/;"	m	class:FragmentUI
+update_line	animation/basic_example.py	/^def update_line(num, data, line):$/;"	f
+update_segment	RLKDevice.py	/^	def update_segment(self):$/;"	m	class:RLKDevice
+update_status	RLKDevice.py	/^	def update_status(self, status):$/;"	m	class:RLKDevice
+updatefig	animation/dynamic_image.py	/^def updatefig(*args):$/;"	f
+version	Version.py	/^version = "V2.1"$/;"	v
+w	Debug.py	/^def w(str):$/;"	f
+window_cloe	ToolV1.1.py	/^	def window_cloe(self):$/;"	m	class:FragmentUI
+window_cloe	ToolV1.py	/^	def window_cloe(self):$/;"	m	class:FragmentUI
+window_cloe	emmc_fragment_test.py	/^	def window_cloe(self):$/;"	m	class:FragmentUI
+window_close	FragmentUI.py	/^	def window_close(self):$/;"	m	class:FragmentUI
+window_close	OfflineParser.py	/^    def window_close(self):$/;"	m	class:OfflineParser
+wr_func	ToolV1.1.py	/^	def wr_func(self,dev_sn,path):$/;"	m	class:FragmentUI
+wr_func	ToolV1.py	/^	def wr_func(self,dev_sn,path):$/;"	m	class:FragmentUI
+wr_func	emmc_fragment_test.py	/^	def wr_func(self,dev_sn,path):$/;"	m	class:FragmentUI
+write	RLKDevice.py	/^	def write(self,dev_sn,path):$/;"	m	class:RLKDevice
+x	animation/basic_example.py	/^x = np.arange(-9, 10)$/;"	v
+x	animation/dynamic_image.py	/^x = np.linspace(0, 2 * np.pi, 120)$/;"	v
+y	animation/basic_example.py	/^y = np.arange(-9, 10).reshape(-1, 1)$/;"	v
+y	animation/dynamic_image.py	/^y = np.linspace(0, 2 * np.pi, 100).reshape(-1, 1)$/;"	v
+z	animation/test2.py	/^z = []$/;"	v
+z	animation/test2.py	/^z = np.reshape(z, [len(aa), len(bb)])$/;"	v
+z	animation/test4.py	/^z=func(x,y)$/;"	v
