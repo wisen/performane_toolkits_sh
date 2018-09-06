@@ -1,0 +1,8 @@
+#!/system/bin/sh
+
+export LD_PRELOAD=/data/local/xx/hook/libandroid-shmem.so
+
+./lib/ld-linux-armhf.so.3 \
+--library-path ./lib \
+./bin/fio \
+$@

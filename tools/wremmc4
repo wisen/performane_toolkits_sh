@@ -1,0 +1,123 @@
+#!/bin/bash
+
+#usage: wremmc4 path loop threads wr_size
+#ext: wremmc4 /data/tmp 10000 30 99
+
+#echo $#
+
+if [ $# -lt 1 ];then
+    echo "Please define the path";
+    exit;
+fi
+
+write_path=$1
+loop_cycles=$2
+if [ -z $loop_cycles ];then
+    loop_cycles=10000
+fi
+
+thread_cnt=$3
+if [ -z $thread_cnt ];then
+    thread_cnt=10
+fi
+
+wr_size=$4
+if [ -z $wr_size ];then
+    wr_size=99
+fi
+
+echo "path: $write_path"
+echo "cycles: $loop_cycles"
+echo "threads: $thread_cnt"
+
+for t in $(seq 1 1 $thread_cnt);do
+    dir_str="${dir_str} th$t"
+done
+echo "mkdir "$dir_str
+
+if [ ! -d ./tmp ];then
+    mkdir ./tmp
+fi
+
+if [ ! -d ./tmp2 ];then
+    mkdir ./tmp2
+fi
+
+if [ ! -d ./cmds ];then
+    mkdir ./cmds
+fi
+
+if [ -f start_mk.bat ];then
+    rm start_mk.bat
+fi
+
+if [ -f start_del.bat ];then
+    rm start_del.bat
+fi
+
+if [ -f start_mk1000.bat ];then
+    rm start_mk1000.bat
+fi
+
+if [ -f start_del1000.bat ];then
+    rm start_del1000.bat
+fi
+
+for t in $(seq 1 1 $thread_cnt);do
+(cat <<EOF
+for k in \$(seq 1 1 $loop_cycles);do
+    _tmp_size=\$((\$RANDOM%$wr_size+1))
+    dd if=/dev/urandom of=$write_path/th$t/\$((\$RANDOM*10000+\$RANDOM))_\${_tmp_size}k.dat bs=\${_tmp_size}k count=1;
+    if [ \$((\$k%100)) == 1 ];then echo '####################################\$k: flush';echo 3 > /proc/sys/vm/drop_caches;fi
+done
+exit
+EOF
+) > ./tmp/mk_$t.txt
+echo "adb shell < ./tmp/mk_$t.txt" > mk_$t.bat
+echo -e "@start \"mk_th$t\" \"mk_$t.bat\"\n" >> start_mk.bat
+done
+
+for t in $(seq 1 1 $thread_cnt);do
+(cat <<EOF
+for k in \$(seq 1 1 50);do
+    _tmp_size=\$((\$RANDOM%$wr_size+1))
+    dd if=/dev/urandom of=$write_path/th$t/\$((\$RANDOM*10000+\$RANDOM))_\${_tmp_size}k.dat bs=\${_tmp_size}k count=1;
+    if [ \$((\$k%100)) == 1 ];then echo '####################################\$k: flush';echo 3 > /proc/sys/vm/drop_caches;fi
+done
+exit
+EOF
+) > ./tmp2/mk_$t.txt
+echo "adb shell < ./tmp2/mk_$t.txt" > mk1000_$t.bat
+echo -e "@start \"mk_1000\" \"mk1000_$t.bat\"\n" >> start_mk1000.bat
+done
+
+for t in $(seq 1 1 $thread_cnt);do
+(cat <<EOF
+for k in \$(seq 1 1 $loop_cycles);do
+    _tmp_dir=\$((\$RANDOM%$thread_cnt+1))
+    file_list=\`ls $write_path/th\${_tmp_dir}/*k.dat\`;j=0;for file in \$file_list;do rm -f \$file;j=\`expr \$j + 1\`;echo "\$j: delete $write_path/th\${_tmp_dir}/\$file";if [ \$j -gt 19 ];then break;fi;done
+    #echo "flush######################"
+    #echo 3 > /proc/sys/vm/drop_caches
+done
+exit
+EOF
+) > ./tmp/del_$t.txt
+echo "adb shell < ./tmp/del_$t.txt" > del_$t.bat
+echo -e "@start \"del_th$t\" \"del_$t.bat\"\n" >> start_del.bat
+done
+
+for t in $(seq 1 1 $thread_cnt);do
+(cat <<EOF
+    _tmp_dir=\$((\$RANDOM%$thread_cnt+1))
+    file_list=\`ls $write_path/th\${_tmp_dir}/*k.dat\`;j=0;for file in \$file_list;do rm -f \$file;j=\`expr \$j + 1\`;echo "\$j: delete $write_path/th\${_tmp_dir}/\$file";if [ \$j -gt 49 ];then break;fi;done
+    #echo "flush######################"
+    #echo 3 > /proc/sys/vm/drop_caches
+    exit
+EOF
+) > ./tmp2/del_$t.txt
+echo "adb shell < ./tmp2/del_$t.txt" > del1000_$t.bat
+echo -e "@start \"del_1000\" \"del1000_$t.bat\"\n" >> start_del1000.bat
+done
+
+echo -e "@taskkill /f /fi \"imagename eq cmd.exe\"" >> kill_cmds.bat
+

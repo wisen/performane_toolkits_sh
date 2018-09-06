@@ -118,7 +118,7 @@ fi
 ##common used start
 if $common_install;then
 	blue "Start install some common packages....."
-	for package in terminator fcitx redshift uget rdesktop shutter wxhexeditor wine;
+	for package in terminator fcitx redshift redshift-gtk uget rdesktop shutter wxhexeditor wine;
 	do
 	which $package
 	if [ $? -ne 0 ];then

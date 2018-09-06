@@ -1,0 +1,48 @@
+#!/bin/bash
+
+#usage: wremmc5 path loop threads
+#ext: wremmc5 /data/tmp 10000 30
+
+write_path=$1
+if [ -z $write_path ];then
+    write_path=/data/tmp
+fi
+
+loop_cycles=$2
+if [ -z $loop_cycles ];then
+    loop_cycles=10000
+fi
+
+thread_cnt=$3
+if [ -z $thread_cnt ];then
+    thread_cnt=30
+fi
+
+echo "path: $write_path"
+echo "cycles: $loop_cycles"
+echo "threads: $thread_cnt"
+
+#reserv 200m
+data_reserv=204800
+
+#data_avail=`adb shell df -k|awk '/\/data/{if(match($6,"/data"))print $4;}'`
+#echo "$data_avail $data_reserv"
+
+for k in $(seq 1 1 $loop_cycles);do
+    data_avail=`adb shell df -k|awk '/\/data/{if(match($6,"/data"))print $4;}'`
+    echo "[$k] $data_avail $data_reserv"
+    if [ $data_avail -lt $data_reserv ];then
+        echo "start del scripts begin+++++"
+        ./start_del1000.bat
+        echo "start del scripts end-------"
+        sleep 10
+        ./kill_cmds.bat
+    else
+        echo "start mk scripts begin+++++"
+        ./start_mk1000.bat
+        echo "start mk scripts end-------"
+        sleep 10
+        taskkill /f /fi "imagename eq cmd.exe"
+        ./kill_cmds.bat
+    fi
+done

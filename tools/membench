@@ -1,0 +1,5 @@
+#!/bin/bash
+
+adb shell mkdir -p /data/local/tools
+adb push android_tools /data/local/tools
+adb shell /data/local/tmp/tinymembench

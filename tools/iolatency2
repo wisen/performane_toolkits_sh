@@ -32,9 +32,9 @@ btt -i ${prj2}_mmcblk0.bin -l ${prj2}_${parser_time}_la > /dev/null
 awk '{print $2}' ${prj2}_${parser_time}_la* > ${prj2}_${parser_time}.la
 btt -i ${prj2}_mmcblk0.bin -q ${prj2}_${parser_time}_q2c > /dev/null
 awk '{print $2}' ${prj2}_${parser_time}_q2c* > ${prj2}_${parser_time}.q2c
-python ${SCRIPT_ROOT}/py/parser/iolatency2.py $appname ${prj1} ${prj1}_${parser_time} "$rwstr1" ${prj2} ${prj2}_${parser_time} "$rwstr2" 
+python ${SCRIPT_ROOT}/py/iolatency2.py $appname ${prj1} ${prj1}_${parser_time} "$rwstr1" ${prj2} ${prj2}_${parser_time} "$rwstr2" 
 else
-python ${SCRIPT_ROOT}/py/parser/iolatency2.py $appname ${prj1} ${prj1}_${parser_time} "$rwstr1"
+python ${SCRIPT_ROOT}/py/iolatency2.py $appname ${prj1} ${prj1}_${parser_time} "$rwstr1"
 fi
 #rm ${prj1}_${parser_time}*
 #rm ${prj2}_${parser_time}*

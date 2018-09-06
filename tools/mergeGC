@@ -53,4 +53,4 @@ done
 
 red ${pass_to_py_str}
 
-python $SCRIPT_ROOT/py/parser/gc.merger ${pass_to_py_str}
+python $SCRIPT_ROOT/py/gc.merger ${pass_to_py_str}

@@ -33,4 +33,4 @@ summary="${total_space}MB/${used_space}MB [$ratio]"
 
 device_version_and_timestamp=`adb shell getprop ro.build.display.id`.$tmp_timestamp
 
-python ${SCRIPT_ROOT}/py/parser/f2fs_segment.parser_v2 $tmp_recordfile $summary $device_version_and_timestamp
+python ${SCRIPT_ROOT}/py/f2fs_segment.parser_v2 $tmp_recordfile $summary $device_version_and_timestamp

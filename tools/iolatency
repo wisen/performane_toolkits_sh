@@ -28,9 +28,9 @@ rwstr2=$(blkparse -i $dir2/mmcblk0 -d ${prj2}_mmcblk0.bin | grep "Reads Complete
 iowatcher -w 1024 -h 768 -t ${prj2}_mmcblk0.bin -O io -o ${prj2}_io.svg
 btt -i ${prj2}_mmcblk0.bin -l ${prj2}_${parser_time} > /dev/null
 awk '{print $2}' ${prj2}_${parser_time}* > ${prj2}_${parser_time}.la
-python ${SCRIPT_ROOT}/py/parser/iolatency.py $appname ${prj1} ${prj1}_${parser_time}.la "$rwstr1" ${prj2} ${prj2}_${parser_time}.la "$rwstr2" 
+python ${SCRIPT_ROOT}/py/iolatency.py $appname ${prj1} ${prj1}_${parser_time}.la "$rwstr1" ${prj2} ${prj2}_${parser_time}.la "$rwstr2" 
 else
-python ${SCRIPT_ROOT}/py/parser/iolatency.py $appname ${prj1} ${prj1}_${parser_time}.la "$rwstr1"
+python ${SCRIPT_ROOT}/py/iolatency.py $appname ${prj1} ${prj1}_${parser_time}.la "$rwstr1"
 fi
 #rm ${prj1}_${parser_time}*
 #rm ${prj2}_${parser_time}*

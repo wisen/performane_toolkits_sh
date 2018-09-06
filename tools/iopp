@@ -1,0 +1,124 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for calc the io use the raw data which collected by iotop
+# Date: 2017-07-13
+
+. color.u
+
+# the iopp data sample
+#  pid    rchar    wchar    syscr    syscw      rkb      wkb     cwkb command
+#  213        0        6        0        0       24        0        0 /system/bin/surfaceflinger
+#  682        4        4        0        0      132        0        0 system_server
+# 2156        0        8        0        0       96        0        0 com.android.settings
+# 3535       51        0        0        0        0        0        0 //data/iopp_32
+
+# step1, collect the io data
+#        adb shell //data/iopp_32 -ci -k 1 20 | tee -a x559_locale_01.txt
+#        iopp -r x559_locale_01.txt
+# step2, calc the io based on the raw data collected on step1
+#        iopp -c x559_locale_01.txt
+
+function usage {
+    red "iopp -c|-r iodata_file"
+    space 2;green "step1, collect the io data"
+    space 4;echo "adb shell //data/iopp_32 -ci -k 1 20 | tee -a x559_locale_01.txt"
+    space 4;echo "iopp -r x559_locale_01.txt"
+    space 2;green "step2, calc the io based on the raw data collected on step1"
+    space 4;echo "iopp -c x559_locale_01.txt"
+}
+
+
+function collect_iopp_data {
+    tmp_file=$1
+    tmp_time=$2
+    if [ ! -n "$tmp_file" ];then
+        tmp_file=tmp.iopp.$(date +%s)
+    fi
+
+    if [ ! -n "$tmp_time" ];then
+        tmp_time=20
+    fi
+    adb remount
+    adb push ${SCRIPT_ROOT}/prebuilt_tools/iopp_32 //data
+    adb shell chmod a+x //data/iopp_32
+    adb shell //data/iopp_32 -ci -k 1 $tmp_time | tee -a $tmp_file
+}
+
+function calc_iopp_data {
+    raw_data_file=$1
+    if [ ! -n "$raw_data_file" ];then
+        red "you must enter a record file"
+        usage
+        exit
+    fi
+
+    lines=$(cat $raw_data_file|grep pid|wc -l)
+
+    sed '/pid/d' ${raw_data_file} > ${raw_data_file}.tmp
+
+    blue_white "rchar\twchar\tsyscr\tsyscw\tread\twrite\tpname"
+
+    for i in $(cat ${raw_data_file}.tmp | awk '{print $9}' | sort | uniq);
+    do
+        cat ${raw_data_file}.tmp |grep -w $i|awk -v pname=$i '{rchars=rchars+$2;wchars=wchars+$3;syscrs=syscrs+$4;syscws=syscws+$5;reads=reads+$6;writes=writes+$7;} END{printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\n", rchars, wchars, syscrs, syscws, reads, writes, pname);}';
+    done | tee ${raw_data_file}.result.tmp ${raw_data_file}.result
+
+    echo
+
+    cat ${raw_data_file}.result.tmp | awk -v count=$lines '
+            {
+                rchars=rchars+$1;
+                wchars=wchars+$2;
+                syscrs=syscrs+$3;
+                syscws=syscws+$4;
+                sread=sread+$5;
+                swrite=swrite+$6;
+                num=num+1;
+            }
+            END {
+                printf("%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%s(%d)\n", rchars/1024, wchars/1024, syscrs, syscws, sread/1024, swrite/1024, "total", num);
+                printf("%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%s(MB/s)\n", rchars/1024/count, wchars/1024/count, syscrs/count, syscws/count, sread/1024/count, swrite/1024/count, "avg");
+            }
+        ' | tee -a ${raw_data_file}.result
+
+    rm ${raw_data_file}.tmp ${raw_data_file}.result.tmp
+}
+
+function study_iopp {
+(cat <<EOF
+1. iopp data sample
+      pid    rchar    wchar    syscr    syscw      rkb      wkb     cwkb command
+      213        0        6        0        0       24        0        0 /system/bin/surfaceflinger
+      682        4        4        0        0      132        0        0 system_server
+     2156        0        8        0        0       96        0        0 com.android.settings
+     3535       51        0        0        0        0        0        0 //data/iopp_32
+
+2. if you want to use iotop to capture the io data, you should build a root kernel base on enable bellow config
+    CONFIG_TASKSTATS=y
+    CONFIG_TASK_IO_ACCOUNTING=y
+    CONFIG_TASK_XACCT=y
+    CONFIG_TASK_DELAY_ACCT=y
+EOF
+)
+}
+
+if [ $# -lt 1 ];then
+    usage
+    exit
+fi
+
+if [ $1 = "-r" ];then
+    shift
+    collect_iopp_data $@
+    exit
+elif [ $1 = "-c" ];then
+    calc_iopp_data $2
+    exit
+elif [ $1 = "study" ];then
+    study_iopp
+    exit
+else
+    usage
+    exit
+fi
+

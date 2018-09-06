@@ -1,0 +1,67 @@
+#!/usr/bin/env python
+import os
+import math
+import numpy as np
+import subprocess
+import datetime
+import time
+import re
+import sys
+import pandas as pd
+import plotly.offline as py
+import plotly.graph_objs as go
+
+filename=sys.argv[1]
+summary_info=sys.argv[2]
+ratio_info=sys.argv[3]
+device_info=sys.argv[4]
+
+aa = []
+cnt = 0
+with open(filename) as file_object:
+	for line in file_object:
+		x = int(line)
+		if(x>0) and (x<512):
+			x=256
+		aa.append(x)
+		cnt=cnt+1
+
+#print(cnt)
+dy1 = 100
+dx1 = int(cnt/dy1) + 1
+i=0
+dcnt=dx1*dy1
+if(dcnt>cnt):
+	for i in range(cnt,dcnt):
+		aa.append(int(999))
+
+bb = []
+bb = np.array(aa).reshape(dx1,dy1)
+print(dx1)
+print(dy1)
+print(bb)
+
+xa = np.array(range(dx1))
+ya = np.array(range(dy1))
+print(xa)
+print(ya)
+print(len(bb))
+trace = go.Heatmap(
+			x=xa,
+			y=ya[::-1],
+			z=bb,
+			#colorscale='Viridis',
+			colorscale='Jet',
+			)
+data=[trace]
+
+layout = go.Layout(
+	title='F2FS Fragments Info '+summary_info+" "+ratio_info,
+	#height = (len(segment["z"])//10)*8,
+	xaxis = dict(title = "segment row"),
+	yaxis = dict(title = "segment col"),
+)
+
+fig = go.Figure(data=data, layout=layout)
+output_filename="f2fs_fragment_v2_"+device_info+".html"
+py.plot(fig,filename=output_filename)

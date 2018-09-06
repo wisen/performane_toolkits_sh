@@ -1,0 +1,102 @@
+#!/usr/bin/env python
+
+import numpy as np
+import sys
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import savefig 
+
+color_table=['red','green','blue','cyan','yellow','purple']
+
+def parseFile(para):
+	filename=para[0]
+	casename=para[1]
+
+	filep=open(filename,'rb')
+	i=0
+	pause_arr=[]
+	total_arr=[]
+	pause_sum=0
+	total_sum=0
+	for line in filep.readlines():
+		type,pause,total=line.split()
+		pause_arr.append(float(pause))
+		total_arr.append(float(total))
+		i=i+1
+		pause_sum=pause_sum+float(pause)
+		total_sum=total_sum+float(total)
+
+	return {'casename':casename,'parr':pause_arr,'psum':pause_sum,'tarr':total_arr,'tsum':total_sum}
+
+argvs=int((len(sys.argv)-1)/2)
+all_data=[[]]*argvs
+for i in range(1, argvs+1, 1):
+	tmp_case=[sys.argv[2*i-1],sys.argv[2*i]]
+	all_data[i-1]=parseFile(tmp_case)
+
+# find the max in all pause_arr
+print("=========")
+tmp_parr=[]
+tmp_tarr=[]
+for i in range(0, argvs, 1):
+	tmp_pmax=max(all_data[i].get('parr'))
+	tmp_parr.append(tmp_pmax)
+	tmp_tmax=max(all_data[i].get('tarr'))
+	tmp_tarr.append(tmp_tmax)
+pmax=max(tmp_parr)
+tmax=max(tmp_tarr)
+
+plt.figure(1) # 创建图表1, show pause arr
+plt.ylim(0,pmax)
+ymin, ymax = plt.ylim()
+plt.xlabel("times")
+plt.ylabel("time(ms)")
+case_str=""
+for i in range(0, argvs, 1):
+	plt.plot(all_data[i].get('parr'), color=color_table[i], label=all_data[i].get('casename'))
+	parr_cnt=len(all_data[i].get('parr'))
+	parr_avg=all_data[i].get('psum')/parr_cnt
+	plt.text(50,ymax-100-100*i,all_data[i].get('casename')+": "+str(parr_avg))
+	plt.plot([0,parr_cnt], [parr_avg,parr_avg], color='black')
+	case_str=case_str+" "+all_data[i].get('casename')
+plt.legend(loc='upper right')
+plt.title("pause: "+case_str)
+	
+plt.figure(2) # 创建图表2, show total arr
+plt.ylim(0,tmax)
+ymin, ymax = plt.ylim()
+plt.xlabel("times")
+plt.ylabel("time(ms)")
+case_str=""
+for i in range(0, argvs, 1):
+	plt.plot(all_data[i].get('tarr'), color=color_table[i], label=all_data[i].get('casename'))
+	total_cnt=len(all_data[i].get('tarr'))
+	total_avg=all_data[i].get('tsum')/total_cnt
+	plt.text(50,ymax-100-100*i,all_data[i].get('casename')+": "+str(total_avg))
+	plt.plot([0,total_cnt], [total_avg,total_avg], color='black')
+	case_str=case_str+" "+all_data[i].get('casename')
+plt.legend(loc='upper right')
+plt.title("total: "+case_str)
+
+plt.show()
+# plt.ylim(0,4000);
+# ymin, ymax = plt.ylim()
+# plt.plot(a3, color='green', label='total')
+# plt.plot(a2, color='red', label='pause')
+# total_x=[0, i]
+# total_y=[total_avg, total_avg]
+# plt.plot(total_x, total_y, color='yellow', label='total_avg')
+# pause_x=[0, i]
+# pause_y=[pause_avg, pause_avg]
+# plt.plot(pause_x, pause_y, color='blue', label='pause_avg')
+# plt.legend(loc='upper left')
+
+# plt.text(650,ymax-80,"total    gc: "+str(i))
+# plt.text(650,ymax-160,"total pause(s): "+str(pause_sum/1000))
+# plt.text(650,ymax-240,"total  time(s): "+str(total_sum/1000))
+# plt.text(650,ymax-320,"total  avg(ms): "+str(total_avg))
+# plt.text(650,ymax-400,"pause  avg(ms): "+str(pause_avg))
+# plt.title("GC case: "+casename)
+# plt.xlabel("times")
+# plt.ylabel("time(ms)")
+# plt.show()
+# savefig(casename+".pdf")

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+data_avail=`adb shell df -k|awk '/\/data/{if(match($6,"/data"))print $4;}'`
+data_used=`adb shell df -k|awk '/\/data/{if(match($6,"/data"))print $3;}'`
+
+data_total=$(($data_avail+$data_used))
+data_write_file=$(($data_total*95/100))
+
+count_1024k=0
+count_1024k=$(($data_write_file/1024))
+
+cloop1024k=$(($count_1024k/100))
+addcount1024k=200
+delcount1024k=100
+echo "1024k: $cloop1024k,$addcount1024k,$delcount1024k"
+
+echo "#####################"
+
+dirpath=/data/tmp/
+(cat <<EOF
+1024k: $cloop1024k,$addcount1024k,$delcount1024k
+
+for k in \$(seq 1 1 $cloop1024k);do
+for i in \$(seq 1 1 100);do dd if=/dev/urandom of=$dirpath\$((\$RANDOM*1000+\$RANDOM))_1024k.dat bs=1024k count=1;done
+done
+EOF
+)
+echo

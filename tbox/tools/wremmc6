@@ -1,9 +1,0 @@
-#!/bin/bash
-
-for k in $(seq 1 1 10000);do
-    disk_usage=`adb shell df -k|awk '/\/data/{if(match($6,"/data"))print $5;}'`
-    echo "Disk Usage: $disk_usage"
-    adb shell "//data/tmp/e4defrag_64 -c /data"
-    echo
-    sleep 20
-done

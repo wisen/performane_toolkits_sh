@@ -85,13 +85,10 @@ scriptpath="$basepath:$basepath/applist/:$basepath/bin/:$basepath/case/:$basepat
 PATH=\${scriptpath}:\${PATH}
 export SCRIPT_ROOT=${basepath}
 
-ASHELL_ROOT=\$SCRIPT_ROOT/tbox/
-ASHELL_VERSION=1.0.1
+ASHELL_ROOT=\$SCRIPT_ROOT/envconf/
 export ASHELL_ROOT
-export ASHELL_VERSION
 
-#eval "dircolors -b \$SCRIPT_ROOT/tbox/.DIR_COLORS"
-LS_COLORS=\$(dircolors -b \$ASHELL_ROOT/.DIR_COLORS|awk -F "'" 'NR==1{print \$2}')
+LS_COLORS=\$(dircolors -b \$ASHELL_ROOT/DIR_COLORS|awk -F "'" 'NR==1{print \$2}')
 export LS_COLORS
 
 alias ls='ls -F --color=auto --show-control-chars'
@@ -107,13 +104,9 @@ alias lh='ls -lh'
 alias l='lla'
 alias lls='l'
 alias grep='grep --color'
-alias exit="date > \$ASHELL_ROOT/.last_logout_time;reset;exit"
-#alias vim='vim -u \$ASHELL_ROOT/conf/.viminfo'
-alias vi='vim -u \$SCRIPT_ROOT/tbox/conf/_vimrc'
+alias vi='vim -u \$SCRIPT_ROOT/envconf/_vimrc'
 alias activate='source activate'
 alias rm='rm -rf'
-alias aShell='bash --rcfile \${SCRIPT_ROOT}/tbox/.myAndDevice.rc'
-alias as='aShell'
 alias cdroot='cd \${SCRIPT_ROOT}'
 alias cls='printf "\033c"'
 alias pelf='python \${SCRIPT_ROOT}/py/parser/elf.parser'
@@ -129,13 +122,9 @@ git config --global user.name "Wisen Wang"
 ulimit -c unlimited
 
 stty echo
-#PYTHON2_PATH="/$(echo $PYTHON2|sed 's/\\/\//g'|sed 's/://g')"
-#PYTHON3_PATH="/$(echo $PYTHON3|sed 's/\\/\//g'|sed 's/://g')"
-#export PATH=\${PYTHON3_PATH}:\${PYTHON3_PATH}/Scripts/:"\${PATH}":"\$ASHELL_ROOT/tools/"
-export PATH="\${PATH}":"\$ASHELL_ROOT/tools/"
 
 #####start define complete#########
-for tabfile in \$(find -L \$ASHELL_ROOT/conf/ -name *tab*)
+for tabfile in \$(ls \$ASHELL_ROOT/tab/*tab*)
 do
 	. \$tabfile
 done
@@ -212,9 +201,6 @@ export LD_LIBRARY_PATH=/usr/local/cuda-9.2/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY
 ###set cuda path end###
 
 PS1='\[\033[01;33m\]\u\[\033[00m\]\[\033[01;31m\][\[\033[00m\]\[\033[04;32m\]\t\[\033[00m\]\[\033[01;31m\]]\[\033[00m\]\[\033[35;40m\] aShell \[\033[00m\]\[\033[01;34m\]\w\[\033[00m\]\n\[\033[45;37m\]$\[\033[0m\]  '
-
-#export HOME=\$ASHELL_ROOT/home/
-#cd \$HOME
 
 # added by Anaconda3 installer
 export PATH="/home/$user/anaconda3/bin:$PATH"

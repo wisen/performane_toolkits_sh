@@ -1,0 +1,35 @@
+__cmd_record_memory() {
+	local _str cur
+	COMPREPLY=()
+	_get_comp_words_by_ref cur
+	
+	_str="mem kernel kernel2 vmstat vmstat2 top fps gfx app ksm mksm"
+	COMPREPLY=( $( compgen -W "$_str" -- "$cur" ) )
+}
+
+__cmd_app() {
+	local _str cur
+	COMPREPLY=()
+	_get_comp_words_by_ref cur
+}
+
+__cmd_ksm() {
+	local _str cur
+	COMPREPLY=()
+	_get_comp_words_by_ref cur
+}
+
+_tab_record_memory() {
+	case $COMP_CWORD in  
+    0)  
+        ;;  
+    1)   
+        eval __cmd_${COMP_WORDS[0]}  
+        ;;  
+    2|*)  
+        eval __cmd_${COMP_WORDS[1]}  
+        ;;  
+    esac  
+}
+
+complete -F _tab_record_memory record_memory

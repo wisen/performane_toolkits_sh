@@ -1,0 +1,287 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for calc the io use the raw data which collected by iotop
+# Date: 2017-07-20
+
+. color.u
+. math.u
+
+# io realted ftrace sample
+# block_bio_queue: 8,16 W 267288 + 8 [flush-8:16]
+#<event name>: <device major number>,<device minor number> <type of I/O operation> <sector number> + <amount of sectors> [kernel thread]
+
+#block_rq_complete: 8,16 W () 267280 + 16 [0]
+#<event name>: <device major number>,<device minor number> <type of I/O operation> __get_str(cmd)  <sector number> + <amount of sectors> [errors]
+
+
+ftrace_path=//sys/kernel/debug/tracing/
+__CMD="adb shell"
+
+function usage {
+    red "io_ftrace -r capture_times -f file"
+}
+
+function start_io_ftrace {
+    #$__CMD echo 0 > ${ftrace_path}tracing_enabled
+    #$__CMD echo 1 > ${ftrace_path}tracing_enabled
+    adb shell "echo 0 > ${ftrace_path}tracing_on"
+    #adb shell "echo stacktrace > ${ftrace_path}trace_options"
+    adb shell "echo nostacktrace > ${ftrace_path}trace_options"
+    adb shell "echo latency-format > ${ftrace_path}trace_options"
+    adb shell "echo 8192 > ${ftrace_path}buffer_size_kb"
+    adb shell "echo blk > ${ftrace_path}current_tracer"
+    adb shell "echo 1 > ${ftrace_path}events/block/enable"
+    adb shell "echo 1 > ${ftrace_path}tracing_on"
+}
+
+function stop_io_ftrace {
+    adb shell "echo 0 > ${ftrace_path}tracing_on"
+}
+
+function collect_io_ftrace {
+    local filename=$1
+    if [ -z $filename ];then
+       filename=.tmp_$(date +%s).ioftrace
+    fi
+    adb shell "cat ${ftrace_path}trace" > $filename
+}
+
+function clean_ftrace {
+    adb shell "echo  > ${ftrace_path}trace_options"
+}
+
+
+function study_io_ftrace {
+(cat <<EOF
+
+1. how to calc the elapsed time to complete the io operations
+      timestamp of block_rq_complete - timestamp of previous block_rq_issue
+
+2. there would be any errors in the block_rq_complete events, which can be revealed by the string between brackets [ ]
+
+3. If events of the type block_rq_requeue are observed, that could means the SAN or storage unit are not being able
+   to handle the I/O operations, due to a high traffic for example.
+
+4. The event block_bio_bounce means that it is not being possible to transfer data directly from the block I/O data
+   memory to the device driver memory. This could indicate a possible error in the configuration of the device driver
+   memory allocation.
+
+5. The events block_bio_backmerge, block_bio_frontmerge and block_plug mean that I/O requests are being aggregated
+   before being sent to the device driver. These events don't necessarily reveal a problem, considering the idea here
+   is to execute I/O in larger chunks in order to improve performance. But, on the other hand, if this behavior is good
+   or not will depend on how the other components are configured and if they match your application I/O profile.
+
+6. The number of in-flight I/O operations can be modified, considering sometimes is better to have the device queue
+   depth smaller than the scheduler depth:
+       # echo 256 > /sys/block/sdc/queue/nr_requests
+       # echo 128 > /sys/block/sdc/device/queue_depth
+
+7. The Kernel I/O scheduler may also affect these events(2-6). You can change it for each specific disk:
+       # echo cfq  > /sys/block/sdc/queue/scheduler
+       noop anticipatory deadline [cfq]
+
+8. If the application has an I/O profile in which read operations are more important than writes, it could be recommended
+   to increase the prefetch size, for example for the disk sdc:
+       # echo 2048 > /sys/block/sdc/queue/read_ahead_kb
+   The prefetch size can and must also be increased in the storage unit.
+
+9. Description of the block I/O events:
+    block_rq_abort - Abort Block Operation Request
+        @q: queue containing the block operation request
+        @rq: block IO operation request
+        Called immediately after pending block IO operation request. @rq in queue @q is aborted. The fields in the operation
+        request @rq can be examined to determine which device and sectors the pending operation would access.
+
+    block_rq_insert - Insert Block Operation Request into Queue
+        @q: target queue
+        @rq: block IO operation request
+        Called immediately before block operation request. @rq is inserted into queue @q. The fields in the operation request
+        @rq struct can be examined to determine which device and sectors the pending operation would access.
+
+    block_rq_issue - Issue Pending Block IO Request Operation to Device Driver
+        @q: queue holding operation
+        @rq: block IO operation operation request
+        Called when block operation request @rq from queue @q is sent to a device driver for processing.
+
+    block_rq_requeue - Place Block IO Request Back on a Queue
+        @q: queue holding operation
+        @rq: block IO operation request
+        The block operation request @rq is being placed back into queue @q. For some reason the request was not completed and
+        needs to be put back in the queue.
+
+    block_rq_complete - Block IO Operation Completed by Device Driver
+        @q: queue containing the block operation request
+        @rq: block operations request
+        The block_rq_complete tracepoint event indicates that some portion of operation request has been completed by the
+        device driver. If the @rq->bio is NULL, then there is absolutely no additonal work to do for the request. If @rq->bio
+        is non-NULL then there is additional work is required to complete the request.
+
+    block_bio_bounce - Used Bounce Buffer When Processing Block Operation
+        @q: queue holding the block operation
+        @bio: block operation
+        A bounce buffer was used to handle the block operation @bio in @q. This occurs when hardware limitations prevent a
+        direct transfer of data between the @bio data memory area and the IO device. Use of a bounce buffer requires extra
+        copying of data and decreases performance.
+
+    block_bio_complete - Completed All Work on the Block Operation
+        @q: queue holding the block operation
+        @bio: block operation completed
+        This tracepoint indicates there is no further work to do on this block IO operation @bio.
+
+    block_bio_backmerge - Merging Block Operation to the End of an Existing Operation
+        @q: queue holding operation
+        @bio: new block operation to merge
+        Merging block request @bio to the end of an existing block request in queue @q.
+
+    block_bio_frontmerge - Merging Block Operation to the beginning of an Existing Operation
+        @q: queue holding operation
+        @bio: new block operation to merge
+        Merging block IO operation @bio to the beginning of an existing block operation in queue @q.
+
+    block_bio_queue - Putting New Block IO Operation in Queue
+        @q: queue holding operation
+        @bio: new block operation
+        About to place the block IO operation @bio into queue @q.
+
+    block_getrq - Get a Free Request Entry in Queue for Block IO Operations
+        @q: queue for operations
+        @bio: pending block IO operation
+        @rw: low bit indicates a read (%0) or a write (%1)
+        A request struct for queue @q has been allocated to handle the block IO operation @bio.
+
+    block_sleeprq - Waiting to Get a Free Request Entry in Queue for Block IO Operation
+        @q: queue for operation
+        @bio: pending block IO operation
+        @rw: low bit indicates a read (%0) or a write (%1)
+        In the case where a request struct cannot be provided for queue @q, the process needs to wait for an request struct
+        to become available. This tracepoint event is generated each time the process goes to sleep waiting for request
+        struct become available.
+
+    block_plug - Keep Operations Requests in Request Queue
+        @q: request queue to plug
+        Plug the request queue @q. Do not allow block operation requests to be sent to the device driver. Instead, accumulate
+        requests in the queue to improve throughput performance of the block device.
+        block_unplug_timer - Timed Release of Operations Requests in Queue to Device Driver
+        @q: request queue to unplug
+        Unplug the request queue @q because a timer expired and allow block operation requests to be sent to the device driver.
+
+    block_unplug_io - Release of Operations Requests in Request Queue
+        @q: request queue to unplug
+        Unplug request queue @q because device driver is scheduled to work on elements in the request queue.
+
+    block_split - Split a Single bio struct into Two bio structs
+        @q: queue containing the bio
+        @bio: block operation being split
+        @new_sector: The starting sector for the new bio
+        The bio request @bio in request queue @q needs to be split into two bio requests. The newly created @bio request
+        starts at @new_sector. This split may be required due to hardware limitation such as operation crossing device
+        boundaries in a RAID system.
+
+    block_remap - Map Request for a Partition to the Raw Device
+        @q: queue holding the operation
+        @bio: revised operation
+        @dev: device for the operation
+        @from: original sector for the operation
+        An operation for a partion on a block device has been mapped to the raw block device.
+
+10. RWBS field:
+    D - discard
+    W - write
+    R - read
+    N - None of the above
+
+    F - FUA
+    A - readahead
+    S - sync
+    M - metadata
+
+    static inline void fill_rwbs(char *rwbs, struct blk_io_trace *t)
+    {
+        int w = t->action & BLK_TC_ACT(BLK_TC_WRITE);
+        int a = t->action & BLK_TC_ACT(BLK_TC_AHEAD);
+        int s = t->action & BLK_TC_ACT(BLK_TC_SYNC);
+        int m = t->action & BLK_TC_ACT(BLK_TC_META);
+        int d = t->action & BLK_TC_ACT(BLK_TC_DISCARD);
+        int f = t->action & BLK_TC_ACT(BLK_TC_FLUSH);
+        int u = t->action & BLK_TC_ACT(BLK_TC_FUA);
+        int i = 0;
+
+        if (f)
+                rwbs[i++] = 'F'; /* flush */
+
+        if (d)
+                rwbs[i++] = 'D';
+        else if (w)
+                rwbs[i++] = 'W';
+        else if (t->bytes)
+                rwbs[i++] = 'R';
+        else
+                rwbs[i++] = 'N';
+
+        if (u)
+                rwbs[i++] = 'F'; /* fua */
+        if (a)
+                rwbs[i++] = 'A';
+        if (s)
+                rwbs[i++] = 'S';
+        if (m)
+                rwbs[i++] = 'M';
+
+        rwbs[i] = '\0';
+    }
+
+11. NCQ(Native Command Queuing)
+    In computing, Native Command Queuing (NCQ) is an extension of the Serial ATA protocol allowing hard disk drives to
+    internally optimize the order in which received read and write commands are executed. This can reduce the amount of
+    unnecessary drive head movement, resulting in increased performance (and slightly decreased wear of the drive) for
+    workloads where multiple simultaneous read/write requests are outstanding, most often occurring in server-type
+    applications.
+
+12. Write barrier
+    In operating systems, write barrier is a mechanism for enforcing a particular ordering in a sequence of writes to a
+    storage system in a computer system. For example, a write barrier in a file system is a mechanism (program logic)
+    that ensures that in-memory file system state is written out to persistent storage in the correct order.
+
+13. increasing queue size(nr_requests) was very helpful for HDD, but not helpful for SSD.
+    refer to: https://yoshinorimatsunobu.blogspot.hk/2009/04/linux-io-scheduler-queue-size-and.html
+
+EOF
+)
+}
+
+
+if [ $1 = "-r" ];then
+    checkInt $2
+    if [ $# -gt 2 ];then
+        if [ $3 = "-f" ];then
+            _filename=$4
+            if [ -z $_filename ];then
+                _filename=.tmp_$(date +%s).ioftrace
+            fi
+        else
+            usage
+            exit
+        fi
+    fi
+    red "start your application and press any key to continue......"
+    read -n 1
+    start_io_ftrace
+    #green "start $(date +%Y%m%d%H%M%S)"
+    sleep $2
+    #green "end $(date +%Y%m%d%H%M%S)"
+    stop_io_ftrace
+    collect_io_ftrace $_filename
+    clean_ftrace
+    exit
+elif [ $1 = "-c" ];then
+    calc_iopp_data $2
+    exit
+elif [ $1 = "study" ];then
+    study_io_ftrace
+    exit
+else
+    usage
+    exit
+fi
+
+

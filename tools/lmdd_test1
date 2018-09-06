@@ -1,0 +1,189 @@
+#!/bin/bash
+
+. color.u
+
+test_cycles=10
+tmp_wfile=tmp".$(date +%s)"".lmddtstw"
+tmp_rfile=tmp".$(date +%s)"".lmddtstr"
+result_file=lmddtst".$(date +%s)"".log"
+
+#adb shell stop
+#adb shell sleep 20
+
+red "start write test: "$(date) | tee ${result_file}
+
+#echo "write" | tee ${result_file}
+str=""
+title1=""
+title2=""
+
+for((i=1;i<=$test_cycles;i++))
+do
+    data_str=""
+    for sz in 8k 16k 32k 64k 128k 256k 512k 1m 2m 4m 8m 16m 32m 64m 128m 256m
+    do
+
+        data_speed=$(adb shell //data/lmdd if=internal of=//data/dumb move=$sz fsync=1|awk '{printf("%0.2f",$6);}')
+        #data_speed=$(adb shell //data/lmdd if=internal of=//data/dumb move=$sz fsync=1|awk -v cou=$i '{printf("%d\\t%0.2f",cou,$6);}')
+        #sdcard_speed=$(adb shell //data/lmdd if=internal of=//sdcard/dumb move=$sz fsync=1|awk '{printf("%0.2f",$6);}')
+        #data_str=${data_str}"${data_speed}\t${sdcard_speed}\t"
+        #data_str=${data_str}"${data_speed}\t"
+        if [ 1 -eq $i ];then
+            if [ "8k" != $sz ];then
+                title1=${title1}"\t"$sz
+            else
+                title1="Times\t8k"
+            fi
+            #title2=$title2"data\tsdcard\t"
+        fi
+
+		if [ "8k" == "$sz" ];then
+        	data_str="$i\t${data_speed}\t"
+		else
+        	data_str=${data_str}"${data_speed}\t"
+		fi
+
+    done
+
+    if [ 1 -eq $i ];then
+        echo -e $title1 | tee -a ${result_file}
+        #echo -e $title2 | tee -a ${result_file}
+    fi
+
+    echo -e $data_str | tee -a $tmp_wfile
+done
+
+cat $tmp_wfile >> ${result_file}
+
+str=$(cat ${tmp_wfile} |awk -v count=$test_cycles '{
+                                                    s1=s1+$1;
+                                                    s2=s2+$2;
+                                                    s3=s3+$3;
+                                                    s4=s4+$4;
+                                                    s5=s5+$5;
+                                                    s6=s6+$6;
+                                                    s7=s7+$7;
+                                                    s8=s8+$8;
+                                                    s9=s9+$9;
+                                                    s10=s10+$10;
+                                                    s11=s11+$11;
+                                                    s12=s12+$12;
+                                                    s13=s13+$13;
+                                                    s14=s14+$14;
+                                                    s15=s15+$15;
+                                                    s16=s16+$16;
+														s17=s17+$17;
+                                                    }
+                                                    END{
+                                                    printf("%s\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f",
+                                                    "Avg",
+                                                    s2/count,
+                                                    s3/count,
+                                                    s4/count,
+                                                    s5/count,
+                                                    s6/count,
+                                                    s7/count,
+                                                    s8/count,
+                                                    s9/count,
+                                                    s10/count,
+                                                    s11/count,
+                                                    s12/count,
+                                                    s13/count,
+                                                    s14/count,
+                                                    s15/count,
+														s16/count,
+                                                    s17/count);
+                                                    }')
+
+echo -e $str"\n" | tee -a ${result_file}
+
+echo | tee -a ${result_file}
+echo | tee -a ${result_file}
+
+red "start read test: "$(date)
+
+echo "read" | tee -a ${result_file}
+str=""
+title1=""
+title2=""
+
+for((i=1;i<=$test_cycles;i++))
+do
+    data_str=""
+    for sz in 8k 16k 32k 64k 128k 256k 512k 1m 2m 4m 8m 16m 32m 64m 128m 256m
+    do
+        adb shell "echo 3 > //proc/sys/vm/drop_caches"
+        data_speed=$(adb shell //data/lmdd if=//data/dumb of=internal move=$sz fsync=1|awk '{printf("%0.2f",$6);}')
+        #adb shell "echo 3 > //proc/sys/vm/drop_caches"
+        #sdcard_speed=$(adb shell //data/lmdd if=//sdcard/dumb of=internal move=$sz fsync=1|awk '{printf("%0.2f",$6);}')
+        #data_str=${data_str}"${data_speed}\t${sdcard_speed}\t"
+        #data_str=${data_str}"${data_speed}\t"
+		if [ 1 -eq $i ];then
+            if [ "8k" != $sz ];then
+                title1=${title1}"\t"$sz
+            else
+                title1="Times\t8k"
+            fi
+            #title2=$title2"data\tsdcard\t"
+        fi
+
+		if [ "8k" == "$sz" ];then
+        	data_str="$i\t${data_speed}\t"
+		else
+        	data_str=${data_str}"${data_speed}\t"
+		fi
+    done
+
+    if [ 1 -eq $i ];then
+        echo -e $title1 | tee -a ${result_file}
+        #echo -e $title2 | tee -a ${result_file}
+    fi
+
+    echo -e $data_str | tee -a $tmp_rfile
+done
+
+cat $tmp_rfile >> ${result_file}
+
+str=$(cat ${tmp_rfile} |awk -v count=$test_cycles '{
+                                                    s1=s1+$1;
+                                                    s2=s2+$2;
+                                                    s3=s3+$3;
+                                                    s4=s4+$4;
+                                                    s5=s5+$5;
+                                                    s6=s6+$6;
+                                                    s7=s7+$7;
+                                                    s8=s8+$8;
+                                                    s9=s9+$9;
+                                                    s10=s10+$10;
+                                                    s11=s11+$11;
+                                                    s12=s12+$12;
+                                                    s13=s13+$13;
+                                                    s14=s14+$14;
+                                                    s15=s15+$15;
+                                                    s16=s16+$16;
+														s17=s17+$17;
+                                                    }
+                                                    END{
+                                                    printf("%s\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f\\t%0.2f",
+                                                    "Avg",
+                                                    s2/count,
+                                                    s3/count,
+                                                    s4/count,
+                                                    s5/count,
+                                                    s6/count,
+                                                    s7/count,
+                                                    s8/count,
+                                                    s9/count,
+                                                    s10/count,
+                                                    s11/count,
+                                                    s12/count,
+                                                    s13/count,
+                                                    s14/count,
+                                                    s15/count,
+														s16/count,
+                                                    s17/count);
+                                                    }')
+
+echo -e $str"\n" | tee -a ${result_file}
+
+red "end test: "$(date)

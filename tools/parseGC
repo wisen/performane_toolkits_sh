@@ -36,4 +36,4 @@ grep "GC freed" $1 |awk -F "," '
 						}
 						' > $logfile_parseGC
 
-python $SCRIPT_ROOT/py/parser/gc2.txt $logfile_parseGC $2
+python $SCRIPT_ROOT/py/gc2.txt $logfile_parseGC $2
