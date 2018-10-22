@@ -18,6 +18,7 @@ function usage {
 	echo
 	red monitor usage:
 	red "\t" monitor meminfo
+	red "\t" monitor meminfoO
 	red "\t" monitor vmstat
 	red "\t" monitor misc
 	red "\t" monitor zoneinfo

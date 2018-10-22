@@ -8,7 +8,8 @@ set ai "或者 set autoindent vim使用自动对齐，也就是把当前行的�
 set si "或者 set smartindent 依据上面的对齐格式，智能的选择对齐方式
 set sw=4 "或者 set shiftwidth 设置当行之间交错时使用4个空格
 set incsearch "设置增量搜索,这样的查询比较smart 
-set showmatch "高亮显示匹配的括号 
+set showmatch "高亮显示匹配的括号
+set modifiable "设置vi可编辑
 set matchtime=5 "匹配括号高亮时间(单位为 1/10 s) set ignorecase "在搜索的时候忽略大小写 
 syntax on "高亮语法
 "colorscheme desert

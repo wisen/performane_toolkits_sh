@@ -53,15 +53,17 @@ fi
 passwd=$1
 
 ####install flag####
-prepare_install=true
-common_install=true
+prepare_install=false
+common_install=false
 deb_install=false
-android_install=true
-latext_install=true
-opencv_install=true
-iotool_install=true
-vim_install=true
-pylib_install=true
+android_install=false
+latext_install=false
+opencv_install=false
+iotool_install=false
+vim_install=false
+pylib_install=false
+armtools_install=false
+misc_install=true
 ####install flag####
 
 inx=0
@@ -118,7 +120,8 @@ fi
 ##common used start
 if $common_install;then
 	blue "Start install some common packages....."
-	for package in terminator fcitx redshift redshift-gtk uget rdesktop shutter wxhexeditor wine;
+	for package in terminator fcitx redshift redshift-gtk uget rdesktop shutter wxhexeditor wine silversearcher-ag \
+					kolourpaint4 dos2unix pstack qemu-system-arm trace-cmd kernelshark gcc-arm-linux-gnueabi repo;
 	do
 	which $package
 	if [ $? -ne 0 ];then
@@ -148,6 +151,44 @@ if $common_install;then
 	echo
 fi
 ##common used end
+
+##misc install start
+if $misc_install;then
+	blue "Start misc install ....."
+	for package in notepadqq;
+	do
+	which $package
+	if [ $? -ne 0 ];then
+		echo $passwd |sudo -S add-apt-repository ppa:notepadqq-team/notepadqq && \
+		echo $passwd |sudo -S apt-get update && \
+		echo $passwd |sudo -S apt-get install notepadqq
+		if [ $? -ne 0 ];then
+			red "$package install fail"
+			apt_fix
+			##reinstall it again start
+			echo $passwd |sudo -S add-apt-repository ppa:notepadqq-team/notepadqq && \
+			echo $passwd |sudo -S apt-get update && \
+			echo $passwd |sudo -S apt-get install notepadqq	
+			if [ $? -ne 0 ];then
+				red "$package install fail"
+				record_failinfo $package
+				echo
+			else
+				green "$package install sucess"
+				echo
+			fi
+			##reinstall it again end
+			echo
+		else
+			green "$package install sucess"
+			echo
+		fi
+	fi
+	done
+	blue "End of misc install ....."
+	echo
+fi
+##misc install end
 
 ##deb install start
 if $deb_install;then
@@ -284,7 +325,7 @@ fi
 ##install iotool related start####
 if $iotool_install;then
 	blue "Start install some io realted packages....."
-	for package in blktrace;
+	for package in blktrace mbw itop f2fs-tools crash fio cgroup-tools;
 	do
 
 		echo $passwd |sudo -S apt-get install -y $package	
@@ -395,6 +436,40 @@ if $pylib_install;then
 	echo
 fi
 ##install python lib related end####
+
+##install armtools start####
+if $armtools_install;then
+	blue "Start install arm tools....."
+	for package in gcc-arm-linux-gnueabihf;
+	do
+
+		echo $passwd |sudo -S apt-get install -y $package	
+		if [ $? -ne 0 ];then
+			red "$package install fail"
+			apt_fix
+			##reinstall it again start
+			echo $passwd |sudo -S apt-get install -y $package	
+			if [ $? -ne 0 ];then
+				red "$package install fail"
+				record_failinfo $package
+				echo
+			else
+				green "$package install sucess"
+				echo
+			fi
+			##reinstall it again end
+			echo
+		else
+			green "$package install sucess"
+			echo
+		fi
+
+	done
+
+	blue "End of install arm tools....."
+	echo
+fi
+##install armtools end####
 
 ##summary all failed info start###
 if [ $inx -gt 0 ];then
