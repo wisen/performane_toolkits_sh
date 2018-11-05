@@ -45,6 +45,7 @@ class FragmentUI:
 			status_str="device["+dev_sn+"]: \n"
 			status_str = status_str + "df: " + str(self.devices[dev_sn].storage)+"\n"
 			status_str = status_str + "fs: " + str(self.devices[dev_sn].fs) + "\n"
+			status_str = status_str + "crypt: " + str(self.devices[dev_sn].crypt) + "\n"
 			status_str = status_str + "frag: " + str(self.devices[dev_sn].frag)+"\n\n"
 			status_str = status_str + "wrthreads: " + str(self.devices[dev_sn].wrthreads) + "\n"
 			status_str = status_str + "wrdelay: " + str(self.devices[dev_sn].wrdelay) + "\n"
@@ -57,7 +58,6 @@ class FragmentUI:
 			status_str = status_str + "stop_wr: " + str(self.devices[dev_sn].stop_wr) + "\n"
 			status_str = status_str + "stop_del: " + str(self.devices[dev_sn].stop_del) + "\n"
 			status_str = status_str + "sleeptime: " + str(self.devices[dev_sn].sleeptime) + "\n"
-			status_str = status_str + "dminx: " + str(self.devices[dev_sn].dminx) + "\n"
 			self.scr.insert(END,status_str)
 		else:
 			return
@@ -72,6 +72,7 @@ class FragmentUI:
 			status_str="device["+dev_sn+"]: \n"
 			status_str=status_str+"df: "+str(self.devices[dev_sn].storage)+"\n"
 			status_str = status_str + "fs: " + str(self.devices[dev_sn].fs) + "\n"
+			status_str = status_str + "crypt: " + str(self.devices[dev_sn].crypt) + "\n"
 			status_str=status_str+"frag: "+str(self.devices[dev_sn].frag)+"\n\n"
 			status_str = status_str + "wrthreads: " + str(self.devices[dev_sn].wrthreads) + "\n"
 			status_str = status_str + "wrdelay: " + str(self.devices[dev_sn].wrdelay) + "\n"
@@ -84,7 +85,6 @@ class FragmentUI:
 			status_str = status_str + "stop_wr: " + str(self.devices[dev_sn].stop_wr) + "\n"
 			status_str = status_str + "stop_del: " + str(self.devices[dev_sn].stop_del) + "\n"
 			status_str = status_str + "sleeptime: " + str(self.devices[dev_sn].sleeptime) + "\n"
-			status_str = status_str + "dminx: " + str(self.devices[dev_sn].dminx) + "\n"
 			self.scr.insert(END,status_str)
 		else:
 			return

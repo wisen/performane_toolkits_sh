@@ -26,7 +26,6 @@ class RLKDevice():
 		d.init()
 
 		if offline:
-			self.dminx = "0"
 			self.db = db
 			self.db.connect()
 			self.cmd = "select * from deviceinfo order by stime desc limit 1"
@@ -55,10 +54,13 @@ class RLKDevice():
 			self.status = "online"
 			self.ratio = 0.0
 			self.segment = {"0":0, "512":0, "z":[]}
-			self.dminx = "0"
+			self.crypt = "encrypted";
 			self.fs = "f2fs"
-			self.query_dminx()
+			self.fsinfo_path = " "
+			self.device_name = " "
+			self.query_cryptstate()
 			self.query_filesystem()
+			self.query_device_name()
 
 	def load_config(self):
 		if not os.path.exists(self.ini_file):
@@ -145,22 +147,46 @@ class RLKDevice():
 
 		return self.fs
 
-	def query_dminx(self):
-		#adb shell mount|grep "\/data "|awk '{print $1}'
-		cmd = ["adb", "-s", self.dev_sn, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
+	def query_cryptstate(self):
+		#adb shell mount|grep "\/data "|cut -d " " -f 5
+		cmd = ["adb", "-s", self.dev_sn, "shell", "getprop", "ro.crypto.state"]
 		try:
 			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		except OSError as e:
 			print(e)
 			return None
-		
-		cmd_out = bytes.decode(proc.stdout.read().split()[0])[-1]
-		self.dminx = cmd_out
 
-		return self.dminx
+		cmd_out = bytes.decode(proc.stdout.read().split()[0])
+		self.crypt = cmd_out
+
+		return self.crypt		
+
+	def query_device_name(self):
+		if self.crypt == "unencrypted":
+			cmd = ["adb", "-s", self.dev_sn, "shell", "df", "-h", "|", "grep", "\/dev\/block\/mmcblk", "|", "grep", "\/data", "|", "cut", "-d", " ", "-f", "1", "|", "cut", "-d", "/", "-f", "4"]
+			try:
+				proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			except OSError as e:
+				print(e)
+				return None
+		else:
+			cmd = ["adb", "-s", self.dev_sn, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data", "|", "cut", "-d", " ", "-f", "1", "|", "cut", "-d", "/", "-f", "4"]
+			try:
+				proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			except OSError as e:
+				print(e)
+				return None
+		cmd_out = bytes.decode(proc.stdout.read().split()[0])
+		self.device_name = cmd_out
+		if "f2fs" == self.fs:
+			self.fsinfo_path = "/proc/fs/f2fs/" + self.device_name + "/"
+		else:
+			self.fsinfo_path = "/proc/fs/ext4/" + self.device_name + "/"
+		return self.device_name
 
 	def query_storage(self):
-		cmd = ["adb", "-s", self.dev_sn, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data"]
+		tmp_path = "/dev/block/" + self.device_name
+		cmd = ["adb", "-s", self.dev_sn, "shell", "df", "-h", "|", "grep", tmp_path, "|", "grep", "\/data"]
 		try:
 			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		except OSError as e:
@@ -311,7 +337,7 @@ class RLKDevice():
 	def calc_fragment_ratio(self):
 		self.segment= {"0":0, "512":0, "z":[]}
 		
-		path = "/proc/fs/f2fs/dm-"+self.dminx+"/segment_info"
+		path = self.fsinfo_path + "/segment_info"
 		cmd = ["adb", "-s", self.dev_sn, "shell", "cat", path]
 		d.d("["+self.dev_sn+"]: calc_fragment_ratio....")
 		try:

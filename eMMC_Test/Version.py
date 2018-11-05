@@ -1,5 +1,5 @@
 name = "eMMC Test Tool"
-version = "V2.1"
+version = "V2.2"
 author = "Wisen Wang"
 email = "wisen.wang.ah@gmail.com"
 github = "https://github.com/wisen"
