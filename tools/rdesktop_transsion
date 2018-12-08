@@ -1,2 +1,2 @@
 #!/bin/bash
-rdesktop -u reallytek.com\\wanbin.wang -p Vv123456 -f -a 32 10.150.148.143 -g 1920x1030 -r clipboard:PRIMARYCLIPBOARD -r disk:ubuntu1604=/home/wisen/test/folder_for_win > /dev/null 2>&1 &
+rdesktop -u TRANSSION\\wanbin.wang -p Bb123456 -f -a 32 10.150.150.29 -g 1850x1030 -r clipboard:PRIMARYCLIPBOARD -r disk:ubuntu1604=/home/wisen/test/folder_for_win > /dev/null 2>&1 &

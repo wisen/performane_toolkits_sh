@@ -1,0 +1,27 @@
+#!/bin/bash
+
+. os.u
+. android.u
+. color.u
+
+function kill_monkey {
+
+    monkey_pid=$(adb shell ps -A| grep -m 1 -i "monkey"|awk '{print $2}')
+    adb shell kill -9 $monkey_pid
+}
+
+trap kill_monkey 2
+
+if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
+    adb shell setprop sys.audio.monkeycontrl 1
+fi
+
+monkey_test_start_time=`date "+%Y%m%d%H%M%S"`
+logfile_monkey_test=logfile_actions_monkey_test.${monkey_test_start_time}.txt
+adb shell monkey --ignore-crashes --ignore-timeouts --throttle 500 --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes 10000000 > $logfile_monkey_test
+
+if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
+    adb shell setprop sys.audio.monkeycontrl 0
+fi
+
+trap : 2

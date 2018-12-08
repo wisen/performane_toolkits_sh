@@ -10,6 +10,33 @@ function dump_misc {
 		adb root > .null
 		adb wait-for-device
 	fi
+	meminfo_text=$(adb shell dumpsys -t 30 meminfo)
+
+	brand_name=`adb shell getprop ro.product.brand`
+	if [ -z "$brand_name" ]; then 
+    	brand_name=`adb shell getprop ro.vendor.product.brand`
+	fi
+	transsion_brands="Infinix \
+				Tecno \
+				Itel"
+	transsion_brands=($transsion_brands)
+	for brand in "${transsion_brands[@]}";do
+		if [ "$brand_name" == "$brand" ];then
+			transsion_product=true
+			break
+		else
+			transsion_product=flase
+		fi
+	done
+
+	product_name=`adb shell getprop ro.vendor.product.name`
+	if [ -z "$product_name" ]; then 
+    	product_name=`adb shell getprop ro.product.name`
+	fi	
+	device_name=`adb shell getprop ro.vendor.product.device`
+	if [ -z "$device_name" ]; then 
+    	device_name=`adb shell getprop ro.product.device`
+	fi
 
 	echo
 	blue "#################Production INFO##################"
@@ -27,28 +54,30 @@ function dump_misc {
 	echo -e "Build Type:\c";space 19;green "${os_build_vesion}(${root_str})"
 	echo -e "Build Production:\c";space 13;green "$os_build_product"
 	echo -e "Build number:\c";space 17;green "$os_build_displayid"
-	echo -e "Name:\c";space 25;green `adb shell getprop ro.vendor.product.name`
-	echo -e "Brand:\c";space 24;green `adb shell getprop ro.vendor.product.brand`
+	echo -e "Name:\c";space 25;green $product_name
+	echo -e "Brand:\c";space 24;green $brand_name
 	echo -e "Model:\c";space 24;green `adb shell getprop ro.product.model`
-	echo -e "Device:\c";space 23;green `adb shell getprop ro.vendor.product.device`
+	echo -e "Device:\c";space 23;green $device_name
 	echo -e "Manufacturer:\c";space 17;green `adb shell getprop ro.vendor.product.manufacturer`
 	echo -e "Custom OS:\c";space 20;green `adb shell getprop ro.os_product.version`"("`adb shell getprop ro.os.version.release`")"
 	echo -e "SerialNo:\c";space 21;green `adb shell getprop ro.serialno`
 	echo
 
-	blue "#################DDR INFO##################"
+	
 	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
+		blue "#################DDR INFO##################"
 		yellow "Current:"
 		echo "$(adb shell cat ///sys/devices/platform/10012000.dvfsrc/helio-dvfsrc/dvfsrc_dump|grep '^DDR \|^Vcore ')"
 		echo
 		yellow "DDR opp table:"
 		adb shell cat ///sys/devices/platform/10012000.dvfsrc/helio-dvfsrc/dvfsrc_opp_table
 		echo 
-	else
-		red "User Release and non-root, no DDR related info."
+	#else
+	#	red "User Release and non-root, no DDR related info."
 	fi
-	blue "#################eMMC INFO##################"
-		if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
+	
+	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
+		blue "#################eMMC INFO##################"
 		yellow "eMMC MANUFACTOR:"
 		echo -e "Manfid:\c";space 23;green `adb shell cat ///sys/block/mmcblk0/device/manfid`
 		echo -e "OEMid:\c";space 24;green `adb shell cat ///sys/block/mmcblk0/device/oemid`
@@ -64,26 +93,34 @@ function dump_misc {
 		yellow "eMMC ios:"
 		echo "$(adb shell cat //sys/kernel/debug/mmc0/ios)"
 		echo 
-	else
-		red "User Release and non-root, no eMMC related info."
+	#else
+	#	red "User Release and non-root, no eMMC related info."
 	fi
 
 	blue "#################Feature INFO##################"
-	yellow "DEBUG:"
-	echo -e "Printk Level:\c";space 17;green `adb shell cat //proc/sys/kernel/printk`
-	echo
-	
-	yellow "Process Manager:"
-	echo -e "Clean:\c";space 24;green `adb shell getprop ro.proc_mgr.clean`
-	echo -e "Mode:\c";space 25;green `adb shell getprop ro.proc_mgr.mode`
-	echo -e "Sleepclean:\c";space 19;green `adb shell getprop ro.proc_mgr.sleepclean`
-	echo -e "Start:\c";space 24;green `adb shell getprop ro.proc_mgr.start`
-	echo -e "Support:\c";space 22;green `adb shell getprop ro.proc_mgr.support`
-	echo
-	
-	yellow "Pnp:"
-	echo -e "Support:\c";space 22;green `adb shell getprop ro.pnpmgr.support`
-	echo
+	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
+		yellow "DEBUG:"
+		echo -e "Printk Level:\c";space 17;green `adb shell cat //proc/sys/kernel/printk`
+		echo
+	fi
+
+	if [ "$transsion_product" == "true" ];then
+		yellow "Process Manager:"
+		echo -e "Clean:\c";space 24;green `adb shell getprop ro.proc_mgr.clean`
+		echo -e "Mode:\c";space 25;green `adb shell getprop ro.proc_mgr.mode`
+		echo -e "Sleepclean:\c";space 19;green `adb shell getprop ro.proc_mgr.sleepclean`
+		echo -e "Start:\c";space 24;green `adb shell getprop ro.proc_mgr.start`
+		echo -e "Support:\c";space 22;green `adb shell getprop ro.proc_mgr.support`
+		echo
+
+		yellow "Pnp:"
+		echo -e "Support:\c";space 22;green `adb shell getprop ro.pnpmgr.support`
+		echo
+
+		yellow "SleepMaster:"
+		echo -e "Support:\c";space 22;green `adb shell getprop ro.sleep_master`
+		echo
+	fi
 	
 	yellow "Framework:"
 	echo -e "Animation:\c";space 20;green `adb shell dumpsys window w -a|grep "Animation settings:"|awk '{print $4,$5,$6}'`
@@ -100,37 +137,37 @@ function dump_misc {
 	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
 		#echo "CPU HP:             "`adb shell "cat /proc/hps/enabled"`
 		#echo "Sched Features:     "`adb shell cat //sys/kernel/debug/sched_features`
+		echo -e "child_runs_first:\c";space 13;green `adb shell cat //proc/sys/kernel/sched_child_runs_first`
+		echo -e "sched_latency:\c";space 16;green `adb shell cat //proc/sys/kernel/sched_latency_ns`
+		echo -e "wakeup_granularity:\c";space 11;green `adb shell cat //proc/sys/kernel/sched_wakeup_granularity_ns`
+		echo -e "min_granularity:\c";space 14;green `adb shell cat //proc/sys/kernel/sched_min_granularity_ns`
 		echo
 	fi
-	echo -e "child_runs_first:\c";space 13;green `adb shell cat //proc/sys/kernel/sched_child_runs_first`
-	echo -e "sched_latency:\c";space 16;green `adb shell cat //proc/sys/kernel/sched_latency_ns`
-	echo -e "wakeup_granularity:\c";space 11;green `adb shell cat //proc/sys/kernel/sched_wakeup_granularity_ns`
-	echo -e "min_granularity:\c";space 14;green `adb shell cat //proc/sys/kernel/sched_min_granularity_ns`
-	echo
+
     echo -e "Freq:\c";space 25;green `adb shell cat //sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies`
-    echo -e "Gove:\c";space 25;green `adb shell cat //sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
+	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
+		echo -e "Gove:\c";space 25;green `adb shell cat //sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
+	fi
 	echo
 
-	blue "#################GPU info#####################"
+	
 	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
+		blue "#################GPU info#####################"
+		yellow "GPU Freq table:"
+		adb shell cat /proc/gpufreq/gpufreq_opp_dump
+		echo
+
+		yellow "Current status:"
+		adb shell cat /proc/gpufreq/gpufreq_var_dump|grep g_cur_opp_freq
 		echo
 	fi
-	yellow "GPU Freq table:"
-	adb shell cat /proc/gpufreq/gpufreq_opp_dump
-	echo
-	#yellow "GPU Power table:"
-	#adb shell cat /proc/gpufreq/gpufreq_power_dump
-	#echo
-	yellow "Current status:"
-	adb shell cat /proc/gpufreq/gpufreq_var_dump|grep g_cur_opp_freq
-	echo
 
 	blue "################Graphic related#################"
     echo `adb shell dumpsys SurfaceFlinger | grep GLES`
     echo
 
-    blue "#################IO Related#####################"
     if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
+		blue "#################IO Related#####################"
 		yellow "Basic IO:"
         echo -e "IO Scheduler:\c";space 17;green `adb shell cat //sys/block/mmcblk0/queue/scheduler`
         echo -e "nr_requests:\c";space 18;green `adb shell cat //sys/block/mmcblk0/queue/nr_requests`
@@ -165,47 +202,251 @@ function dump_misc {
 		echo -e "dirty_ratio:\c";space 18;green `adb shell "cat /proc/sys/vm/dirty_ratio"`
 		echo -e "dirty_writeback_centisecs:\c";space 4;green `adb shell "cat /proc/sys/vm/dirty_writeback_centisecs"`
 		echo -e "dirtytime_expire_seconds:\c";space 5;green `adb shell "cat /proc/sys/vm/dirtytime_expire_seconds"`
-    else
-        red "User Release and non-root, no io related info."
+    #else
+    #    red "User Release and non-root, no io related info."
     fi
     echo
 
 	blue "#################Memory INFO##################"
 	yellow "Memory:"
 	echo -e "Total:\c";space 24;green `adb shell cat //proc/meminfo|awk '/MemTotal:/{print $2/1024}'`" MB"
-	echo
 
-	yellow "Buddy info:"
-	adb shell cat /proc/buddyinfo
-	echo
+	cached_process_array=($(echo "$meminfo_text" |awk '/Total PSS by category:/{found=0} {if(found) print} /: Cached/{found=1}'|tr -d '\r'|tr -d ' '))
+	mem_available=($(adb shell cat //proc/meminfo| grep 'MemAvailable:'))
 
-	yellow "VM:"
-	echo -e "ext_free_bytes:\c";space 15;green `adb shell "cat /proc/sys/vm/extra_free_kbytes"`
-	echo -e "extfrag_threshold:\c";space 12;green `adb shell "cat /proc/sys/vm/extfrag_threshold"`
-	echo -e "lowmem_reserve_ratio:\c";space 9;green `adb shell "cat /proc/sys/vm/lowmem_reserve_ratio"`
-	echo -e "min_free_kbytes:\c";space 14;green `adb shell "cat /proc/sys/vm/min_free_kbytes"`
-	echo -e "overcommit_kbytes:\c";space 12;green `adb shell "cat /proc/sys/vm/overcommit_kbytes"`
-	echo -e "overcommit_memory:\c";space 12;green `adb shell "cat /proc/sys/vm/overcommit_memory"`
-	echo -e "overcommit_ratio:\c";space 13;green `adb shell "cat /proc/sys/vm/overcommit_ratio"`
-	echo -e "swappiness:\c";space 19;green `adb shell "cat /proc/sys/vm/swappiness"`
-	echo -e "vfs_cache_pressure:\c";space 11;green `adb shell "cat /proc/sys/vm/vfs_cache_pressure"`
-	echo -e "watermark_scale_factor:\c";space 7;green `adb shell "cat /proc/sys/vm/watermark_scale_factor"`
-	echo
-	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
-		if false;then
-		yellow "KSM:"
-		echo "RUN:"`adb shell "cat /sys/kernel/mm/ksm/run"`
-		echo "KSM pages_to_scan:"`adb shell "cat /sys/kernel/mm/ksm/pages_to_scan"`
-		echo "KSM sleep_millisecs:"`adb shell "cat /sys/kernel/mm/ksm/sleep_millisecs"`
-		echo
-		fi
+	if [[ "${#mem_available[@]}" -le 1 ]]; then
+		echo "Error parsing meminfo. Exiting ..."
+		exit 1
 	fi
 
-	yellow "ZRAM:"
-	echo -e "ZRAM Algorithm:\c";space 15;green $(adb shell cat //sys/block/zram0/comp_algorithm)
-	echo -e "ZRAM Streams:\c";space 17;green $(adb shell cat //sys/block/zram0/max_comp_streams)
-	echo -e "ZRAM Disksize:\c";space 16;green $(adb shell cat //sys/block/zram0/disksize)
+	cache_proc_dirty=${mem_available[1]}
+
+	if [[ $debug -eq 1 ]]; then
+		declare -p cached_process_array
+	fi
+
+	for i in "${!cached_process_array[@]}"; do
+		pid=$(echo "${cached_process_array[$i]}"|cut -d '(' -f 2|tr -d 'pid)')
+		process_cache_info=$(adb shell dumpsys meminfo "$pid"|grep 'TOTAL'||echo "")
+		if [[ -z "$process_cache_info" ]]; then
+		continue
+		fi
+		cache=($process_cache_info)
+
+		if [[ "${#cache[@]}" -le 3 ]]; then
+		echo "Error parsing dumpsys meminfo $pid. Exiting ..."
+		exit 1
+		fi
+
+		cache_proc_dirty=$((cache_proc_dirty+${cache[2]}+${cache[3]}))
+	done
+	available_mem=`echo $cache_proc_dirty|awk '{print $1/1024}'`
+	echo -e "Available:\c";space 20;green $available_mem" MB"
+
+	watermark=`adb shell cat /proc/zoneinfo| grep low | awk '{sum=sum+$2} END{print sum*4/1024}'`
+	echo -e "WaterMark:\c";space 20;green $watermark" MB"
 	echo
+
+	yellow "User View:"
+	vmalloc_used_sz=`adb shell cat /proc/vmallocinfo | sort | uniq | awk '{sum=sum+$2} END{print sum/1024/1024}'`
+	#vmalloc_used_sz=`adb shell cat /proc/vmallocinfo | sort | uniq | grep -v "ioremap\|map_lowmem\|vm_map_ram" | awk '{sum=sum+$2} END{print sum/1024/1024}'`
+	kernel_used_sz=`adb shell cat //proc/meminfo | grep "SUnreclaim:\|KernelStack:\|PageTables:" | awk '{sum=sum+$2} END{print sum/1024}'`
+	#kernel_used_sz=`adb shell cat /proc/meminfo | grep "Slab:\|KernelStack:\|PageTables:" | awk '{sum=sum+$2} END{print sum/1024}'`
+	kernel_used_sz=`echo "$vmalloc_used_sz+$kernel_used_sz"|bc`
+	echo -e "Kernel_Used:\c";space 18;green $kernel_used_sz" MB"
+	kernel_other=`adb shell cat //proc/meminfo | grep "Buffers:\|SwapCached:\|Unevictable:\|SReclaimable:" | awk '{sum=sum+$2} END{print sum/1024}'`
+	echo -e "Kernel_Other:\c";space 17;green $kernel_other" MB"
+
+	free_mem=`adb shell cat //proc/meminfo| grep 'MemFree:' | awk 'END{print $2/1024}'`
+	echo -e "Free Ram:\c";space 21;green $free_mem" MB"
+
+	native_memory=$(echo "$meminfo_text"|grep -m 1 ": Native"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	system_server_memory=$(echo "$meminfo_text"|grep -m 1 "system ("|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	persistent_memory=$(echo "$meminfo_text"|grep -m 1 ": Persistent"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	persistentsevr_memory=$(echo "$meminfo_text"|grep -m 1 ": Persistent Service"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	fg_memory=$(echo "$meminfo_text"|grep -m 1 ": Foreground"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	visible_memory=$(echo "$meminfo_text"|grep -m 1 ": Visible"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	heavy_memory=$(echo "$meminfo_text"|grep -m 1 ": Heavy Weight"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	backup_memory=$(echo "$meminfo_text"|grep -m 1 ": Backup"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	perceptible_memory=$(echo "$meminfo_text"|grep -m 1 ": Perceptible"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	aservices_memory=$(echo "$meminfo_text"|grep -m 1 ": A Services"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	home_memory=$(echo "$meminfo_text"|grep -m 1 ": Home"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	previous_memory=$(echo "$meminfo_text"|grep -m 1 ": Previous"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	bservices_memory=$(echo "$meminfo_text"|grep -m 1 ": B Services"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	cached_memory=$(echo "$meminfo_text"|grep -m 1 ": Cached"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	zram_used=$(echo "$meminfo_text"| awk '/ZRAM:/{print $2}'|tr -d ',K'||echo 0)
+
+	native_memory=`echo $native_memory|awk '{print $1/1024}'`
+	system_server_memory=`echo $system_server_memory|awk '{print $1/1024}'`
+	persistent_memory=`echo $persistent_memory|awk '{print $1/1024}'`
+	persistentsevr_memory=`echo $persistentsevr_memory|awk '{print $1/1024}'`
+	fg_memory=`echo $fg_memory|awk '{print $1/1024}'`
+	visible_memory=`echo $visible_memory|awk '{print $1/1024}'`
+	heavy_memory=`echo $heavy_memory|awk '{print $1/1024}'`
+	backup_memory=`echo $backup_memory|awk '{print $1/1024}'`
+	perceptible_memory=`echo $perceptible_memory|awk '{print $1/1024}'`
+	aservices_memory=`echo $aservices_memory|awk '{print $1/1024}'`
+	home_memory=`echo $home_memory|awk '{print $1/1024}'`
+	previous_memory=`echo $previous_memory|awk '{print $1/1024}'`
+	bservices_memory=`echo $bservices_memory|awk '{print $1/1024}'`
+	cached_memory=`echo $cached_memory|awk '{print $1/1024}'`
+	zram_used=`echo $zram_used|awk '{print $1/1024}'`
+
+	total_ram=`echo "$kernel_used_sz+$kernel_other+$free_mem+$native_memory+$system_server_memory+$persistent_memory+$persistentsevr_memory+$fg_memory+$visible_memory+$heavy_memory+$backup_memory+$perceptible_memory+$aservices_memory+$home_memory+$previous_memory+$bservices_memory+$cached_memory+$zram_used"|bc`
+
+	echo -e "Native:\c";space 23;green $native_memory" MB"
+	echo -e "SystemServer:\c";space 17;green $system_server_memory" MB"
+	echo -e "Persistent:\c";space 19;green $persistent_memory" MB"
+	echo -e "Persistent Service:\c";space 11;green $persistentsevr_memory" MB"
+	echo -e "Foreground:\c";space 19;green $fg_memory" MB"
+	echo -e "Visible:\c";space 22;green $visible_memory" MB"
+	echo -e "Heavy Weight:\c";space 17;green $heavy_memory" MB"
+	echo -e "Backup:\c";space 23;green $backup_memory" MB"
+	echo -e "Perceptible:\c";space 18;green $perceptible_memory" MB"
+	echo -e "A Services:\c";space 19;green $aservices_memory" MB"
+	echo -e "Home:\c";space 25;green $home_memory" MB"
+	echo -e "Previous:\c";space 21;green $previous_memory" MB"
+	echo -e "B Services:\c";space 19;green $bservices_memory" MB"
+	echo -e "Cached:\c";space 23;green $cached_memory" MB"
+	echo -e "Zram_Used:\c";space 20;green $zram_used" MB"
+	echo -e "Total:\c";space 24;green $total_ram" MB"
+	echo
+
+	xos_launcher_memory=$(echo "$meminfo_text"|grep -m 1 "XOSLauncher"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	hilauncher_memory=$(echo "$meminfo_text"|grep -m 1 "hilauncher"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	system_ui_memory=$(echo "$meminfo_text"|grep -m 1 "com.android.systemui"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	camerahalserver=$(echo "$meminfo_text"|grep -m 1 "camerahalserver"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	cameraserver=$(echo "$meminfo_text"|grep -m 1 "cameraserver"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	mtk_camera=$(echo "$meminfo_text"|grep -m 1 "com.mediatek.camera"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+	tran_camera=$(echo "$meminfo_text"|grep -m 1 "com.transsion.camera"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+
+	xos_launcher_memory=`echo $xos_launcher_memory|awk '{print $1/1024}'`
+	hilauncher_memory=`echo $hilauncher_memory|awk '{print $1/1024}'`
+	system_ui_memory=`echo $system_ui_memory|awk '{print $1/1024}'`
+	camerahalserver=`echo $camerahalserver|awk '{print $1/1024}'`
+	cameraserver=`echo $cameraserver|awk '{print $1/1024}'`
+	mtk_camera=`echo $mtk_camera|awk '{print $1/1024}'`
+	tran_camera=`echo $tran_camera|awk '{print $1/1024}'`
+
+	yellow "Core apps:"
+	echo -e "XOSLauncher:\c";space 18;green $xos_launcher_memory" MB"
+	echo -e "HiLauncher:\c";space 19;green $hilauncher_memory" MB"
+	echo -e "SystemUI:\c";space 21;green $system_ui_memory" MB"
+	echo -e "Camera HAL:\c";space 19;green $camerahalserver" MB"
+	echo -e "Camera Server:\c";space 16;green $cameraserver" MB"
+	echo -e "MTK Camera:\c";space 19;green $mtk_camera" MB"
+	echo -e "Transsion Camera:\c";space 13;green $tran_camera" MB"
+
+	gsm_packages="com.google.android.gms.persistent \
+					com.google.android.gms \
+					com.google.android.inputmethod.latin \
+					com.google.process.gapps \
+					com.google.process.gservices \
+					com.google.android.apps.speechservices \
+					com.google.android.configupdater \
+					com.google.android.backuptransport \
+					com.google.android.feedback \
+					com.google.android.onetimeinitializer \
+					com.google.android.partnersetup \
+					com.google.android.gsf \
+					com.google.android.setupwizard \
+					com.google.android.syncadapters.calendar \
+					com.google.android.syncadapters.contacts \
+					com.google.android.webview \
+					com.google.android.tts \
+					com.google.android.packageinstaller \
+					com.google.android.ext.services \
+					com.google.android.ext.shared \
+					com.google.android.printservice.recommendation \
+					com.google.android.apps.assistant \
+					com.android.chrome \
+					com.google.android.gm.lite \
+					com.google.android.apps.mapslite \
+					com.google.android.apps.navlite \
+					com.android.vending \
+					com.google.android.apps.searchlite"
+
+	gsm_packages=($gsm_packages)
+
+	for i in "${gsm_packages[@]}";do
+		gsm_tmp_info=`adb shell dumpsys meminfo $i|grep 'TOTAL'`
+		if [[ -z "$gsm_tmp_info" ]]; then
+			continue
+		fi
+		gsm_tmp_info=($gsm_tmp_info)
+		gsm_total=`expr $gsm_total + ${gsm_tmp_info[1]}`
+	done
+	gsm_sz=`echo "$gsm_total"|awk '{print $1/1024}'`
+	echo -e "GSM:\c";space 26;green $gsm_sz" MB"
+	echo
+
+	yellow "Kernel view:"
+	kfree=`adb shell cat //proc/meminfo | awk '/^MemFree:/{print $2/1024}'`
+	kbuffer=`adb shell cat //proc/meminfo | awk '/^Buffers:/{print $2/1024}'`
+	kcache=`adb shell cat //proc/meminfo | awk '/^Cached:/{print $2/1024}'`
+	kswapcached=`adb shell cat //proc/meminfo | awk '/^SwapCached:/{print $2/1024}'`
+	kunevictable=`adb shell cat //proc/meminfo | awk '/^Unevictable:/{print $2/1024}'`
+	kanonpages=`adb shell cat //proc/meminfo | awk '/^AnonPages:/{print $2/1024}'`
+	kshmem=`adb shell cat //proc/meminfo | awk '/^Shmem:/{print $2/1024}'`
+	kslab=`adb shell cat //proc/meminfo | awk '/^Slab:/{print $2/1024}'`
+	kstack=`adb shell cat //proc/meminfo | awk '/^KernelStack:/{print $2/1024}'`
+	kpagetables=`adb shell cat //proc/meminfo | awk '/^PageTables:/{print $2/1024}'`
+	ktotal=`echo "$kfree+$kbuffer+$kcache+$kswapcached+$kunevictable+$kanonpages+$kshmem+$kslab+$kstack+$kpagetables+$vmalloc_used_sz+$zram_used"|bc`
+
+	echo -e "Kfree:\c";space 24;green $kfree" MB"
+	echo -e "Kbuffer:\c";space 22;green $kbuffer" MB"
+	echo -e "Kcache:\c";space 23;green $kcache" MB"
+	echo -e "Kswapcache:\c";space 19;green $kswapcached" MB"
+	echo -e "Kunevictable:\c";space 17;green $kunevictable" MB"
+	echo -e "Kanonpages:\c";space 19;green $kanonpages" MB"
+	echo -e "Kshmem:\c";space 23;green $kshmem" MB"
+	echo -e "Kslab:\c";space 24;green $kslab" MB"
+	echo -e "Kstack:\c";space 23;green $kstack" MB"
+	echo -e "Kpagetable:\c";space 19;green $kpagetables" MB"
+	echo -e "Kvmallocused:\c";space 17;green $vmalloc_used_sz" MB"
+	echo -e "Kzramused:\c";space 20;green $zram_used" MB"
+	echo -e "Ktotal:\c";space 23;green $ktotal" MB"
+	echo
+
+	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
+		yellow "Buddy info:"
+		adb shell cat /proc/buddyinfo
+		echo
+
+		yellow "VM:"
+		if [ "${os_version}" -lt 8 ];then
+			echo -e "ext_free_bytes:\c";space 15;green `adb shell "cat /proc/sys/vm/extra_free_kbytes"`
+		fi
+		echo -e "extfrag_threshold:\c";space 12;green `adb shell "cat /proc/sys/vm/extfrag_threshold"`
+		echo -e "lowmem_reserve_ratio:\c";space 9;green `adb shell "cat /proc/sys/vm/lowmem_reserve_ratio"`
+		echo -e "min_free_kbytes:\c";space 14;green `adb shell "cat /proc/sys/vm/min_free_kbytes"`
+		echo -e "overcommit_kbytes:\c";space 12;green `adb shell "cat /proc/sys/vm/overcommit_kbytes"`
+		echo -e "overcommit_memory:\c";space 12;green `adb shell "cat /proc/sys/vm/overcommit_memory"`
+		echo -e "overcommit_ratio:\c";space 13;green `adb shell "cat /proc/sys/vm/overcommit_ratio"`
+		echo -e "swappiness:\c";space 19;green `adb shell "cat /proc/sys/vm/swappiness"`
+		echo -e "vfs_cache_pressure:\c";space 11;green `adb shell "cat /proc/sys/vm/vfs_cache_pressure"`
+		echo -e "watermark_scale_factor:\c";space 7;green `adb shell "cat /proc/sys/vm/watermark_scale_factor"`
+		echo
+
+		if false;then
+			yellow "KSM:"
+			echo "RUN:"`adb shell "cat /sys/kernel/mm/ksm/run"`
+			echo "KSM pages_to_scan:"`adb shell "cat /sys/kernel/mm/ksm/pages_to_scan"`
+			echo "KSM sleep_millisecs:"`adb shell "cat /sys/kernel/mm/ksm/sleep_millisecs"`
+			echo
+		fi
+
+	fi
+
+	if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
+		yellow "ZRAM:"
+		echo -e "ZRAM Algorithm:\c";space 15;green $(adb shell cat //sys/block/zram0/comp_algorithm)
+		echo -e "ZRAM Streams:\c";space 17;green $(adb shell cat //sys/block/zram0/max_comp_streams)
+		echo -e "ZRAM Disksize:\c";space 16;green $(adb shell cat //sys/block/zram0/disksize)
+		echo
+	#else
+	#	red "User Release and non-root, no ZRAM related info."
+	fi
 	
 	#if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" ];then
 	if false;then
@@ -218,12 +459,9 @@ function dump_misc {
 		echo "ion_mm_heap_for_camera_total_in_pool: "`adb shell cat //sys/kernel/debug/ion/heaps/ion_mm_heap_for_camera_total_in_pool`
 		echo "ion_mm_heap_shrink:                   "`adb shell cat //sys/kernel/debug/ion/heaps/ion_mm_heap_shrink`
 		echo "ion_mm_heap_total_in_pool:            "`adb shell cat //sys/kernel/debug/ion/heaps/ion_mm_heap_total_in_pool`
+		echo
 	fi
 
-	#adb shell cat //proc/zoneinfo|awk 'NR>=0&&NR<5&&/free/{free=$3;}NR>=0&&NR<10&&/min/{min=$2;}NR>=0&&NR<10&&/low/{low=$2;}NR>=0&&NR<10&&/high/{high=$2;} END{printf("%s: \t%d\t%d\t%d\t%d\n","Normal Zone [free high low min]", free, high, low, min);}'
-	#adb shell cat //proc/zoneinfo|awk '/zone  HighMem/{line=NR;} NR>=line&&NR<line+5&&/free/{free=$3;}NR>=line&&NR<line+10&&/min/{min=$2;}NR>=line&&NR<line+10&&/low/{low=$2;}NR>=line&&NR<line+10&&/high/{high=$2;} END{printf("%s: \t%d\t%d\t%d\t%d\n","HighMem Zone[free high low min]", free, high, low, min);}'
-	echo 
-	
 	yellow "ART info:"
 	echo -e "heaputilization:\c";space 15;green `adb shell getprop dalvik.vm.heaputilization`
 	echo -e "heapminfree:\c";space 18;green `adb shell getprop dalvik.vm.heapminfree`
@@ -235,7 +473,7 @@ function dump_misc {
 		echo -e "LMK adj:\c";space 22;green `adb shell "cat /sys/module/lowmemorykiller/parameters/adj"`
 		echo -e "LMK source:\c";space 19;green `adb shell "cat /sys/module/lowmemorykiller/parameters/minfree"`
 	else
-		echo -e "LMK threshold:\c";space 16;green `adb shell dumpsys meminfo|grep "Tuning:"|awk '{print $6}'|sed 's/[,K]//g'|awk '{print $1/1024,"MB"}'`
+		echo -e "LMK threshold:\c";space 16;green `echo "$meminfo_text" | grep "Tuning:"|awk '{print $6}'|sed 's/[,K]//g'|awk '{print $1/1024,"MB"}'`
 	fi
 	echo
 	

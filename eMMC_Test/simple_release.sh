@@ -23,6 +23,7 @@ mkdir -p release/doc
 cp conf/global.ini release/conf
 cd doc
 pandoc --toc eMMC_Test_Overview.md -o ../release/doc/eMMC_Test_Overview.pdf --latex-engine=xelatex --toc-depth=4 -V mainfont="WenQuanYi Micro Hei" --smart -f markdown+tex_math_single_backslash -s --dpi=20 -V documentclass=report
+pandoc --toc eMMC_TestTool_SOP.md -o ../release/doc/eMMC_TestTool_SOP.pdf --latex-engine=xelatex --toc-depth=4 -V mainfont="WenQuanYi Micro Hei" --smart -f markdown+tex_math_single_backslash -s --dpi=20 -V documentclass=report
 cd ..
 
 timestamp_str=`date +%Y%m%d%H%M%S`

@@ -22,8 +22,11 @@ else
     root_str=NoN-root
 fi
 
+os_version=$(adb shell getprop ro.build.version.release|cut -d '.' -f 1)
+
 export os_build_vesion
 export os_build_id
 export os_build_product
 export os_build_displayid
+export os_version
 export isROOT

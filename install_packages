@@ -122,7 +122,8 @@ if $common_install;then
 	blue "Start install some common packages....."
 	for package in terminator fcitx redshift redshift-gtk uget rdesktop shutter wxhexeditor wine silversearcher-ag \
 					kolourpaint4 dos2unix pstack qemu-system-arm trace-cmd kernelshark gcc-arm-linux-gnueabi repo\
-					btrfs-tools docker.io dmsetup sleuthkit selinux-utils policycoreutils cryptsetup lvm2;
+					btrfs-tools docker.io dmsetup sleuthkit selinux-utils policycoreutils cryptsetup lvm2 xul-ext-lightning\
+					gdb-arm-none-eabi eclipse-cdt;
 	do
 	which $package
 	if [ $? -ne 0 ];then

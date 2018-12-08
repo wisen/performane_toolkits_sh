@@ -142,6 +142,10 @@ class RLKDevice():
 			print(e)
 			return None
 
+		#print(proc.stdout.read())
+		#print(type(proc.stdout.read()))
+		#print(proc.stdout.read().split())
+		#print(type(proc.stdout.read().split()))
 		cmd_out = bytes.decode(proc.stdout.read().split()[0])
 		self.fs = cmd_out
 
