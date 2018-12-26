@@ -18,7 +18,7 @@ fi
 
 monkey_test_start_time=`date "+%Y%m%d%H%M%S"`
 logfile_monkey_test=logfile_actions_monkey_test.${monkey_test_start_time}.txt
-adb shell monkey --ignore-crashes --ignore-timeouts --throttle 500 --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes 10000000 > $logfile_monkey_test
+adb shell monkey --ignore-crashes --ignore-timeouts --throttle 200 --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes 10000000 > $logfile_monkey_test
 
 if [ $os_build_vesion == "userdebug" -o $os_build_vesion == "eng" -o $isROOT = "true" ];then
     adb shell setprop sys.audio.monkeycontrl 0

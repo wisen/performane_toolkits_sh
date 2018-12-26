@@ -135,17 +135,13 @@ class RLKDevice():
 
 	def query_filesystem(self):
 		#adb shell mount|grep "\/data "|cut -d " " -f 5
-		cmd = ["adb", "-s", self.dev_sn, "shell", "mount", "|", "grep", "\/data\ ", "|", "cut", "-d", " ", "-f", "5"]
+		cmd = ["adb", "-s", self.dev_sn, "shell", "mount", "|", "grep", "\/data\ ", "|", "cut", "-d", "\ ", "-f", "5"]
 		try:
 			proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		except OSError as e:
 			print(e)
 			return None
 
-		#print(proc.stdout.read())
-		#print(type(proc.stdout.read()))
-		#print(proc.stdout.read().split())
-		#print(type(proc.stdout.read().split()))
 		cmd_out = bytes.decode(proc.stdout.read().split()[0])
 		self.fs = cmd_out
 
@@ -167,14 +163,14 @@ class RLKDevice():
 
 	def query_device_name(self):
 		if self.crypt == "unencrypted":
-			cmd = ["adb", "-s", self.dev_sn, "shell", "df", "-h", "|", "grep", "\/dev\/block\/mmcblk", "|", "grep", "\/data", "|", "cut", "-d", " ", "-f", "1", "|", "cut", "-d", "/", "-f", "4"]
+			cmd = ["adb", "-s", self.dev_sn, "shell", "df", "-h", "|", "grep", "\/dev\/block\/mmcblk", "|", "grep", "\/data", "|", "cut", "-d", "\ ", "-f", "1", "|", "cut", "-d", "/", "-f", "4"]
 			try:
 				proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 			except OSError as e:
 				print(e)
 				return None
 		else:
-			cmd = ["adb", "-s", self.dev_sn, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data", "|", "cut", "-d", " ", "-f", "1", "|", "cut", "-d", "/", "-f", "4"]
+			cmd = ["adb", "-s", self.dev_sn, "shell", "df", "-h", "|", "grep", "\/dev\/block\/dm-", "|", "grep", "\/data", "|", "cut", "-d", "\ ", "-f", "1", "|", "cut", "-d", "/", "-f", "4"]
 			try:
 				proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 			except OSError as e:
@@ -290,8 +286,8 @@ class RLKDevice():
 
 	## monitor thread will monitor when device should write, when should delete
 	def monitor(self,dev_sn, path):
-		#print("monitor func on device:"+self.dev_sn)
 		df = self.query_storage()
+		d.d("monitor func on device:"+self.dev_sn+" "+str(df)+" "+str(self.stop_wr)+" "+str(self.stop_del))
 		if df > self.stop_wr:
 			if self.has_wring:
 				self.stop_wrthreads()
@@ -365,7 +361,11 @@ class RLKDevice():
 				self.segment["0"] += info["0"]
 				self.segment["512"] += info["512"]
 				self.segment["z"] += info["z"]
-		self.ratio = (len(self.segment["z"])-self.segment["0"]-self.segment["512"])/len(self.segment["z"])
+		try:
+			self.ratio = (len(self.segment["z"])-self.segment["0"]-self.segment["512"])/len(self.segment["z"])
+		except ZeroDivisionError as e:
+			d.d("["+self.dev_sn+"]: calc_fragment_ratio ERR division by zero!")
+		
 		self.update_segment()
 		return self.ratio
 

@@ -19,5 +19,8 @@ fi
 
 device_sn=${dev_SN[$device_ind]}
 green "Connect to [$device_ind] $device_sn ${dev_Product[$device_ind]}"
+CONNDEV="adb -s $device_sn"
+export CONNDEV
+
 echo
 echo

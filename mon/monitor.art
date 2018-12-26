@@ -3,7 +3,7 @@
 # Description: make for monitoring some memory infomation
 # Date: 2017-02-26
 
-. color.u
+#. color.u
 
 function monitor_art_by_processname {
 

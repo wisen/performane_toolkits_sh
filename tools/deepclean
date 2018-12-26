@@ -1,0 +1,148 @@
+#!/bin/bash
+
+. os.u
+. android.u
+. color.u
+
+##############################standrad start##################################
+ONEG_DEVICES_NATIVE=
+ONEG_DEVICES_SYSTEM=
+ONEG_DEVICES_PERSISTENT=
+ONEG_DEVICES_FOREGROUND=
+ONEG_DEVICES_VISIBLE=
+ONEG_DEVICES_PERCEPTIBLE=
+ONEG_DEVICES_ASERVICES=
+ONEG_DEVICES_PREVIOUS=
+ONEG_DEVICES_BSERVICES=
+ONEG_DEVICES_CACHED=
+
+TWOG_DEVICES_NATIVE=
+TWOG_DEVICES_SYSTEM=
+TWOG_DEVICES_PERSISTENT=
+TWOG_DEVICES_FOREGROUND=
+TWOG_DEVICES_VISIBLE=
+TWOG_DEVICES_PERCEPTIBLE=
+TWOG_DEVICES_ASERVICES=
+TWOG_DEVICES_PREVIOUS=
+TWOG_DEVICES_BSERVICES=
+TWOG_DEVICES_CACHED=
+##############################standrad end##################################
+
+meminfo_text=$(adb shell dumpsys -t 30 meminfo)
+
+device_memory_sz=($(echo "$meminfo_text" |grep "Total RAM:" | awk '{print $3}' | sed 's/[,K]//g'))
+
+native_memory=$(echo "$meminfo_text"|grep -m 1 ": Native"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+system_server_memory=$(echo "$meminfo_text"|grep -m 1 "system ("|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+persistent_memory=$(echo "$meminfo_text"|grep -m 1 ": Persistent"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+persistentsevr_memory=$(echo "$meminfo_text"|grep -m 1 ": Persistent Service"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+fg_memory=$(echo "$meminfo_text"|grep -m 1 ": Foreground"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+visible_memory=$(echo "$meminfo_text"|grep -m 1 ": Visible"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+heavy_memory=$(echo "$meminfo_text"|grep -m 1 ": Heavy Weight"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+backup_memory=$(echo "$meminfo_text"|grep -m 1 ": Backup"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+perceptible_memory=$(echo "$meminfo_text"|grep -m 1 ": Perceptible"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+aservices_memory=$(echo "$meminfo_text"|grep -m 1 ": A Services"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+home_memory=$(echo "$meminfo_text"|grep -m 1 ": Home"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+previous_memory=$(echo "$meminfo_text"|grep -m 1 ": Previous"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+bservices_memory=$(echo "$meminfo_text"|grep -m 1 ": B Services"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+cached_memory=$(echo "$meminfo_text"|grep -m 1 ": Cached"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+zram_used=$(echo "$meminfo_text"| awk '/ZRAM:/{print $2}'|tr -d ',K'||echo 0)
+
+native_memory=`echo $native_memory|awk '{print $1/1024}'`
+system_server_memory=`echo $system_server_memory|awk '{print $1/1024}'`
+persistent_memory=`echo $persistent_memory|awk '{print $1/1024}'`
+persistentsevr_memory=`echo $persistentsevr_memory|awk '{print $1/1024}'`
+fg_memory=`echo $fg_memory|awk '{print $1/1024}'`
+visible_memory=`echo $visible_memory|awk '{print $1/1024}'`
+heavy_memory=`echo $heavy_memory|awk '{print $1/1024}'`
+backup_memory=`echo $backup_memory|awk '{print $1/1024}'`
+perceptible_memory=`echo $perceptible_memory|awk '{print $1/1024}'`
+aservices_memory=`echo $aservices_memory|awk '{print $1/1024}'`
+home_memory=`echo $home_memory|awk '{print $1/1024}'`
+previous_memory=`echo $previous_memory|awk '{print $1/1024}'`
+bservices_memory=`echo $bservices_memory|awk '{print $1/1024}'`
+cached_memory=`echo $cached_memory|awk '{print $1/1024}'`
+zram_used=`echo $zram_used|awk '{print $1/1024}'`
+
+native_process_array=($(echo "$meminfo_text" |awk '/Total PSS by category:/{found=0} {if(found) print} /: Native/{found=1}'|tr -d '\r'|tr -d ' '))
+visible_process_array=($(echo "$meminfo_text" |awk '/Total PSS by category:/{found=0} {if(found) print} /: Visible/{found=1}'|tr -d '\r'|tr -d ' '))
+perceptible_process_array=($(echo "$meminfo_text" |awk '/Total PSS by category:/{found=0} {if(found) print} /: Perceptible/{found=1}'|tr -d '\r'|tr -d ' '))
+aservices_process_array=($(echo "$meminfo_text" |awk '/Total PSS by category:/{found=0} {if(found) print} /: A Services/{found=1}'|tr -d '\r'|tr -d ' '))
+aservices_process_array=($(echo "$meminfo_text" |awk '/Total PSS by category:/{found=0} {if(found) print} /: B Services/{found=1}'|tr -d '\r'|tr -d ' '))
+
+gsm_core_packages="com.google.android.gms.persistent \
+                com.google.android.gms \
+                com.google.android.inputmethod.latin \
+                com.google.process.gapps \
+                com.google.process.gservices \
+                com.google.android.apps.speechservices \
+                com.google.android.configupdater \
+                com.google.android.backuptransport \
+                com.google.android.feedback \
+                com.google.android.onetimeinitializer \
+                com.google.android.partnersetup \
+                com.google.android.gsf \
+                com.google.android.setupwizard \
+                com.google.android.syncadapters.calendar \
+                com.google.android.syncadapters.contacts \
+                com.google.android.webview \
+                com.google.android.tts \
+                com.google.android.packageinstaller \
+                com.google.android.ext.services \
+                com.google.android.ext.shared \
+                com.google.android.printservice.recommendation \
+                com.google.android.apps.assistant \
+                com.google.android.gm.lite \
+                com.google.android.apps.mapslite \
+                com.google.android.apps.navlite \
+                com.android.vending \
+                com.google.android.apps.searchlite"
+
+transsion_packages="com.google.android.gms.persistent \
+                com.google.android.gms \
+                com.google.android.inputmethod.latin \
+                com.google.process.gapps \
+                com.google.process.gservices"
+
+htc_packages="com.google.android.gms.persistent \
+                com.google.android.gms \
+                com.google.android.inputmethod.latin \
+                com.google.process.gapps \
+                com.google.process.gservices"
+
+mtk_packages="com.google.android.gms.persistent \
+                com.google.android.gms \
+                com.google.android.inputmethod.latin \
+                com.google.process.gapps \
+                com.google.process.gservices"
+
+qcom_packages="com.google.android.gms.persistent \
+                com.google.android.gms \
+                com.google.android.inputmethod.latin \
+                com.google.process.gapps \
+                com.google.process.gservices"
+
+huawei_packages="com.google.android.gms.persistent \
+                com.google.android.gms \
+                com.google.android.inputmethod.latin \
+                com.google.process.gapps \
+                com.google.process.gservices"
+
+vivo_packages="com.google.android.gms.persistent \
+                com.google.android.gms \
+                com.google.android.inputmethod.latin \
+                com.google.process.gapps \
+                com.google.process.gservices"
+
+oppo_packages="com.google.android.gms.persistent \
+                com.google.android.gms \
+                com.google.android.inputmethod.latin \
+                com.google.process.gapps \
+                com.google.process.gservices"
+
+xiaomi_packages="com.google.android.gms.persistent \
+                com.google.android.gms \
+                com.google.android.inputmethod.latin \
+                com.google.process.gapps \
+                com.google.process.gservices"
+

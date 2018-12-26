@@ -3,6 +3,7 @@
 . os.u
 . color.u
 . devices_var.u
+. android.u
 . monitor.meminfo
 . monitor.meminfo_for_AndroidO
 . monitor.vmstat

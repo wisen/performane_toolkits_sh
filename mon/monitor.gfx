@@ -3,7 +3,7 @@
 # Description: make for monitoring gfxinfo
 # Date: 2017-02-26
 
-. color.u
+#. color.u
 
 function monitor_gfx_by_processname {
 

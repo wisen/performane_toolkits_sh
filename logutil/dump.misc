@@ -1,8 +1,8 @@
 #!/bin/bash
 
-. os.u
-. android.u
-. color.u
+#. os.u
+#. android.u
+#. color.u
 
 function dump_misc {
 

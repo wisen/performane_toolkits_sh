@@ -123,7 +123,7 @@ if $common_install;then
 	for package in terminator fcitx redshift redshift-gtk uget rdesktop shutter wxhexeditor wine silversearcher-ag \
 					kolourpaint4 dos2unix pstack qemu-system-arm trace-cmd kernelshark gcc-arm-linux-gnueabi repo\
 					btrfs-tools docker.io dmsetup sleuthkit selinux-utils policycoreutils cryptsetup lvm2 xul-ext-lightning\
-					gdb-arm-none-eabi eclipse-cdt;
+					gdb-arm-none-eabi eclipse-cdt iotop verilog gtkwave;
 	do
 	which $package
 	if [ $? -ne 0 ];then
@@ -226,7 +226,9 @@ fi
 ##install for android compile start####
 if $android_install;then
 	blue "Start install some Android related packages....."
-	for package in git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev ccache libgl1-mesa-dev libxml2-utils xsltproc unzip android-tools-adb;
+	for package in git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev gcc-multilib g++-multilib \
+					libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev ccache libgl1-mesa-dev \
+					libxml2-utils xsltproc unzip android-tools-adb;
 	do
 	which $package
 	if [ $? -ne 0 ];then
