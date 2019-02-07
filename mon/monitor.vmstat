@@ -3,37 +3,22 @@
 # Description: make for monitoring some memory infomation
 # Date: 2017-02-26
 
-function monitor_vmstat {
-	title_line1="\tnr_\t\t|\tpgscan\t\t\t|"
-	title_line2="dirty\tthres\tbgthres\t|ks_nor\t\tks_high\t\tdi_nor\t\tdi_high\t\t|acstall"
-	#title_line9="d\t"
 
-	#echo -e $title_line1
-	#echo -e $title_line2
-	
-	line=0
+ 
+function monitor_vmstat {
+	log_file=meminfo.vmstat."$(date +%s)"".log"
+	#title=" \cr  \cb   \cswpd   \cfree   \cbuff  \ccache   \csi   \cso    \cbi    \cbo   \cin   \ccs \cus \csy \cid \cwa"
+	#echo -e $title > ${log_file}
+	#line=0
 	while true
 	do
-		if [ `expr ${line} % 50` == 0 ];then
-			echo -e $title_line1
-			echo -e $title_line2
-		fi
-		line=`expr ${line} + 1`
-		
-		adb shell cat /proc/vmstat |awk '/nr_dirty/{a[0]=$2;} 
-										/nr_dirty_threshold/{a[1]=$2;}
-										/nr_dirty_background_threshold/{a[2]=$2;}
-										/pgscan_kswapd_normal/{a[3]=$2;}
-										/pgscan_kswapd_high/{a[4]=$2;}
-										/pgscan_direct_normal/{a[5]=$2;}
-										/pgscan_direct_high/{a[6]=$2;}
-										/allocstall/{a[7]=$2;}
-										
-										END{
-											printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7]);
-										}
-										'
-		sleep 1
+		#if [ `expr ${line} % 40` == 0 ];then
+			#echo -e ${title}
+			#blue_white ${title}
+			echo -e "\033[44;37m r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa\033[0m"
+		#fi
+		#line=`expr ${line} + 1`
+		adb -s $device_sn shell vmstat -n 1 40 | tee -a ${log_file}
+		#sleep 2
 	done
-	
 }

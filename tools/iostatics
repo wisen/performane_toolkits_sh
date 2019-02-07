@@ -1,14 +1,121 @@
 #!/bin/bash
 
+. color.u
+
+
 ## $1: systrace file(the trace should be enable Disk IO and Android Disk IO)
 
+eMMC_Standard_HOME=${SCRIPT_ROOT}"/standard/emmc"
+
+function lookup_dir(){
+    for element in `ls $1`
+    do
+		dir_or_file=$1"/"$element
+		if [ -d $dir_or_file ]
+		then
+			lookup_dir $dir_or_file
+		else
+			echo $dir_or_file
+		fi
+    done
+}
+
+#lookup_dir $eMMC_Standard_HOME
+
+red "Choose the Vendor:"
+idx=1
+for dir in `ls $eMMC_Standard_HOME`
+do
+	space 4;blue "[$idx] $dir"
+	idx=`expr ${idx} + 1`
+done
+read vendor_idx
+if [ ! -n "$vendor_idx" ];then
+	vendor_idx=1
+fi
+idx=1
+for dir in `ls $eMMC_Standard_HOME`
+do
+	if [ $idx -eq $vendor_idx ];then
+		vendor_str=$dir
+		space 4;yellow "You choose $vendor_str"
+	fi
+	idx=`expr ${idx} + 1`
+done
+echo
+
+red "Choose the Size:"
+idx=1
+for dir in `ls $eMMC_Standard_HOME/$vendor_str`
+do
+	space 4;blue "[$idx] $dir"
+	idx=`expr ${idx} + 1`
+done
+read emmc_sz_idx
+if [ ! -n "$emmc_sz_idx" ];then
+	emmc_sz_idx=1
+fi
+idx=1
+for dir in `ls $eMMC_Standard_HOME/$vendor_str`
+do
+	if [ $idx -eq $emmc_sz_idx ];then
+		emmc_sz_str=$dir
+		space 4;yellow "You choose $vendor_str, size $emmc_sz_str"
+	fi
+	idx=`expr ${idx} + 1`
+done
+echo
+
+red "Choose the Standard:"
+idx=1
+for file in `ls $eMMC_Standard_HOME/$vendor_str/$emmc_sz_str`
+do
+	space 4;blue "[$idx] `cat $eMMC_Standard_HOME/$vendor_str/$emmc_sz_str/$file`"
+	idx=`expr ${idx} + 1`
+done
+read standard_idx
+if [ ! -n "$standard_idx" ];then
+	standard_idx=1
+fi
+idx=1
+for file in `ls $eMMC_Standard_HOME/$vendor_str/$emmc_sz_str`
+do
+	if [ $idx -eq $standard_idx ];then
+		standard_str=`cat $eMMC_Standard_HOME/$vendor_str/$emmc_sz_str/$file`
+		space 4;yellow "You choose $vendor_str, size $emmc_sz_str, io throughput:"
+		space 8;green $standard_str
+	fi
+	idx=`expr ${idx} + 1`
+done
+standard_io=($standard_str)
+#echo ${standard_io[0]} ${standard_io[1]} ${standard_io[2]} ${standard_io[3]}
+
+###################################################################################################################################
 tracefile=$1
 
 totalread=`grep "android_fs_dataread_start" $tracefile |awk -F "," '{print $3}'|awk 'BEGIN{sum=0} {sum=sum+$2;} END{print sum/1024}'`
 totalwrite=`grep "android_fs_datawrite_start" $tracefile |awk -F "," '{print $3}'|awk 'BEGIN{sum=0} {sum=sum+$2;} END{print sum/1024}'`
+totalreadio=`grep "android_fs_dataread_start" $tracefile |wc -l`
+totalwriteio=`grep "android_fs_datawrite_start" $tracefile |wc -l`
+
+#((readcost1=$totalread/${standard_io[0]}))
+#((readcost2=$totalreadio/${standard_io[2]}))
+#((wrcost1=$totalwrite/${standard_io[1]}))
+#((wrcost2=$totalwriteio/${standard_io[3]}))
+readcost1=$(printf "%.2f" `echo "scale=3;$totalread/1024/${standard_io[0]}*1000"|bc`)
+readcost2=$(printf "%.2f" `echo "scale=3;$totalreadio/${standard_io[2]}*1000"|bc`)
+wrcost1=$(printf "%.2f" `echo "scale=3;$totalwrite/1024/${standard_io[1]}*1000"|bc`)
+wrcost2=$(printf "%.2f" `echo "scale=3;$totalwriteio/${standard_io[3]}*1000"|bc`)
+
+##########sumary start###############
+echo -e "\033[34m" Total read: $totalread KB, ios: $totalreadio"\033[0m"
+space 4;echo -e "\033[34m" Time cost: $readcost1 \~ $readcost2"\033[0m"
+echo -e "\033[34m" Total write: $totalwrite KB, ios: $totalwriteio"\033[0m"
+space 4;echo -e "\033[34m" Time cost: $wrcost1 \~ $wrcost2"\033[0m"
+##########sumary end###############
+echo
 
 parsertime=`date "+%Y%m%d%H%M%S"`
-
 ###### parser read io###########
 read_tmp_appname_file=read.$parsertime.tmpappname
 read_tmp_data_file=read.$parsertime.tmpdata
@@ -16,12 +123,12 @@ read_result_file=read.$parsertime.result
 grep "android_fs_dataread_start" $tracefile|awk -F ":" '{print $3}'|sed 's/,//g'|awk '$2~/^\/./{print $2}'|sort|uniq > $read_tmp_appname_file
 grep "android_fs_dataread_start" $tracefile|awk -F ":" '{print $3}'|sed 's/,//g'|awk '$2~/^\/./{print $6,$2}'|sort > $read_tmp_data_file
 
-echo -e "\033[34m" Total read: $totalread "\033[0m"
+#echo -e "\033[34m" Total read: $totalread KB, ios: $totalreadio"\033[0m"
 while read appname
 do
 	#echo $appname
-	#cat $read_tmp_data_file|awk -v a_app="$appname" 'BEGIN{sum=0;} $0~a_app{sum=sum+$2;} END{print a_app,sum}' |tee -a $read_result_file
-	cat $read_tmp_data_file | grep "$appname$" | awk -v a_app="$appname" '{sum=sum+$1} END{print a_app,sum/1024}' |tee -a $read_result_file
+	#cat $read_tmp_data_file | grep "$appname$" | awk -v a_app="$appname" '{sum=sum+$1} END{print a_app,sum/1024}' |tee -a $read_result_file
+	cat $read_tmp_data_file | grep "$appname$" | awk -v a_app="$appname" '{sum=sum+$1} END{print a_app,sum/1024}' >> $read_result_file
 done < $read_tmp_appname_file
 
 echo
@@ -32,12 +139,12 @@ write_result_file=write.$parsertime.result
 grep "android_fs_datawrite_start" $tracefile|awk -F ":" '{print $3}'|sed 's/,//g'|awk '$2~/^\/./{print $2}'|sort|uniq > $write_tmp_appname_file
 grep "android_fs_datawrite_start" $tracefile|awk -F ":" '{print $3}'|sed 's/,//g'|awk '$2~/^\/./{print $6,$2}'|sort > $write_tmp_data_file
 
-echo -e "\033[34m" Total write: $totalwrite "\033[0m"
+#echo -e "\033[34m" Total write: $totalwrite KB, ios: $totalwriteio"\033[0m"
 while read appname
 do
 	#echo $appname
-	#cat $write_tmp_data_file|awk -v a_app="$appname" 'BEGIN{sum=0;} $0~a_app{sum=sum+$2;} END{print a_app,sum}' |tee -a $write_result_file
-	cat $write_tmp_data_file | grep "$appname$" | awk -v a_app="$appname" '{sum=sum+$1} END{print a_app,sum/1024}' |tee -a $write_result_file
+	#cat $write_tmp_data_file | grep "$appname$" | awk -v a_app="$appname" '{sum=sum+$1} END{print a_app,sum/1024}' |tee -a $write_result_file
+	cat $write_tmp_data_file | grep "$appname$" | awk -v a_app="$appname" '{sum=sum+$1} END{print a_app,sum/1024}' >> $write_result_file
 done < $write_tmp_appname_file
 
 #rm $read_tmp_appname_file $read_tmp_data_file $write_tmp_appname_file $write_tmp_data_file

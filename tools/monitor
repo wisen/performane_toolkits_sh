@@ -5,6 +5,7 @@
 . devices_var.u
 . android.u
 . monitor.meminfo
+. monitor.adj
 . monitor.meminfo_for_AndroidO
 . monitor.vmstat
 . dump.misc
@@ -52,6 +53,11 @@ fi
 if [ $# -eq 1 ];then
 	if [ $1 == "meminfo" ];then
 		monitor_meminfo
+		exit
+	fi
+
+	if [ $1 == "adj" ];then
+		monitor_adj
 		exit
 	fi
 

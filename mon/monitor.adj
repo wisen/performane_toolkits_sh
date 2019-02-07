@@ -1,0 +1,66 @@
+#!/bin/bash
+# Author: wisen_wang
+# Description: make for monitoring some memory infomation
+# Date: 2017-02-26
+
+#. color.u
+#. devices_var.u
+
+function monitor_adj {
+	log_file=meminfo.adj".$(date +%s)"".log"
+	title="Native\tSystem\tPersist\tPerServ\tFG\tVisible\tPercept\tAServ\tHome\tPrev\tBserv\tCached\tSWUsed\tTotal"
+	echo -e $title > ${log_file}
+	line=0
+	while true
+	do
+		if [ `expr ${line} % 40` == 0 ];then
+			#echo -e ${title}
+			blue_white ${title}
+		fi
+		line=`expr ${line} + 1`
+		meminfo_text=$(adb -s $device_sn shell dumpsys -t 30 meminfo)
+
+		native_memory=$(echo "$meminfo_text"|grep -m 1 ": Native"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $native_memory ];then native_memory=0;fi
+		system_server_memory=$(echo "$meminfo_text"|grep -m 1 "system ("|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $system_server_memory ];then system_server_memory=0;fi
+		persistent_memory=$(echo "$meminfo_text"|grep -m 1 ": Persistent"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $persistent_memory ];then persistent_memory=0;fi
+		persistentsevr_memory=$(echo "$meminfo_text"|grep -m 1 ": Persistent Service"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $persistentsevr_memory ];then persistentsevr_memory=0;fi
+		fg_memory=$(echo "$meminfo_text"|grep -m 1 ": Foreground"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $fg_memory ];then fg_memory=0;fi
+		visible_memory=$(echo "$meminfo_text"|grep -m 1 ": Visible"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $visible_memory ];then visible_memory=0;fi
+		heavy_memory=$(echo "$meminfo_text"|grep -m 1 ": Heavy Weight"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $heavy_memory ];then heavy_memory=0;fi
+		backup_memory=$(echo "$meminfo_text"|grep -m 1 ": Backup"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $backup_memory ];then backup_memory=0;fi
+		perceptible_memory=$(echo "$meminfo_text"|grep -m 1 ": Perceptible"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $perceptible_memory ];then perceptible_memory=0;fi
+		aservices_memory=$(echo "$meminfo_text"|grep -m 1 ": A Services"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $aservices_memory ];then aservices_memory=0;fi
+		home_memory=$(echo "$meminfo_text"|grep -m 1 ": Home"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $home_memory ];then home_memory=0;fi
+		previous_memory=$(echo "$meminfo_text"|grep -m 1 ": Previous"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $previous_memory ];then previous_memory=0;fi
+		bservices_memory=$(echo "$meminfo_text"|grep -m 1 ": B Services"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $bservices_memory ];then bservices_memory=0;fi
+		cached_memory=$(echo "$meminfo_text"|grep -m 1 ": Cached"|cut -d ':' -f 1|awk '{$1=$1;print}'|cut -d ' ' -f 1|tr -d ',K' || echo 0)
+		if [ ! $cached_memory ];then cached_memory=0;fi
+		#zram_used=$(echo "$meminfo_text"| awk '/ZRAM:/{print $2}'|tr -d ',K'||echo 0)
+		zram_used=$(echo "$meminfo_text"|grep -m 1 "ZRAM:"|awk '{print $6}'|tr -d ',K'||echo 0)
+		if [ ! $zram_used ];then zram_used=0;fi
+		#echo $zram_used
+		#echo $native_memory $system_server_memory $persistent_memory $persistentsevr_memory $fg_memory $visible_memory $perceptible_memory \
+		#	$aservices_memory $home_memory $previous_memory $bservices_memory $cached_memory $zram_used 
+		echo $native_memory $system_server_memory $persistent_memory $persistentsevr_memory $fg_memory $visible_memory $perceptible_memory \
+			$aservices_memory $home_memory $previous_memory $bservices_memory $cached_memory $zram_used  |awk '
+										END{
+											total = $1+$2+$3+$4+$5+$6+$7+$8+$9+$10+$11+$12;
+											printf("%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", $1/1024,$2/1024,$3/1024,$4/1024,$5/1024,$6/1024,$7/1024,$8/1024,$9/1024,$10/1024,$11/1024,$12/1024,$13/1024,total/1024);
+										}
+										'|tee -a ${log_file}
+		sleep 1
+	done
+}

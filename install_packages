@@ -123,7 +123,8 @@ if $common_install;then
 	for package in terminator fcitx redshift redshift-gtk uget rdesktop shutter wxhexeditor wine silversearcher-ag \
 					kolourpaint4 dos2unix pstack qemu-system-arm trace-cmd kernelshark gcc-arm-linux-gnueabi repo\
 					btrfs-tools docker.io dmsetup sleuthkit selinux-utils policycoreutils cryptsetup lvm2 xul-ext-lightning\
-					gdb-arm-none-eabi eclipse-cdt iotop verilog gtkwave;
+					gdb-arm-none-eabi eclipse-cdt iotop verilog gtkwave libgnutls-dev libetpan-dev extra-cmake-modules mesa-utils\
+					qt5-default qttools5-dev-tools;
 	do
 	which $package
 	if [ $? -ne 0 ];then
